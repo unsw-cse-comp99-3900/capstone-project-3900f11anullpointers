@@ -24,7 +24,20 @@ def generate_PDF(token: str, name: str, form_name: str) -> None:
     pdf.set_font(fonts["body"], size=12)
     pdf.multi_cell(0, 5, txt = get_body(form_name))
 
+    # Space
+    pdf.cell(0, 15, txt = "", ln = True)
+
+    # Add signature
+    pdf.image("signatures/" + token + ".png", w = 80, h = 20)
+
+    # Space
+    pdf.cell(0, 5, txt = "", ln = True)
+
+    # Add clinet's name
+    pdf.cell(0, 5, txt = name, ln = True, align = 'L')
+
     pdf.output(token + ".pdf")
+    
 
 def get_fonts():
     with open(FONT_CONFIG, "r") as file:
@@ -52,7 +65,7 @@ def get_body(form_name: str) -> str:
 
 
 def main():
-    generate_PDF("test1", "gerald", "consent1")
+    generate_PDF("test1", "Gerald", "consent1")
 
 
 if __name__ == "__main__":
