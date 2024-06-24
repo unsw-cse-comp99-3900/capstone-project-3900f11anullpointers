@@ -1,7 +1,11 @@
 from fpdf import FPDF
 import json
+from datetime import datetime
 
 FONT_CONFIG = "font_config.json"
+TEXT_FOLDER = "form_text/"
+SIGNATURE_FOLDER = "signatures/"
+LOGO_FILE = "logo/logo.png"
 
 def generate_PDF(token: str, name: str, form_name: str) -> None:
     pdf: object = FPDF()
@@ -12,7 +16,13 @@ def generate_PDF(token: str, name: str, form_name: str) -> None:
     # Generate title
     pdf.add_font(fonts["title"], "", "fonts/" + fonts["title"] + ".ttf", uni=True)
     pdf.set_font(fonts["title"], size=20)
-    pdf.cell(200, 20, txt = get_title(form_name), ln = True, align = 'C')
+    pdf.cell(200, 10, txt = get_title(form_name), ln = True, align = 'C')
+
+    # Add logo
+    pdf.image(LOGO_FILE, w=20, x=20, y=11)
+
+    # Space
+    pdf.cell(0, 8, txt = "", ln = True)
 
     # Generate subtitle
     pdf.add_font(fonts["subtitle"], "", "fonts/" + fonts["subtitle"] + ".ttf", uni=True)
@@ -28,7 +38,7 @@ def generate_PDF(token: str, name: str, form_name: str) -> None:
     pdf.cell(0, 15, txt = "", ln = True)
 
     # Add signature
-    pdf.image("signatures/" + token + ".png", w = 80, h = 20)
+    pdf.image(SIGNATURE_FOLDER + token + ".png", w = 80, h = 20)
 
     # Space
     pdf.cell(0, 5, txt = "", ln = True)
@@ -36,29 +46,33 @@ def generate_PDF(token: str, name: str, form_name: str) -> None:
     # Add clinet's name
     pdf.cell(0, 5, txt = name, ln = True, align = 'L')
 
+    # Add date
+    date: str = datetime.now().strftime("%d %B %Y")
+    pdf.cell(0, 5, txt = date, ln = True, align = 'L')
+
     pdf.output(token + ".pdf")
     
 
-def get_fonts():
+def get_fonts() -> dict:
     with open(FONT_CONFIG, "r") as file:
         fonts = json.load(file)
 
     return fonts
 
 def get_title(form_name: str) -> str:
-    with open("form_text/" + form_name + "/title.txt", "r") as file:
+    with open(TEXT_FOLDER + form_name + "/title.txt", "r") as file:
         title = file.read()
 
     return title
 
 def get_subtitle(form_name: str) -> str:
-    with open("form_text/" + form_name + "/subtitle.txt", "r") as file:
+    with open(TEXT_FOLDER + form_name + "/subtitle.txt", "r") as file:
         subtitle = file.read()
 
     return subtitle
 
 def get_body(form_name: str) -> str:
-    with open("form_text/" + form_name + "/body.txt", "r") as file:
+    with open(TEXT_FOLDER + form_name + "/body.txt", "r") as file:
         text = file.read()
 
     return text
