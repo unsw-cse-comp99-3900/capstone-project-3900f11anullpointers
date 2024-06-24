@@ -1,89 +1,121 @@
-from fpdf import FPDF
+"""
+PDF generator script
+"""
+
 import json
 from datetime import datetime
+import logging
+from fpdf import FPDF
 
-FONT_CONFIG = "font_config.json"
 TEXT_FOLDER = "form_text/"
 SIGNATURE_FOLDER = "signatures/"
+FONTS_FOLDER = "fonts/"
+FONT_CONFIG = f"{FONTS_FOLDER}font_config.json"
 LOGO_FILE = "logo/logo.png"
 
-def generate_PDF(token: str, name: str, form_name: str) -> None:
-    pdf: object = FPDF()
-    pdf.add_page()
+logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
-    fonts = get_fonts()
-    
-    # Generate title
-    pdf.add_font(fonts["title"], "", "fonts/" + fonts["title"] + ".ttf", uni=True)
-    pdf.set_font(fonts["title"], size=20)
-    pdf.cell(200, 10, txt = get_title(form_name), ln = True, align = 'C')
+def generate_pdf(token: str, client_name: str, form_name: str) -> None:
+    """Generates a PDF document with the specified token, client name, and form name"""
 
-    # Add logo
-    pdf.image(LOGO_FILE, w=20, x=20, y=11)
+    try:
+        pdf = FPDF()
+        pdf.add_page()
 
-    # Space
-    pdf.cell(0, 8, txt = "", ln = True)
+        fonts = get_fonts()
 
-    # Generate subtitle
-    pdf.add_font(fonts["subtitle"], "", "fonts/" + fonts["subtitle"] + ".ttf", uni=True)
-    pdf.set_font(fonts["subtitle"], size=16)
-    pdf.cell(200, 15, txt = get_subtitle(form_name), ln = True, align = 'L')
+        # Generate title
+        add_font(pdf, fonts["title"], 20)
+        pdf.cell(200, 10, txt = get_title(form_name), ln = True, align = 'C')
 
-    # Generate text
-    pdf.add_font(fonts["body"], "", "fonts/" + fonts["body"] + ".ttf", uni=True)
-    pdf.set_font(fonts["body"], size=12)
-    pdf.multi_cell(0, 5, txt = get_body(form_name))
+        # Add logo
+        pdf.image(LOGO_FILE, w=20, x=20, y=11)
 
-    # Space
-    pdf.cell(0, 15, txt = "", ln = True)
+        # Space
+        pdf.cell(0, 8, txt = "", ln = True)
 
-    # Add signature
-    pdf.image(SIGNATURE_FOLDER + token + ".png", w = 80, h = 20)
+        # Generate subtitle
+        add_font(pdf, fonts["subtitle"], 16)
+        pdf.cell(200, 15, txt = get_subtitle(form_name), ln = True, align = 'L')
 
-    # Space
-    pdf.cell(0, 5, txt = "", ln = True)
+        # Generate text
+        add_font(pdf, fonts["body"], 12)
+        pdf.multi_cell(0, 5, txt = get_body(form_name))
 
-    # Add clinet's name
-    pdf.cell(0, 5, txt = name, ln = True, align = 'L')
+        # Space
+        pdf.cell(0, 15, txt = "", ln = True)
 
-    # Add date
-    date: str = datetime.now().strftime("%d %B %Y")
-    pdf.cell(0, 5, txt = date, ln = True, align = 'L')
+        # Add signature
+        pdf.image(f"{SIGNATURE_FOLDER}{token}.png", h = 20)
 
-    pdf.output(token + ".pdf")
-    
+        # Space
+        pdf.cell(0, 5, txt = "", ln = True)
+
+        # Add client's name
+        pdf.cell(0, 5, txt = client_name, ln = True, align = 'L')
+
+        # Add date
+        date: str = datetime.now().strftime("%d %B %Y")
+        pdf.cell(0, 5, txt = date, ln = True, align = 'L')
+
+        pdf.output(f"{token}.pdf")
+        logging.info("%s.pdf successfully generated", token)
+
+    except (RuntimeError, FileNotFoundError, json.JSONDecodeError) as e:
+        logging.error("PDF generation failed: %s", e)
 
 def get_fonts() -> dict:
-    with open(FONT_CONFIG, "r") as file:
-        fonts = json.load(file)
+    """Loads fonts from FONT_CONFIG json file into dictionary"""
 
-    return fonts
+    try:
+        with open(FONT_CONFIG, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logging.error("Cannot read font config file: %s", e)
+        raise
+
+def get_text(file_path: str) -> str:
+    """Reads text from file_path into string"""
+
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            return file.read()
+
+    except FileNotFoundError as e:
+        logging.error("Cannot read file %s: %s", file_path, e)
+        raise
+
+def add_font(pdf: FPDF, font_name: str, size: int) -> None:
+    """Adds a font to a pdf"""
+
+    try:
+        pdf.add_font(font_name, "", f"{FONTS_FOLDER}{font_name}.ttf", uni=True)
+        pdf.set_font(font_name, size=size)
+    except RuntimeError as e:
+        logging.error("Font %s not found: %s", font_name, e)
+        raise
+
 
 def get_title(form_name: str) -> str:
-    with open(TEXT_FOLDER + form_name + "/title.txt", "r") as file:
-        title = file.read()
+    """Gets title text from saved file"""
 
-    return title
+    return get_text(f"{TEXT_FOLDER}{form_name}/title.txt")
 
 def get_subtitle(form_name: str) -> str:
-    with open(TEXT_FOLDER + form_name + "/subtitle.txt", "r") as file:
-        subtitle = file.read()
+    """Gets subtitle text from saved file"""
 
-    return subtitle
+    return get_text(f"{TEXT_FOLDER}{form_name}/subtitle.txt")
 
 def get_body(form_name: str) -> str:
-    with open(TEXT_FOLDER + form_name + "/body.txt", "r") as file:
-        text = file.read()
+    """Gets body text from saved file"""
 
-    return text
-
+    return get_text(f"{TEXT_FOLDER}{form_name}/body.txt")
 
 def main():
-    generate_PDF("test1", "Gerald", "consent1")
+    """Testing"""
+
+    generate_pdf("test1", "Gerald", "consent1")
 
 
 if __name__ == "__main__":
     main()
-
-
-    
