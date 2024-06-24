@@ -7,11 +7,12 @@ from datetime import datetime
 import logging
 from fpdf import FPDF
 
-TEXT_FOLDER = "form_text/"
-SIGNATURE_FOLDER = "signatures/"
-FONTS_FOLDER = "fonts/"
-FONT_CONFIG = f"{FONTS_FOLDER}font_config.json"
-LOGO_FILE = "logo/logo.png"
+TEXT_FOLDER = "form_text"
+SIGNATURE_FOLDER = "signatures"
+FONTS_FOLDER = "fonts"
+LOGO_FOLDER = "logo"
+FONT_CONFIG = f"{FONTS_FOLDER}/font_config.json"
+LOGO_FILE = f"{LOGO_FOLDER}/logo.png"
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
@@ -46,7 +47,7 @@ def generate_pdf(token: str, client_name: str, form_name: str) -> None:
         pdf.cell(0, 15, txt = "", ln = True)
 
         # Add signature
-        pdf.image(f"{SIGNATURE_FOLDER}{token}.png", h = 20)
+        pdf.image(f"{SIGNATURE_FOLDER}/{token}.png", h = 20)
 
         # Space
         pdf.cell(0, 5, txt = "", ln = True)
@@ -89,7 +90,7 @@ def add_font(pdf: FPDF, font_name: str, size: int) -> None:
     """Adds a font to a pdf"""
 
     try:
-        pdf.add_font(font_name, "", f"{FONTS_FOLDER}{font_name}.ttf", uni=True)
+        pdf.add_font(font_name, "", f"{FONTS_FOLDER}/{font_name}.ttf", uni=True)
         pdf.set_font(font_name, size=size)
     except RuntimeError as e:
         logging.error("Font %s not found: %s", font_name, e)
@@ -99,17 +100,17 @@ def add_font(pdf: FPDF, font_name: str, size: int) -> None:
 def get_title(form_name: str) -> str:
     """Gets title text from saved file"""
 
-    return get_text(f"{TEXT_FOLDER}{form_name}/title.txt")
+    return get_text(f"{TEXT_FOLDER}/{form_name}/title.txt")
 
 def get_subtitle(form_name: str) -> str:
     """Gets subtitle text from saved file"""
 
-    return get_text(f"{TEXT_FOLDER}{form_name}/subtitle.txt")
+    return get_text(f"{TEXT_FOLDER}/{form_name}/subtitle.txt")
 
 def get_body(form_name: str) -> str:
     """Gets body text from saved file"""
 
-    return get_text(f"{TEXT_FOLDER}{form_name}/body.txt")
+    return get_text(f"{TEXT_FOLDER}/{form_name}/body.txt")
 
 def main():
     """Testing"""
