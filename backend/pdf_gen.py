@@ -12,9 +12,7 @@ from backend.fonts.fonts import Fonts
 
 TEXT_FOLDER = "form_text"
 SIGNATURE_FOLDER = "signatures"
-FONTS_FOLDER = "fonts"
 LOGO_FOLDER = "logo"
-FONT_CONFIG = f"{FONTS_FOLDER}/font_config.json"
 LOGO_FILE = f"{LOGO_FOLDER}/logo.png"
 
 
