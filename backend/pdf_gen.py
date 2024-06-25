@@ -5,6 +5,7 @@ PDF generator script
 import json
 from datetime import datetime
 import logging
+from typing import List
 from fpdf import FPDF
 from doc_printing import Document
 from backend.fonts.fonts import Fonts
@@ -28,7 +29,7 @@ class GeneratePDF:
     def __init__(self):
         self.pdf = FPDF()
 
-    def generate_pdf(self, token: str, client_name: str, form_name: str) -> None:
+    def generate_pdf(self, token: str, client_name: str, form_name: str, consent_flags: List[bool]) -> None:
         """Generates a PDF document with the specified token, client name, and form name"""
         self.pdf.add_page()
 
@@ -40,7 +41,7 @@ class GeneratePDF:
 
             # Print document text
             form_dict = self._get_json_dict(form_name)
-            document: Document = Document(self.pdf, fonts, form_dict["document"])
+            document: Document = Document(self.pdf, fonts, consent_flags, form_dict["document"])
             document.print()
 
             # Space
@@ -77,7 +78,7 @@ class GeneratePDF:
 def main():
     """Testing"""
     generator = GeneratePDF()
-    generator.generate_pdf("test1", "Gerald", "adult")
+    generator.generate_pdf("test1", "Gerald", "adult", [True, False, True])
 
 
 if __name__ == "__main__":

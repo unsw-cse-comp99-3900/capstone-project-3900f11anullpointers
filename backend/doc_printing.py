@@ -6,11 +6,11 @@ from backend.fonts.fonts import Fonts
 
 class Document:
     """Document class"""
-    def __init__(self, pdf: FPDF, fonts: Fonts, doc: dict):
+    def __init__(self, pdf: FPDF, fonts: Fonts, consent_flags: List[bool], doc: dict):
         self.pdf = pdf
         self.fonts = fonts
         self.title = Title(pdf, fonts, doc["title"])
-        self.sections = Sections(pdf, fonts, doc["sections"])
+        self.sections = Sections(pdf, fonts, consent_flags, doc["sections"])
 
     def print(self):
         """Prints the document to the pdf"""
@@ -57,12 +57,12 @@ class InfoSection(Section):
 
 class ConsentSection(Section):
     """Consent section class"""
-    def __init__(self, pdf: FPDF, fonts: Fonts, info: Dict[str, Any]):
+    def __init__(self, pdf: FPDF, fonts: Fonts, accepted: bool, info: Dict[str, Any]):
         self.pdf = pdf
         self.fonts = fonts
         self.subtitle = Subtitle(pdf, fonts, info["subtitle"])
         # TODO: pass in the accepted flag
-        self.body = ConsentBody(pdf, fonts, False, info["body"])
+        self.body = ConsentBody(pdf, fonts, accepted, info["body"])
         if info["footnote"] is None:
             self.footnote = None
         else:
@@ -82,23 +82,28 @@ class ConsentSection(Section):
 
 class Sections:
     """Sections class"""
-    def __init__(self, pdf: FPDF, fonts: Fonts, sections: List[Dict[str, Any]]):
+    def __init__(self, pdf: FPDF, fonts: Fonts, consent_flags: List[bool], sections: List[Dict[str, Any]]):
         self.pdf = pdf
         self.fonts = fonts
-        self.sections = self._convert_to_sections(sections)
+        self.sections = self._convert_to_sections(consent_flags, sections)
 
     def print(self):
         """Prints the sections to the pdf"""
         for section in self.sections:
             section.print()
 
-    def _convert_to_sections(self, sections: List[Dict[str, Any]]) -> List[Section]:
+    def _convert_to_sections(self, consent_flags: List[bool], sections: List[Dict[str, Any]]) -> List[Section]:
         output = []
+        i = 0
         for section in sections:
             if section["type"] == "info":
                 output.append(InfoSection(self.pdf, self.fonts, section))
             if section["type"] == "consent":
-                output.append(ConsentSection(self.pdf, self.fonts, section))
+                if i < len(consent_flags):
+                    output.append(ConsentSection(self.pdf, self.fonts, consent_flags[i], section))
+                else: # If no bool has been recorded default to no consent
+                    output.append(ConsentSection(self.pdf, self.fonts, False, section))
+                i += 1
 
         return output
 
