@@ -1,5 +1,6 @@
 {
-    "title": "Roboto-Bold",
-    "subtitle": "Roboto-Regular",
-    "body": "Roboto-Regular"
+    "title": "Roboto-Black",
+    "subtitle": "Roboto-Bold",
+    "body": "Roboto-Regular",
+    "body_bold": "Roboto-Bold"
 }
