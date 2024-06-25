@@ -29,7 +29,8 @@ class GeneratePDF:
     def __init__(self):
         self.pdf = FPDF()
 
-    def generate_pdf(self, token: str, client_name: str, form_name: str, consent_flags: List[bool]) -> None:
+    def generate_pdf(self, token: str, client_name: str, form_name: str,
+                     consent_flags: List[bool]) -> None:
         """Generates a PDF document with the specified token, client name, and form name"""
         self.pdf.add_page()
 

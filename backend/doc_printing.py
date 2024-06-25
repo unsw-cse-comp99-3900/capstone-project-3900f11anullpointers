@@ -61,7 +61,6 @@ class ConsentSection(Section):
         self.pdf = pdf
         self.fonts = fonts
         self.subtitle = Subtitle(pdf, fonts, info["subtitle"])
-        # TODO: pass in the accepted flag
         self.body = ConsentBody(pdf, fonts, accepted, info["body"])
         if info["footnote"] is None:
             self.footnote = None
@@ -82,7 +81,8 @@ class ConsentSection(Section):
 
 class Sections:
     """Sections class"""
-    def __init__(self, pdf: FPDF, fonts: Fonts, consent_flags: List[bool], sections: List[Dict[str, Any]]):
+    def __init__(self, pdf: FPDF, fonts: Fonts, consent_flags: List[bool],
+                 sections: List[Dict[str, Any]]):
         self.pdf = pdf
         self.fonts = fonts
         self.sections = self._convert_to_sections(consent_flags, sections)
@@ -92,7 +92,8 @@ class Sections:
         for section in self.sections:
             section.print()
 
-    def _convert_to_sections(self, consent_flags: List[bool], sections: List[Dict[str, Any]]) -> List[Section]:
+    def _convert_to_sections(self, consent_flags: List[bool],
+                             sections: List[Dict[str, Any]]) -> List[Section]:
         output = []
         i = 0
         for section in sections:
