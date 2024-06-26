@@ -7,7 +7,7 @@ from datetime import datetime
 import logging
 from typing import List
 from fpdf import FPDF
-from doc_printing import Document
+from backend.doc_printing import Document
 from backend.fonts.fonts import Fonts
 
 TEXT_FOLDER = "form_text"
@@ -20,12 +20,14 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
 
 class GeneratePDF:
-    """
-    Class used to generate a consent form PDF
-    """
+    """Class used to generate a consent form PDF"""
 
     def __init__(self):
         self.pdf = FPDF()
+        try:
+            self.fonts = Fonts()
+        except (RuntimeError, FileNotFoundError, json.JSONDecodeError) as e:
+            logging.error("PDF generator cannot be made: %s", e)
 
     def generate_pdf(self, token: str, client_name: str, form_name: str,
                      consent_flags: List[bool]) -> None:
@@ -33,14 +35,12 @@ class GeneratePDF:
         self.pdf.add_page()
 
         try:
-            fonts: Fonts = Fonts()
-
             # Add logo
             self.pdf.image(LOGO_FILE, w=25, x=15, y=11)
 
             # Print document text
             form_dict = self._get_json_dict(form_name)
-            document: Document = Document(self.pdf, fonts, consent_flags, form_dict["document"])
+            document: Document = Document(self.pdf, self.fonts, consent_flags, form_dict["document"])
             document.print()
 
             # Space
@@ -62,7 +62,7 @@ class GeneratePDF:
             self.pdf.output(f"{token}.pdf")
             logging.info("%s.pdf successfully generated", token)
 
-        except (RuntimeError, FileNotFoundError, json.JSONDecodeError) as e:
+        except RuntimeError as e:
             logging.error("PDF generation failed: %s", e)
 
 
