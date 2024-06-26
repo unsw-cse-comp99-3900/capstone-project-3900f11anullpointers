@@ -7,8 +7,8 @@ from datetime import datetime
 import logging
 from typing import List
 from fpdf import FPDF
-from backend.doc_printing import Document
-from backend.fonts.fonts import Fonts
+from backend.src.doc_printing import Document
+from backend.src.fonts.fonts import Fonts
 
 TEXT_FOLDER = "form_text"
 SIGNATURE_FOLDER = "signatures"

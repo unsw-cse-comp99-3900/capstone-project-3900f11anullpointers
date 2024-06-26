@@ -3,8 +3,8 @@ import unittest
 from unittest.mock import MagicMock
 from fpdf import FPDF
 
-from backend.fonts.fonts import Fonts
-from backend.doc_printing import (
+from backend.src.fonts.fonts import Fonts
+from backend.src.doc_printing import (
     Document,
     Title,
     InfoSection,
