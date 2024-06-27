@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from 'react';
 
 const MainBody = () => {
@@ -13,6 +13,8 @@ const MainBody = () => {
     consent: false,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const totalSteps = 4;
 
   const handleChange = (e: { target: { name: any; value: any; type: any; checked: any; }; }) => {
     const { name, value, type, checked } = e.target;
@@ -43,6 +45,7 @@ const MainBody = () => {
     <div className="flex flex-col">
       <div className="flex-grow flex items-center justify-center">
         <div className={`max-w-3xl mx-auto p-8 font-roboto bg-primary-foreground shadow-md rounded-lg ${textSize}`}>
+          <ProgressBar step={step} totalSteps={totalSteps} />
           <form onSubmit={handleSubmit} className="space-y-6">
             {step === 0 && (
               <div className="text-center py-16">
@@ -242,3 +245,18 @@ const MainBody = () => {
 };
 
 export default MainBody;
+
+
+
+const ProgressBar = ({ step, totalSteps }: { step: number, totalSteps: number }) => {
+  const progress = (step / totalSteps) * 100;
+
+  return (
+    <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+      <div
+        className="bg-blue-500 h-2.5 rounded-full transition-width duration-300"
+        style={{ width: `${progress}%` }}
+      ></div>
+    </div>
+  );
+};
