@@ -7,12 +7,12 @@ from datetime import datetime
 import logging
 from typing import List
 from fpdf import FPDF
-from backend.src.doc_printing import Document
-from backend.src.fonts.fonts import Fonts
+from .doc_printing import Document
+from .fonts.fonts import Fonts
 
-TEXT_FOLDER = "form_text"
-SIGNATURE_FOLDER = "signatures"
-LOGO_FOLDER = "logo"
+TEXT_FOLDER = "src/form_text"
+SIGNATURE_FOLDER = "src/signatures"
+LOGO_FOLDER = "src/logo"
 LOGO_FILE = f"{LOGO_FOLDER}/logo.png"
 
 
@@ -59,7 +59,9 @@ class GeneratePDF:
             date: str = datetime.now().strftime("%d %B %Y")
             self.pdf.cell(0, 5, txt = date, ln = True, align = "L")
 
-            self.pdf.output(f"{token}.pdf")
+            pdf_path = f"/app/pdfs/{token}.pdf"  # Path where PDF will be saved
+
+            self.pdf.output(pdf_path)
             logging.info("%s.pdf successfully generated", token)
 
         except RuntimeError as e:
@@ -74,11 +76,11 @@ class GeneratePDF:
             logging.error("Cannot read {form_name} config file: %s", e)
             raise
 
-def main():
-    """Testing"""
-    generator = GeneratePDF()
-    generator.generate_pdf("test1", "Gerald", "adult", [True, False, True])
+# def main():
+    # """Testing"""
+    # generator = GeneratePDF()
+    # generator.generate_pdf("test1", "Gerald", "adult", [True, False, True])
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

@@ -2,7 +2,7 @@
 from typing import List, Dict, Any
 from abc import ABC, abstractmethod
 from fpdf import FPDF
-from backend.src.fonts.fonts import Fonts
+from .fonts.fonts import Fonts
 
 class Document:
     """Document class"""

@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3030:3030"
+    volumes:
+      - ./pdfs:/app/pdfs
     depends_on:
       - postgres
       - redis
