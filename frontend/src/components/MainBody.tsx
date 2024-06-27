@@ -13,10 +13,11 @@ const MainBody = () => {
     consent: false,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const totalSteps = 4;
 
-  const handleChange = (e: { target: { name: any; value: any; type: any; checked: any; }; }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -32,13 +33,41 @@ const MainBody = () => {
     setStep((prevStep) => prevStep - 1);
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep(4);
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log(result);
+      setStep(4); // Proceed to the success message step
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('There was a problem with your fetch operation:', error);
+        setErrorMessage(error.message);
+      } else {
+        console.error('Unexpected error', error);
+        setErrorMessage('An unexpected error occurred');
+      }
+      setIsModalOpen(true);
+    }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setErrorMessage('');
   };
 
   return (
@@ -227,14 +256,11 @@ const MainBody = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl mb-4 font-lora">Session Timeout</h2>
-            <p className="mb-4">Your session is about to expire. Would you like to extend your session?</p>
-            <div className="flex justify-end space-x-4">
-              <button onClick={closeModal} className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition">
-                Cancel
-              </button>
+            <h2 className="text-2xl mb-4 font-lora">Error</h2>
+            <p className="mb-4">{errorMessage}</p>
+            <div className="flex justify-end">
               <button onClick={closeModal} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
-                Extend Session
+                Close
               </button>
             </div>
           </div>
