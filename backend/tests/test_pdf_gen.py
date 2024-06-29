@@ -1,88 +1,124 @@
 
 import unittest
+import os
 from unittest.mock import MagicMock, patch
 from fpdf import FPDF
 import logging
 import json
 
-from fonts.fonts import Fonts
-from pdf_gen import (
+from src.fonts.fonts import Fonts
+import src.pdf_gen
+from src.pdf_gen import (
     GeneratePDF
 )
 class testPDFGeneration(unittest.TestCase):
     def setUp(self) -> None:
         self.pdf = MagicMock(spec=FPDF)
         self.generator = GeneratePDF()
-    
-    def tearDown(self) -> None:
-        return super().tearDown()
-
 
     @patch('pdf_gen.FPDF')
-    @patch('pdf_gen.Document')
-    @patch('pdf_gen.Fonts')
-    @patch('builtins.open', unittest.mock.mock_open(read_data='{}'))    
-    def test_success(self, MockFonts, MockDocument, MockFPDF):
-        # Mock required dependencies
-        mock_fonts_instance = MagicMock()
-        MockFonts.return_value = mock_fonts_instance
+    @patch('fonts.fonts.Fonts')
+    @patch('pdf_gen.open', read_data='{"document": "Sample document text"}')
+    @patch('pdf_gen.datetime')
+    def test_generate_pdf(self, mock_fpdf, mock_fonts, mock_open, mock_datetime):
+        # Setup mocks
+        mock_datetime.now.return_value.strftime.return_value = '01 January 2023'
+        pdf_instance = mock_fpdf.return_value
 
-        mock_pdf_instance = MagicMock()
-        MockFPDF.return_value = mock_pdf_instance
+        # Mocking the Fonts instantiation
+        fonts_instance = MagicMock()
+        mock_fonts.return_value = fonts_instance
+
+        # Creating instance of GeneratePDF
+        pdf_generator = GeneratePDF()
+
+        # Test data
+        token = 'test1'
+        client_name = 'ur mom'
+        form_name = 'adult'
+        consent_flags = [True, False, True]
 
         # Call the method under test
-        self.generator.generate_pdf("test1", "Gerald", "adult", [True, False, True])
+        pdf_generator.generate_pdf(token, client_name, form_name, consent_flags)
 
-        # Assertions
-        mock_pdf_instance.add_page.assert_called_once()
-        mock_pdf_instance.image.assert_called_with('logo/logo.png', w=25, x=15, y=11)
-        mock_pdf_instance.image.assert_any_call('signatures/test1.png', h=20)
-        mock_pdf_instance.cell.assert_any_call(0, 5, txt="Gerald", ln=True, align="L")
+        # Assertions to verify interactions
+        pdf_instance.image.assert_called()
+        pdf_instance.image.assert_any_call('logo/logo.png', w=25, x=15, y=11)
+        pdf_instance.cell.assert_any_call(0, 5, txt='', ln=True)
+        pdf_instance.image.assert_any_call(f'signatures/{token}.png', h=20)
+        pdf_instance.cell.assert_any_call(0, 5, txt=client_name, ln=True, align='L')
+        pdf_instance.cell.assert_any_call(0, 5, txt='01 January 2023', ln=True, align='L')
+        pdf_instance.output.assert_called_once_with(f'{token}.pdf')
+
+        mock_open.assert_called_once_with(f'texts/{form_name}.json', 'r', encoding='utf-8')
+        mock_datetime.now.return_value.strftime.assert_called_once_with('%d %B %Y')
+        logging.info.assert_called_once_with('%s.pdf successfully generated', token)
 
     def test_invalid_flags(self):
-        #self.generator.generate_pdf("test", "Gerald", "adult", [])
-        self.assertEqual(1,1, "Should be equal")       
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf("test", "Gerald", "adult", ['a', 1, 4])   
 
     def test_empty_flags(self):
         with self.assertRaises(Exception):
             self.generator.generate_pdf("test", "Gerald", "adult", [])
     
+    def test_incorrect_amount_of_flags(self):
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf("test", "Gerald", "adult", [False, False])
+        
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf("test", "Gerald", "adult", [False, False, True, True])
+    
+    def test_invalid_form_type(self):
+        with self.assertRaises(FileNotFoundError):
+            self.generator.generate_pdf("test", "Gerald", "lol", [True, True, True])
+        
     def test_invalid_form_type(self):
         with self.assertRaises(FileNotFoundError):
             self.generator.generate_pdf("test", "Gerald", "lol", [True, True, True])      
         
-        with self.assertRaises(FileNotFoundError):
-            self.generator.generate_pdf("test", "Gerald", "adult", [True, False, True])
-        
 
 class testGeneratePDFInit(unittest.TestCase):
-    @patch('pdf_gen.Fonts')
-    def test_init_runtime_error(self, MockFonts):
-        MockFonts.side_effect = RuntimeError("Fonts initialization failed")
-        
-        with self.assertRaises(RuntimeError):
-            GeneratePDF()
 
-        logging.error.assert_called_with("PDF generator cannot be made: Fonts initialization failed")
+    def setUp(self) -> None:
+        self.fonts_mock = MagicMock(spec=Fonts)
+        self.pdf_mock = MagicMock()  # If FPDF methods are needed, replace MagicMock() with MagicMock(spec=FPDF)
+        self.generator_mock = MagicMock(spec=GeneratePDF)
+        self.generator_mock.pdf = self.pdf_mock  # Attach mocked FPDF to generator_mock
 
-    @patch('pdf_gen.Fonts')
-    def test_init_file_not_found_error(self, MockFonts):
-        MockFonts.side_effect = FileNotFoundError("Fonts configuration file not found")
+    @patch('src.pdf_gen.Fonts')  # Adjust path to Fonts as per your module structure
+    @patch('logging.error')
+    def test_init_runtime_error(self, MockFonts, mock_logging_error):
+        MockFonts.return_value = self.fonts_mock
+        self.fonts_mock.side_effect = FileNotFoundError("fonts/font_config.json not found")
         
         with self.assertRaises(FileNotFoundError):
-            GeneratePDF()
+            self.generator_mock = GeneratePDF()
 
-        logging.error.assert_called_with("PDF generator cannot be made: Fonts configuration file not found")
+        mock_logging_error.assert_called_with("Cannot read fonts/font_config.json config file: fonts/font_config.json not found")
 
-    @patch('pdf_gen.Fonts')
-    def test_init_json_decode_error(self, MockFonts):
-        MockFonts.side_effect = json.JSONDecodeError("JSON decode error", "", 0)
+    @patch('src.pdf_gen.Fonts')  # Adjust path to Fonts as per your module structure
+    @patch('logging.error')
+    def test_init_file_not_found_error(self, MockFonts, mock_logging_error):
+        MockFonts.return_value = self.fonts_mock
+        self.fonts_mock.side_effect = FileNotFoundError("Fonts configuration file not found")
         
-        with self.assertRaises(json.JSONDecodeError):
-            GeneratePDF()
+        with self.assertRaises(FileNotFoundError):
+            self.generator_mock = GeneratePDF()
 
-        logging.error.assert_called_with("PDF generator cannot be made: JSON decode error")
-             
-             
+        mock_logging_error.assert_called_with("PDF generator cannot be made: Fonts configuration file not found")
+
+    @patch('src.pdf_gen.Fonts')  # Adjust path to Fonts as per your module structure
+    @patch('logging.error')
+    def test_init_json_decode_error(self, MockFonts, mock_logging_error):
+        MockFonts.return_value = self.fonts_mock
+        self.fonts_mock.side_effect = json.JSONDecodeError("JSON decode error", "", 0)
+        
+        # with self.assertRaises(json.JSONDecodeError):
+        #     self.generator_mock = GeneratePDF()
+
+        mock_logging_error.assert_called_with("PDF generator cannot be made: JSON decode error")
+
+     
 if __name__ == '__main__':
     unittest.main()

@@ -2,19 +2,18 @@
 PDF generator script
 """
 
-import json
+import json, os
 from datetime import datetime
 import logging
 from typing import List
 from fpdf import FPDF
-from backend.src.doc_printing import Document
-from backend.src.fonts.fonts import Fonts
+from doc_printing import Document
+from fonts.fonts import Fonts
 
 TEXT_FOLDER = "form_text"
 SIGNATURE_FOLDER = "signatures"
 LOGO_FOLDER = "logo"
 LOGO_FILE = f"{LOGO_FOLDER}/logo.png"
-
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
@@ -28,6 +27,7 @@ class GeneratePDF:
             self.fonts = Fonts()
         except (RuntimeError, FileNotFoundError, json.JSONDecodeError) as e:
             logging.error("PDF generator cannot be made: %s", e)
+            raise
 
     def generate_pdf(self, token: str, client_name: str, form_name: str,
                      consent_flags: List[bool]) -> None:
@@ -71,7 +71,7 @@ class GeneratePDF:
             with open(f"{TEXT_FOLDER}/{form_name}.json", "r", encoding="utf-8") as file:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError) as e:
-            logging.error("Cannot read {form_name} config file: %s", e)
+            logging.error(f"Cannot read {form_name} config file: %s", e)
             raise
 
 def main():

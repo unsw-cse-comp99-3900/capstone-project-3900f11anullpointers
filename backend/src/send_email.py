@@ -99,7 +99,7 @@ def send_emails(server, port, email_from, email_to, pswd, attachment_name, attac
     msg.attach(attachment_package)
     
     text = msg.as_string()
-    
+    TIE_server = None
     try:
         TIE_server = smtplib.SMTP(server, port)
         TIE_server.starttls()
@@ -109,8 +109,10 @@ def send_emails(server, port, email_from, email_to, pswd, attachment_name, attac
         print(f"Email successfully sent to - {email_to}")
     except Exception as e:
         print(e)
+        raise
     finally:
-        TIE_server.quit()
+        if TIE_server:
+            TIE_server.quit()
 
 def email_test():
     SERVER = "smtp.gmail.com"

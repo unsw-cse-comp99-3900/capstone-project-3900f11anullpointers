@@ -4,8 +4,8 @@ import unittest
 from unittest.mock import MagicMock
 from fpdf import FPDF
 
-from fonts.fonts import Fonts
-from doc_printing import (
+from src.fonts.fonts import Fonts
+from src.doc_printing import (
     Document,
     Title,
     InfoSection,
