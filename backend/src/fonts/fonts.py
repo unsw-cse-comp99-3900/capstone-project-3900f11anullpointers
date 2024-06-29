@@ -7,7 +7,7 @@ TITLE_SIZE = 16
 SUBTITLE_SIZE = 14
 BODY_SIZE = 10
 
-FONTS_FOLDER = "src/fonts"
+FONTS_FOLDER = "fonts"
 FONTS_FILE = "font_config.json"
 
 class Fonts:
