@@ -5,8 +5,6 @@ from email.mime.base import MIMEBase
 from email import encoders
 import os
 
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
-
 def send_emails(server, port, email_from, email_to, pswd, attachment_name, attachment):
     subject = "Patient consent form"
     name = "[Recipient's Name]"
@@ -117,7 +115,7 @@ def email_test():
     PORT = 587
 
     EMAIL_FROM = "anullpointers@gmail.com"
-    EMAIL_TO = "z5361272@ad.unsw.edu.au"
+    EMAIL_TO = "z5425707@ad.unsw.edu.au"
 
     # app password
     PSWD = "rtrjqzvtyuecbyxh"
