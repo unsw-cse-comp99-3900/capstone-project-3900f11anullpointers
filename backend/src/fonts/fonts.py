@@ -1,5 +1,5 @@
 """Fonts class"""
-import json
+import json, os
 import logging
 from fpdf import FPDF
 

@@ -73,31 +73,39 @@ class testPDFGeneration(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             self.generator.generate_pdf("test", "Gerald", "lol", [True, True, True])
         
-    def test_invalid_form_type(self):
-        with self.assertRaises(FileNotFoundError):
-            self.generator.generate_pdf("test", "Gerald", "lol", [True, True, True])      
+ 
         
 
 class testGeneratePDFInit(unittest.TestCase):
 
     def setUp(self) -> None:
         self.fonts_mock = MagicMock(spec=Fonts)
-        self.pdf_mock = MagicMock()  # If FPDF methods are needed, replace MagicMock() with MagicMock(spec=FPDF)
         self.generator_mock = MagicMock(spec=GeneratePDF)
-        self.generator_mock.pdf = self.pdf_mock  # Attach mocked FPDF to generator_mock
+        self.generator_mock.pdf = MagicMock(spec=FPDF) 
+        self.generator_mock.Fonts = MagicMock(spec=Fonts)
 
-    @patch('src.pdf_gen.Fonts')  # Adjust path to Fonts as per your module structure
+    @patch('src.fonts.fonts.Fonts')
+    @patch('src.pdf_gen.FPDF')
+    def test_init_successful(self, mock_fonts, mock_fpdf):
+        """Test successful initialization of GeneratePDF"""
+        mock_fonts.return_value = MagicMock()
+        instance = GeneratePDF()
+        self.assertIsInstance(instance, GeneratePDF)
+        mock_fpdf.assert_called_once()
+        mock_fonts.assert_called_once()
+
+
+    @patch('src.pdf_gen.Fonts')
     @patch('logging.error')
     def test_init_runtime_error(self, MockFonts, mock_logging_error):
         MockFonts.return_value = self.fonts_mock
-        self.fonts_mock.side_effect = FileNotFoundError("fonts/font_config.json not found")
+        self.generator_mock.Fonts.side_effect = FileNotFoundError("fonts/font_config.json not found")
         
         with self.assertRaises(FileNotFoundError):
-            self.generator_mock = GeneratePDF()
-
+            GeneratePDF()       
         mock_logging_error.assert_called_with("Cannot read fonts/font_config.json config file: fonts/font_config.json not found")
 
-    @patch('src.pdf_gen.Fonts')  # Adjust path to Fonts as per your module structure
+    @patch('src.pdf_gen.Fonts')
     @patch('logging.error')
     def test_init_file_not_found_error(self, MockFonts, mock_logging_error):
         MockFonts.return_value = self.fonts_mock
@@ -108,14 +116,14 @@ class testGeneratePDFInit(unittest.TestCase):
 
         mock_logging_error.assert_called_with("PDF generator cannot be made: Fonts configuration file not found")
 
-    @patch('src.pdf_gen.Fonts')  # Adjust path to Fonts as per your module structure
+    @patch('src.pdf_gen.Fonts')
     @patch('logging.error')
     def test_init_json_decode_error(self, MockFonts, mock_logging_error):
         MockFonts.return_value = self.fonts_mock
         self.fonts_mock.side_effect = json.JSONDecodeError("JSON decode error", "", 0)
         
-        # with self.assertRaises(json.JSONDecodeError):
-        #     self.generator_mock = GeneratePDF()
+        with self.assertRaises(json.JSONDecodeError):
+            self.generator_mock = GeneratePDF()
 
         mock_logging_error.assert_called_with("PDF generator cannot be made: JSON decode error")
 
