@@ -51,8 +51,7 @@ const MainBody = () => {
       }
 
       const result = await response.json();
-      console.log(result);
-      setStep(4); // Proceed to the success message step
+      setStep(4);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('There was a problem with your fetch operation:', error);
