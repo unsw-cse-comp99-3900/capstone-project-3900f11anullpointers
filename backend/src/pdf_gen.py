@@ -7,6 +7,7 @@ from datetime import datetime
 import logging
 from typing import List
 from fpdf import FPDF
+import os
 from .doc_printing import Document
 from .fonts.fonts import Fonts
 
@@ -44,28 +45,31 @@ class GeneratePDF:
             document.print()
 
             # Space
-            self.pdf.cell(0, 5, txt = "", ln = True)
+            self.pdf.cell(0, 5, text = "", ln = True)
 
             # Add signature
             self.pdf.image(f"{SIGNATURE_FOLDER}/{token}.png", h = 20)
 
             # Space
-            self.pdf.cell(0, 5, txt = "", ln = True)
+            self.pdf.cell(0, 5, text = "", ln = True)
 
             # Add client's name
-            self.pdf.cell(0, 5, txt = client_name, ln = True, align = "L")
+            self.pdf.cell(0, 5, text = client_name, ln = True, align = "L")
 
             # Add date
             date: str = datetime.now().strftime("%d %B %Y")
-            self.pdf.cell(0, 5, txt = date, ln = True, align = "L")
+            self.pdf.cell(0, 5, text = date, ln = True, align = "L")
 
-            pdf_path = f"/app/pdfs/{token}.pdf"  # Path where PDF will be saved
-
-            self.pdf.output(pdf_path)
+            print(os.getcwd())
+            
+            pdf_path = f"{token}.pdf"  # Path where PDF will be saved
+            print(isinstance(pdf_path, os.PathLike))
+            self.pdf.output(name=pdf_path)
             logging.info("%s.pdf successfully generated", token)
 
-        except RuntimeError as e:
-            logging.error("PDF generation failed: %s", e)
+        except Exception as e:
+            logging.error("PDF generation failed: %s %s", e, type(e))
+            raise
 
 
     def _get_json_dict(self, form_name: str):
