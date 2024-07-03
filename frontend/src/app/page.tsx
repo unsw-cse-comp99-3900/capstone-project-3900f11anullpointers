@@ -9,9 +9,7 @@ import { useState } from "react";
 import {
   Card,
   CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardFooter
 } from "@/components/ui/card";
 import { CardHeaderContent } from "@/components/CardHeaderContent";
 import { FormStep1, FormStep2, FormStep3, FormSuccess } from "@/components/Forms";
@@ -20,7 +18,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({ subsets: ["latin"] });
 type Input = z.infer<typeof consentSchema>;
 
 export default function Home() {
@@ -56,8 +53,6 @@ export default function Home() {
     "2": FormStep3,
     "3": FormSuccess,
   };
-
-  const CurrentStepComponent = formSteps[formStep];
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">

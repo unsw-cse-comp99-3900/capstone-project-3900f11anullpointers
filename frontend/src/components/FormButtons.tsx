@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 
 type FormButtonsProps = {
@@ -11,7 +10,7 @@ type FormButtonsProps = {
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
   setIsSubmitted: (submitted: boolean) => void;
-  handleRestart: () => void; // Add this line
+  handleRestart: () => void;
 };
 
 export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, setIsSubmitted, handleRestart }: FormButtonsProps) {
