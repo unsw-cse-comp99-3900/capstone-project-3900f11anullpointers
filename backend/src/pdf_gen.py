@@ -7,7 +7,6 @@ from datetime import datetime
 import logging
 from typing import List
 from fpdf import FPDF
-import os
 from .doc_printing import Document
 from .fonts.fonts import Fonts
 
@@ -59,11 +58,8 @@ class GeneratePDF:
             # Add date
             date: str = datetime.now().strftime("%d %B %Y")
             self.pdf.cell(0, 5, text = date, ln = True, align = "L")
-
-            print(os.getcwd())
             
             pdf_path = f"{token}.pdf"  # Path where PDF will be saved
-            print(isinstance(pdf_path, os.PathLike))
             self.pdf.output(name=pdf_path)
             logging.info("%s.pdf successfully generated", token)
 
