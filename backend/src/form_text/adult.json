@@ -1,0 +1,30 @@
+{
+    "document": {
+        "title": "PATIENT CONSENT AND INFORMATION SHEET",
+        "sections": [
+            {
+                "type": "info",
+                "subtitle": "TEACHING AND RESEARCH",
+                "body": "The UNSW Optometry clinic is part of the School of Optometry and Vision Science, UNSW Australia. It is a teaching facility for both undergraduate and postgraduate optometry students, providing excellence in eye care and is the forefront of the latest research"
+            },
+            {
+                "type": "consent",
+                "subtitle": "USE OF CLINICAL INFORMATION IN RESEARCH STUDIES",
+                "body": "to the use of my de-identified* clinical information for the purpose of research",
+                "footnote": "* de-identified means we exclude your name and contact details from the research database"
+            },
+            {
+                "type": "consent",
+                "subtitle": "CONTACT FOR FUTURE RESEARCH STUDIES",
+                "body": "to be contacted with invitations to take part in teaching or clinical studies",
+                "footnote": null
+            },
+            {
+                "type": "consent",
+                "subtitle": "STUDENT CLINIC CONSENT",
+                "body": "to be examined by a student under supervision",
+                "footnote": null
+            }
+        ]
+    }
+}
