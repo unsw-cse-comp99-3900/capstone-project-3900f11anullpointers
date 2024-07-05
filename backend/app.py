@@ -5,6 +5,7 @@ from src.send_email import send_emails
 import os
 import logging
 
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
@@ -36,7 +37,6 @@ def post_method():
         consent = received_data.get('consent')
         consent_flags = [consent['researchConsent'], False, False]
 
-        
         very_special_name = "test1"
 
         # Generate PDF with dynamic data

@@ -61,6 +61,7 @@ class GeneratePDF:
  
             #pdf_path = f"/app/pdfs/{token}.pdf"  # Path where PDF will be saved
             pdf_path = f"{token}.pdf"
+
             self.pdf.output(name=pdf_path)
             logging.info("%s.pdf successfully generated", token)
 
