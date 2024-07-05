@@ -59,7 +59,9 @@ class GeneratePDF:
             date: str = datetime.now().strftime("%d %B %Y")
             self.pdf.cell(0, 5, text = date, ln = True, align = "L")
  
-            pdf_path = f"/app/pdfs/{token}.pdf"  # Path where PDF will be saved
+            #pdf_path = f"/app/pdfs/{token}.pdf"  # Path where PDF will be saved
+            pdf_path = f"{token}.pdf"
+
             self.pdf.output(name=pdf_path)
             logging.info("%s.pdf successfully generated", token)
 
