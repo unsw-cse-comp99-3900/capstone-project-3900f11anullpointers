@@ -62,7 +62,7 @@ def post_method():
         generator.generate_pdf(very_special_name, received_data['name'], "adult", consent_flags)
 
         # Send email of PDF
-        send_email_with_pdf(pdf_path, "z5425707@ad.unsw.edu.au")
+        send_email_with_pdf(pdf_path, "nicholas.abreu@outlook.com")
 
         # Delete the generated PDF file from the server
         if os.path.exists(pdf_path):
