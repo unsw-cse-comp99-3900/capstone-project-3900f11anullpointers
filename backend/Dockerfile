@@ -6,7 +6,6 @@ WORKDIR /app
 
 # Copy the backend code to the container
 COPY . .
-COPY src/fonts /app/fonts
 
 # Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
