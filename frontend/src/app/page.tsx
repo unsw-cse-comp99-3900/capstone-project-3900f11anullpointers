@@ -31,7 +31,7 @@ export default function Home() {
       name: "",
       acceptResearchConsent: false,
       denyResearchConsent: false,
-      acceptStudentConesent: false,
+      acceptStudentConsent: false,
       denyStudentConsent: false,
       signature: ""
     },

@@ -3,7 +3,7 @@ import { z } from "zod";
 export const consentSchema = z.object({
   acceptResearchConsent: z.boolean(),
   denyResearchConsent: z.boolean(),
-  acceptStudentConesent: z.boolean(),
+  acceptStudentConsent: z.boolean(),
   denyStudentConsent: z.boolean(),
   email: z.string().email(),
   name: z
@@ -16,7 +16,7 @@ export const consentSchema = z.object({
 }).refine(
   (schema) => {
     const researchConsentValid = !(schema.acceptResearchConsent && schema.denyResearchConsent);
-    const studentConsentValid = !(schema.acceptStudentConesent && schema.denyStudentConsent);
+    const studentConsentValid = !(schema.acceptStudentConsent && schema.denyStudentConsent);
     return researchConsentValid && studentConsentValid;
   },
   {

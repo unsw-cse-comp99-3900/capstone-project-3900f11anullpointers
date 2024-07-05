@@ -114,7 +114,7 @@ export function FormStep3({ form }: FormStep3Props) {
         <strong>Research Consent:</strong> {values.acceptResearchConsent ? "Accepted" : "Denied"}
       </div>
       <div>
-        <strong>Student Consent:</strong> {values.acceptStudentConesent ? "Accepted" : "Denied"}
+        <strong>Student Consent:</strong> {values.acceptStudentConsent ? "Accepted" : "Denied"}
       </div>
       <FHr />
       <FormDescription>

@@ -18,12 +18,12 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
 
   const handleNext = async () => {
     let fieldsToValidate: string | readonly string[] | undefined = [];
-    if (formStep === 0) {
+/*     if (formStep === 0) {
       fieldsToValidate = ['name', 'email'];
     } else if (formStep === 2) {
       fieldsToValidate = ['signature'];
     }
-
+ */
     const isValid = await trigger(fieldsToValidate);
     isValid && setFormStep(formStep + 1);
   };
@@ -32,19 +32,28 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
     setIsLoading(true);
     const formData = getValues();
 
+    console.log(formData);
     try {
+      const reqFormData = {
+        name: formData.name,
+        email: formData.email,
+        signature: formData.signature,
+        consent: {
+          researchConsent: formData.acceptResearchConsent,
+          studentConsent: formData.acceptStudentConsent,
+        }
+      }
       // For debugging
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+/*       await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsLoading(false);
-      setFormStep(formStep + 1);
+      setFormStep(formStep + 1); */
 
-      // TODO: Fix this up to be appropriate with the backend
-/*       const response = await fetch('http://localhost:3030/post', {
+        const response = await fetch('http://localhost:3030/post', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
          },
-         body: JSON.stringify(formData),
+         body: JSON.stringify(reqFormData),
        });
 
        if (!response.ok) {
@@ -53,7 +62,8 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
        }
 
        setIsLoading(false);
-       setFormStep(formStep + 1); */
+       setFormStep(formStep + 1);
+
     } catch (error: any) {
       setIsLoading(false);
       toast({
