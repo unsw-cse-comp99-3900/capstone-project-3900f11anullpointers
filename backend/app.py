@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # Docker directory where PDFs are stored
-PDF_DIR = ''
+PDF_DIR = '/app/pdfs'
 
 # Function to set up email to be sent.
 def send_email_with_pdf(pdf_path, recipient_email):
