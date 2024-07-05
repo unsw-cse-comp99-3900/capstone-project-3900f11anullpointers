@@ -18,12 +18,12 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
 
   const handleNext = async () => {
     let fieldsToValidate: string | readonly string[] | undefined = [];
-/*     if (formStep === 0) {
+    if (formStep === 0) {
       fieldsToValidate = ['name', 'email'];
     } else if (formStep === 2) {
       fieldsToValidate = ['signature'];
     }
- */
+
     const isValid = await trigger(fieldsToValidate);
     isValid && setFormStep(formStep + 1);
   };
