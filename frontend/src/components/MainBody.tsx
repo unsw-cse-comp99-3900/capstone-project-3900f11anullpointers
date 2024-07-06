@@ -1,19 +1,22 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
+
+const BACKEND_HOST = process.env.NEXT_PUBLIC_HOST;
+const BACKEND_PORT = process.env.NEXT_PUBLIC_BACKEND_PORT;
 
 const MainBody = () => {
   const [step, setStep] = useState(0);
-  const [textSize, setTextSize] = useState('text-base');
+  const [textSize, setTextSize] = useState("text-base");
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    dob: '',
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    dob: "",
     consent: false,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const totalSteps = 4;
 
@@ -21,7 +24,7 @@ const MainBody = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -37,17 +40,19 @@ const MainBody = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://127.0.0.1:3030/post', {
-        method: 'POST',
+      const backendURL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
+      console.log(backendURL);
+      const response = await fetch(`${backendURL}/post`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Network response was not ok');
+        throw new Error(errorData.message || "Network response was not ok");
       }
 
       const result = await response.json();
@@ -55,11 +60,11 @@ const MainBody = () => {
       setStep(4); // Proceed to the success message step
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('There was a problem with your fetch operation:', error);
+        console.error("There was a problem with your fetch operation:", error);
         setErrorMessage(error.message);
       } else {
-        console.error('Unexpected error', error);
-        setErrorMessage('An unexpected error occurred');
+        console.error("Unexpected error", error);
+        setErrorMessage("An unexpected error occurred");
       }
       setIsModalOpen(true);
     }
@@ -67,30 +72,42 @@ const MainBody = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setErrorMessage('');
+    setErrorMessage("");
   };
 
   return (
     <div className="flex flex-col">
       <div className="flex-grow flex items-center justify-center">
-        <div className={`max-w-3xl mx-auto p-8 font-roboto bg-primary-foreground shadow-md rounded-lg ${textSize}`}>
+        <div
+          className={`max-w-3xl mx-auto p-8 font-roboto bg-primary-foreground shadow-md rounded-lg ${textSize}`}
+        >
           <ProgressBar step={step} totalSteps={totalSteps} />
           <form onSubmit={handleSubmit} className="space-y-6">
             {step === 0 && (
               <div className="text-center py-16">
-                <h2 className="text-xl mb-4 font-lora">Welcome to Our Consent Form</h2>
-                <button type="button" onClick={handleNext} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
+                <h2 className="text-xl mb-4 font-lora">
+                  Welcome to Our Consent Form
+                </h2>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+                >
                   Begin
                 </button>
               </div>
             )}
             {step === 1 && (
               <div className="space-y-6">
-                <h2 className="text-2xl mb-4 font-lora">Personal Information</h2>
-                <hr className="border-t-2 border-gray-300 mb-4"/>
+                <h2 className="text-2xl mb-4 font-lora">
+                  Personal Information
+                </h2>
+                <hr className="border-t-2 border-gray-300 mb-4" />
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
-                    <label className="w-32 text-right" htmlFor="name">Name:</label>
+                    <label className="w-32 text-right" htmlFor="name">
+                      Name:
+                    </label>
                     <input
                       type="text"
                       id="name"
@@ -103,7 +120,9 @@ const MainBody = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <label className="w-32 text-right" htmlFor="email">Email:</label>
+                    <label className="w-32 text-right" htmlFor="email">
+                      Email:
+                    </label>
                     <input
                       type="email"
                       id="email"
@@ -116,7 +135,9 @@ const MainBody = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <label className="w-32 text-right" htmlFor="phone">Phone:</label>
+                    <label className="w-32 text-right" htmlFor="phone">
+                      Phone:
+                    </label>
                     <input
                       type="tel"
                       id="phone"
@@ -129,7 +150,9 @@ const MainBody = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <label className="w-32 text-right" htmlFor="address">Address:</label>
+                    <label className="w-32 text-right" htmlFor="address">
+                      Address:
+                    </label>
                     <input
                       type="text"
                       id="address"
@@ -142,7 +165,9 @@ const MainBody = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <label className="w-32 text-right" htmlFor="dob">Date of Birth:</label>
+                    <label className="w-32 text-right" htmlFor="dob">
+                      Date of Birth:
+                    </label>
                     <input
                       type="date"
                       id="dob"
@@ -155,10 +180,14 @@ const MainBody = () => {
                     />
                   </div>
                 </div>
-                <hr className="border-t-2 border-gray-300 mt-4"/>
+                <hr className="border-t-2 border-gray-300 mt-4" />
                 <div className="flex justify-between mt-4">
                   <div className="flex-1"></div>
-                  <button type="button" onClick={handleNext} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+                  >
                     Next
                   </button>
                 </div>
@@ -167,13 +196,37 @@ const MainBody = () => {
             {step === 2 && (
               <div className="space-y-6">
                 <h2 className="text-2xl mb-4 font-lora">Consent</h2>
-                <hr className="border-t-2 border-gray-300 mb-4"/>
+                <hr className="border-t-2 border-gray-300 mb-4" />
                 <div className="p-4 border rounded bg-gray-100 text-left">
                   <p className="mb-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean hendrerit dolor et tempus pretium. Nulla viverra egestas lectus. Fusce ullamcorper vestibulum consectetur. Nunc interdum molestie urna vel blandit. Ut tempus metus nec dui sollicitudin, eget malesuada neque pretium. Phasellus ac libero interdum, laoreet diam quis, tristique elit. Curabitur eleifend tincidunt lectus eget tristique. Sed ac dapibus augue. Vestibulum convallis ornare urna eu laoreet. Morbi et velit a quam sagittis dapibus ut condimentum lectus. Phasellus eget semper diam, ac semper metus. Sed tincidunt, purus at vulputate dictum, ligula orci varius neque, a pellentesque lectus velit sed libero. Donec iaculis tellus mauris, eu mattis arcu blandit sit amet. Praesent ornare condimentum hendrerit.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Aenean hendrerit dolor et tempus pretium. Nulla viverra
+                    egestas lectus. Fusce ullamcorper vestibulum consectetur.
+                    Nunc interdum molestie urna vel blandit. Ut tempus metus nec
+                    dui sollicitudin, eget malesuada neque pretium. Phasellus ac
+                    libero interdum, laoreet diam quis, tristique elit.
+                    Curabitur eleifend tincidunt lectus eget tristique. Sed ac
+                    dapibus augue. Vestibulum convallis ornare urna eu laoreet.
+                    Morbi et velit a quam sagittis dapibus ut condimentum
+                    lectus. Phasellus eget semper diam, ac semper metus. Sed
+                    tincidunt, purus at vulputate dictum, ligula orci varius
+                    neque, a pellentesque lectus velit sed libero. Donec iaculis
+                    tellus mauris, eu mattis arcu blandit sit amet. Praesent
+                    ornare condimentum hendrerit.
                   </p>
                   <p>
-                    In rutrum sed leo vel placerat. Nam pellentesque elementum dolor eu convallis. Quisque dictum nunc turpis, sed dignissim enim mattis varius. Fusce vitae tincidunt leo. Praesent a enim quis nisl volutpat suscipit. Nulla porta tellus id lorem dapibus bibendum. Donec condimentum luctus dolor, et interdum libero sollicitudin porttitor. Nam eu elit posuere, tristique metus quis, condimentum dolor. Aenean molestie accumsan tellus quis vehicula. Etiam egestas hendrerit posuere. Maecenas et mauris ut lectus iaculis aliquet euismod nec eros. Duis vel est quam. Mauris nec volutpat tortor, et scelerisque orci. Pellentesque dapibus nulla non magna maximus facilisis a tempor augue.
+                    In rutrum sed leo vel placerat. Nam pellentesque elementum
+                    dolor eu convallis. Quisque dictum nunc turpis, sed
+                    dignissim enim mattis varius. Fusce vitae tincidunt leo.
+                    Praesent a enim quis nisl volutpat suscipit. Nulla porta
+                    tellus id lorem dapibus bibendum. Donec condimentum luctus
+                    dolor, et interdum libero sollicitudin porttitor. Nam eu
+                    elit posuere, tristique metus quis, condimentum dolor.
+                    Aenean molestie accumsan tellus quis vehicula. Etiam egestas
+                    hendrerit posuere. Maecenas et mauris ut lectus iaculis
+                    aliquet euismod nec eros. Duis vel est quam. Mauris nec
+                    volutpat tortor, et scelerisque orci. Pellentesque dapibus
+                    nulla non magna maximus facilisis a tempor augue.
                   </p>
                   <br />
                   <hr />
@@ -194,12 +247,20 @@ const MainBody = () => {
                   <p className="mb-2 font-bold">Signature:</p>
                   <div className="border border-gray-300 h-24"></div>
                 </div>
-                <hr className="border-t-2 border-gray-300 mt-4"/>
+                <hr className="border-t-2 border-gray-300 mt-4" />
                 <div className="flex justify-between mt-4">
-                  <button type="button" onClick={handleBack} className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition"
+                  >
                     Back
                   </button>
-                  <button type="button" onClick={handleNext} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+                  >
                     Next
                   </button>
                 </div>
@@ -207,8 +268,10 @@ const MainBody = () => {
             )}
             {step === 3 && (
               <div className="space-y-6">
-                <h2 className="text-2xl mb-4 font-lora">Confirm Your Information</h2>
-                <hr className="border-t-2 border-gray-300 mb-4"/>
+                <h2 className="text-2xl mb-4 font-lora">
+                  Confirm Your Information
+                </h2>
+                <hr className="border-t-2 border-gray-300 mb-4" />
                 <div className="space-y-4">
                   <div>
                     <strong>Name:</strong> {formData.name}
@@ -226,15 +289,23 @@ const MainBody = () => {
                     <strong>Date of Birth:</strong> {formData.dob}
                   </div>
                   <div>
-                    <strong>Consent:</strong> {formData.consent ? "Agreed" : "Not Agreed"}
+                    <strong>Consent:</strong>{" "}
+                    {formData.consent ? "Agreed" : "Not Agreed"}
                   </div>
                 </div>
-                <hr className="border-t-2 border-gray-300 mt-4"/>
+                <hr className="border-t-2 border-gray-300 mt-4" />
                 <div className="flex justify-between mt-4">
-                  <button type="button" onClick={handleBack} className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition"
+                  >
                     Back
                   </button>
-                  <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+                  >
                     Submit
                   </button>
                 </div>
@@ -242,9 +313,18 @@ const MainBody = () => {
             )}
             {step === 4 && (
               <div className="text-center py-16">
-                <h2 className="text-2xl mb-4 font-lora">Form Submitted Successfully!</h2>
-                <p className="mb-4">Thank you for submitting the consent form. We have received your information.</p>
-                <button type="button" onClick={() => setStep(0)} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
+                <h2 className="text-2xl mb-4 font-lora">
+                  Form Submitted Successfully!
+                </h2>
+                <p className="mb-4">
+                  Thank you for submitting the consent form. We have received
+                  your information.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setStep(0)}
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+                >
                   Fill Another Form
                 </button>
               </div>
@@ -259,7 +339,10 @@ const MainBody = () => {
             <h2 className="text-2xl mb-4 font-lora">Error</h2>
             <p className="mb-4">{errorMessage}</p>
             <div className="flex justify-end">
-              <button onClick={closeModal} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
+              <button
+                onClick={closeModal}
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+              >
                 Close
               </button>
             </div>
@@ -272,9 +355,13 @@ const MainBody = () => {
 
 export default MainBody;
 
-
-
-const ProgressBar = ({ step, totalSteps }: { step: number, totalSteps: number }) => {
+const ProgressBar = ({
+  step,
+  totalSteps,
+}: {
+  step: number;
+  totalSteps: number;
+}) => {
   const progress = (step / totalSteps) * 100;
 
   return (

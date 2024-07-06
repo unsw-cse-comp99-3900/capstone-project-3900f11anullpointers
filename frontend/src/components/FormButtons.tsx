@@ -4,6 +4,9 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 
+const BACKEND_HOST = process.env.NEXT_PUBLIC_HOST;
+const BACKEND_PORT = process.env.NEXT_PUBLIC_BACKEND_PORT;
+
 type FormButtonsProps = {
   formStep: number;
   setFormStep: (step: number) => void;
@@ -13,15 +16,22 @@ type FormButtonsProps = {
   handleRestart: () => void;
 };
 
-export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, setIsSubmitted, handleRestart }: FormButtonsProps) {
+export function FormButtons({
+  formStep,
+  setFormStep,
+  isLoading,
+  setIsLoading,
+  setIsSubmitted,
+  handleRestart,
+}: FormButtonsProps) {
   const { trigger, getValues } = useFormContext();
 
   const handleNext = async () => {
     let fieldsToValidate: string | readonly string[] | undefined = [];
     if (formStep === 0) {
-      fieldsToValidate = ['name', 'email'];
+      fieldsToValidate = ["name", "email"];
     } else if (formStep === 2) {
-      fieldsToValidate = ['signature'];
+      fieldsToValidate = ["signature"];
     }
 
     const isValid = await trigger(fieldsToValidate);
@@ -41,29 +51,30 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
         consent: {
           researchConsent: formData.acceptResearchConsent,
           studentConsent: formData.acceptStudentConsent,
-        }
-      }
+        },
+      };
       // For debugging
-/*       await new Promise((resolve) => setTimeout(resolve, 1000));
+      /*       await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsLoading(false);
       setFormStep(formStep + 1); */
 
-        const response = await fetch('http://localhost:3030/post', {
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify(reqFormData),
-       });
+      const backendURL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
+      console.log(backendURL);
+      const response = await fetch(`${backendURL}/post`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqFormData),
+      });
 
-       if (!response.ok) {
-         const errorData = await response.json();
-         throw new Error(errorData.message || 'Network response was not ok');
-       }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Network response was not ok");
+      }
 
-       setIsLoading(false);
-       setFormStep(formStep + 1);
-
+      setIsLoading(false);
+      setFormStep(formStep + 1);
     } catch (error: any) {
       setIsLoading(false);
       toast({
@@ -75,21 +86,21 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
   };
 
   return (
-    <div className='flex justify-between'>
+    <div className="flex justify-between">
       {formStep > 0 && formStep < 3 && (
         <Button
-          type='button'
+          type="button"
           variant={"ghost"}
           onClick={() => setFormStep(formStep - 1)}
           disabled={isLoading}
         >
-          <ArrowLeft className='w-4 h-4 mr-2' />
+          <ArrowLeft className="w-4 h-4 mr-2" />
           Go Back
         </Button>
       )}
       {formStep < 2 && (
         <Button
-          type='button'
+          type="button"
           variant={"ghost"}
           className={cn("ml-auto", {
             hidden: formStep === 2,
@@ -97,29 +108,20 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
           onClick={handleNext}
           disabled={isLoading}
         >
-          {formStep === 1 ? 'Review' : 'Next Page'}
-          <ArrowRight className='w-4 h-4 ml-2' />
+          {formStep === 1 ? "Review" : "Next Page"}
+          <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       )}
       {formStep === 2 && (
-        <Button
-          type='button'
-          onClick={handleFinalSubmit}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Submitting...' : 'Submit'}
+        <Button type="button" onClick={handleFinalSubmit} disabled={isLoading}>
+          {isLoading ? "Submitting..." : "Submit"}
         </Button>
       )}
       {formStep === 3 && (
-        <Button
-          className="w-full"
-          type='button'
-          onClick={handleRestart}
-        >
+        <Button className="w-full" type="button" onClick={handleRestart}>
           Restart
         </Button>
       )}
     </div>
   );
 }
-

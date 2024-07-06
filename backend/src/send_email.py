@@ -109,21 +109,3 @@ def send_emails(server, port, email_from, email_to, pswd, attachment_name, attac
         print(e)
     finally:
         TIE_server.quit()
-
-def email_test():
-    SERVER = "smtp.gmail.com"
-    PORT = 587
-
-    EMAIL_FROM = "anullpointers@gmail.com"
-    EMAIL_TO = "z5425707@ad.unsw.edu.au"
-
-    # app password
-    PSWD = "rtrjqzvtyuecbyxh"
-    
-    FILENAME = "test1.pdf"
-    attachment = open(FILENAME, 'rb')
-
-    send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, FILENAME, attachment)
-
-if __name__ == '__main__':
-    email_test()
