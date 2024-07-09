@@ -1,0 +1,15 @@
+.large-text {
+    font-size: 30pt;
+  }
+  
+  .large-text .input {
+    font-size: 18pt;
+  }
+  
+  .large-text .form-label {
+    font-size: 18pt;
+  }
+  
+  .large-text .form-message {
+    font-size: 18pt;
+  }

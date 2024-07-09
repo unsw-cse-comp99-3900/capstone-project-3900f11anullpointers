@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
+import { useThemeContext } from "@/context/theme-context";
 
 type FormButtonsProps = {
   formStep: number;
@@ -15,6 +16,7 @@ type FormButtonsProps = {
 
 export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, setIsSubmitted, handleRestart }: FormButtonsProps) {
   const { trigger, getValues } = useFormContext();
+  const { textLarge } = useThemeContext();
 
   const handleNext = async () => {
     let fieldsToValidate: string | readonly string[] | undefined = [];
@@ -44,11 +46,11 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
         }
       }
       // For debugging
-/*       await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsLoading(false);
-      setFormStep(formStep + 1); */
+      setFormStep(formStep + 1);
 
-        const response = await fetch('http://localhost:3030/post', {
+/*         const response = await fetch('http://localhost:3030/post', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
@@ -62,7 +64,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
        }
 
        setIsLoading(false);
-       setFormStep(formStep + 1);
+       setFormStep(formStep + 1); */
 
     } catch (error: any) {
       setIsLoading(false);
@@ -75,11 +77,12 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
   };
 
   return (
-    <div className='flex justify-between'>
+    <div className={'flex justify-between'}>
       {formStep > 0 && formStep < 3 && (
         <Button
           type='button'
           variant={"ghost"}
+          className={textLarge ? "text-xl" : ""}
           onClick={() => setFormStep(formStep - 1)}
           disabled={isLoading}
         >
@@ -93,7 +96,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
           variant={"ghost"}
           className={cn("ml-auto", {
             hidden: formStep === 2,
-          })}
+          }) + (textLarge ? " text-xl" : "")}
           onClick={handleNext}
           disabled={isLoading}
         >
@@ -106,13 +109,14 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
           type='button'
           onClick={handleFinalSubmit}
           disabled={isLoading}
+          className={textLarge ? "text-xl" : ""}
         >
           {isLoading ? 'Submitting...' : 'Submit'}
         </Button>
       )}
       {formStep === 3 && (
         <Button
-          className="w-full"
+          className={"w-full " + (textLarge ? "text-xl" : "")}
           type='button'
           onClick={handleRestart}
         >

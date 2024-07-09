@@ -3,6 +3,7 @@ import { CheckboxWithText } from "@/components/CheckboxWithText";
 import { CardDescription, CardTitle } from "./ui/card";
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useThemeContext } from "@/context/theme-context";
 
 const FHr = () => <hr className='my-4' />;
 
@@ -11,9 +12,11 @@ type FormStep1Props = {
 };
 
 export function FormStep1({ form }: FormStep1Props) {
+  const { textLarge } = useThemeContext();
+
   return (
-    <div>
-      <CardTitle className='pb-3'>
+    <div className={textLarge ? "text-2xl" : "text-base"}>
+      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"}`}>
         Personal Information and Contact
       </CardTitle>
       <FHr />
@@ -22,12 +25,12 @@ export function FormStep1({ form }: FormStep1Props) {
         name='name'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel>Full name</FormLabel>
+            <FormLabel className={textLarge ? "text-xl" : "text-base"}>Full name</FormLabel>
             <FormControl>
-              <Input placeholder='Enter your name' {...field} />
+              <Input className={textLarge ? "text-xl" : "text-base"} placeholder='Enter your name' {...field} />
             </FormControl>
             {fieldState.error && (
-              <FormMessage className="text-red-500">
+              <FormMessage className={"text-red-500 " + (textLarge ? "text-xl" : "text-base")}>
                 {fieldState.error.message}
               </FormMessage>
             )}
@@ -40,12 +43,12 @@ export function FormStep1({ form }: FormStep1Props) {
         name='email'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel className={textLarge ? "text-xl" : "text-base"}>Email</FormLabel>
             <FormControl>
-              <Input placeholder='Enter your email' {...field} />
+              <Input className={textLarge ? "text-xl" : "text-base"} placeholder='Enter your email' {...field} />
             </FormControl>
             {fieldState.error && (
-              <FormMessage className="text-red-500">
+              <FormMessage className={"text-red-500 " + (textLarge ? "text-xl" : "text-base")}>
                 {fieldState.error.message}
               </FormMessage>
             )}
@@ -61,9 +64,11 @@ type FormStep2Props = {
 };
 
 export function FormStep2({ form }: FormStep2Props) {
+  const { textLarge } = useThemeContext();
+
   return (
-    <div>
-      <CardTitle className='pb-3'>
+    <div className={textLarge ? "text-2xl" : "text-base"}>
+      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"}`}>
         Use of Clinical Information for Research
       </CardTitle>
       <FHr />
@@ -83,7 +88,7 @@ export function FormStep2({ form }: FormStep2Props) {
         mobileSettingsLink='/examples/forms'
       />
       <br />
-      <CardDescription>
+      <CardDescription className={textLarge ? "text-xl" : "text-base"}>
         *De-identified information is data that has been stripped of all personal identifiers, such as name, address, and contact information.
       </CardDescription>
     </div>
@@ -95,12 +100,13 @@ type FormStep3Props = {
 };
 
 export function FormStep3({ form }: FormStep3Props) {
+  const { textLarge } = useThemeContext();
   const { getValues } = form;
   const values = getValues();
 
   return (
-    <div className='space-y-4'>
-      <CardTitle className='pb-3'>
+    <div className={`space-y-4 ${textLarge ? "text-2xl" : "text-base"}`}>
+      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"}`}>
         Review Your Information
       </CardTitle>
       <FHr />
@@ -117,7 +123,7 @@ export function FormStep3({ form }: FormStep3Props) {
         <strong>Student Consent:</strong> {values.acceptStudentConsent ? "Accepted" : "Denied"}
       </div>
       <FHr />
-      <FormDescription>
+      <FormDescription className={textLarge ? "text-xl" : "text-base"}>
         By signing below, you agree that the information you have provided is accurate
       </FormDescription>
       <FormField
@@ -125,9 +131,9 @@ export function FormStep3({ form }: FormStep3Props) {
         name='signature'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel>Signature</FormLabel>
+            <FormLabel className={textLarge ? "text-xl" : "text-base"}>Signature</FormLabel>
             <FormControl>
-              <Input placeholder='Type your name to sign' {...field} />
+              <Input className={textLarge ? "text-xl" : "text-base"} placeholder='Type your name to sign' {...field} />
             </FormControl>
             {fieldState.error && (
               <FormMessage className="text-red-500">
@@ -142,11 +148,13 @@ export function FormStep3({ form }: FormStep3Props) {
 }
 
 export function FormSuccess() {
+  const { textLarge } = useThemeContext();
+
   return (
-    <div className="text-center">
+    <div className={`text-center ${textLarge ? "text-2xl" : "text-base"}`}>
       <div>
-        <CardTitle className="mb-5">Form Submitted Successfully</CardTitle>
-        <CardDescription>
+        <CardTitle className={`mb-5 ${textLarge ? "text-2xl" : "text-base"}`}>Form Submitted Successfully</CardTitle>
+        <CardDescription className={textLarge ? "text-xl" : "text-base"}>
           Your information has been submitted successfully. Thank you!
         </CardDescription>
       </div>

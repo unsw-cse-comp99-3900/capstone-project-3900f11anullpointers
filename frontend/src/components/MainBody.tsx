@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import "../styles/accessibility.css";
 
 const MainBody = () => {
   const [step, setStep] = useState(0);

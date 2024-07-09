@@ -9,6 +9,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { useThemeContext } from "@/context/theme-context";
 
 type CheckboxWithTextProps = {
   form: UseFormReturn<any>;
@@ -29,6 +30,8 @@ export function CheckboxWithText({
   checkbox1,
   checkbox2,
 }: CheckboxWithTextProps) {
+  const { textLarge } = useThemeContext();
+  
   return (
     <div className='space-y-6'>
       <FormField
@@ -43,7 +46,7 @@ export function CheckboxWithText({
               />
             </FormControl>
             <div className='space-y-1 leading-none'>
-              <FormLabel>{checkbox1.labelText}</FormLabel>
+              <FormLabel className={textLarge ? "text-xl" : "text-base"}>{checkbox1.labelText}</FormLabel>
               <FormDescription>
                 {checkbox1.descriptionText}
               </FormDescription>
@@ -63,7 +66,7 @@ export function CheckboxWithText({
               />
             </FormControl>
             <div className='space-y-1 leading-none'>
-              <FormLabel>{checkbox2.labelText}</FormLabel>
+              <FormLabel className={textLarge ? "text-xl" : "text-base"}>{checkbox2.labelText}</FormLabel>
               <FormDescription>
                 {checkbox2.descriptionText}
               </FormDescription>
