@@ -3,18 +3,21 @@ from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
 from src.send_email import send_emails
 import os
+import logging
+import re
 
-# Only allow requests from frontend.
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
-# Docker directory where PDFs are stored.
+logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
+
+# Docker directory where PDFs are stored
 # PDF_DIR = '/app/pdfs'
 PDF_DIR = ""
 
 ################### Helper Functions ###################
 # Function to set up email to be sent.
-def send_pdf(pdf_path, recipient_email):
+def send_email_with_pdf(pdf_path, recipient_email):
     SERVER = "smtp.gmail.com"
     PORT = 587
     EMAIL_FROM = "anullpointers@gmail.com"
@@ -25,52 +28,60 @@ def send_pdf(pdf_path, recipient_email):
         send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, os.path.basename(pdf_path), attachment)
 
 # Function to validate user data.
-# def validateData(received_data):
-#     # Check for required fields and empty values.
-#     required_fields = ['name', 'email', 'phone', 'address', 'dob', 'consent', 'typed_sig']
-#     for field in required_fields:
-#         # If any field other than consent is empty, return error.
-#         if field != 'consent' and (field not in received_data or not received_data[field]):
-#             return jsonify({"error": f"Field '{field}' is required and cannot be empty."}), 400
+def validateData(received_data):
+    # Check for required fields and empty values.
+    required_fields = ['name', 'email', 'signature', 'consent']
+    for field in required_fields:
+        # If any field other than consent is empty, return error.
+        if field not in received_data or not received_data[field]:
+            return jsonify({"error": f"Field '{field}' is required and cannot be empty."}), 400
 
-#     # Validate email format.
-#     email = received_data['email']
-#     if '@' not in email:
-#         return jsonify({"error": "Email must contain the '@' symbol."}), 400
-
-#     # Validate phone number format and length.
-#     phone_number = received_data['phone']
-#     if not (phone_number.isdigit() and len(phone_number) == 10):
-#         return jsonify({"error": "Phone number must be a 10-digit numeric value."}), 400
-
-#     # Validate date of birth format and values.
-#     dob = received_data['dob']
-#     if not (len(dob) == 10 and dob[4] == dob[7] == '-' and dob[:4].isdigit() and dob[5:7].isdigit() and dob[8:].isdigit()):
-#         return jsonify({"error": "Invalid date of birth format. Use DD-MM-YYYY."}), 400
+    # Validate email format.
+    email = received_data['email']
+    email_regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+    if not re.match(email_regex, email):
+        return jsonify({"error": "Invalid email format."}), 400
     
-#     yyyy, mm, dd = map(int, dob.split('-'))
-#     if not (0 < dd <= 31 and 0 < mm <= 12):
-#         return jsonify({"error": "Invalid date of birth values. Check day, month, and year."}), 400
+    # Validate consent field.
+    consent = received_data['consent']
+    if not isinstance(consent, dict) or 'researchConsent' not in consent or 'studentConsent' not in consent:
+        return jsonify({"error": "Consent fields are invalid."}), 400
+
+    # Validate phone number format and length.
+    # phone_number = received_data['phone']
+    # if not (phone_number.isdigit() and len(phone_number) == 10):
+    #     return jsonify({"error": "Phone number must be a 10-digit numeric value."}), 400
+
+    # Validate date of birth format and values.
+    # dob = received_data['dob']
+    # if not (len(dob) == 10 and dob[4] == dob[7] == '-' and dob[:4].isdigit() and dob[5:7].isdigit() and dob[8:].isdigit()):
+    #     return jsonify({"error": "Invalid date of birth format. Use DD-MM-YYYY."}), 400
+
+    # yyyy, mm, dd = map(int, dob.split('-'))
+    # if not (0 < dd <= 31 and 0 < mm <= 12):
+    #     return jsonify({"error": "Invalid date of birth values. Check day, month, and year."}), 400
 ########################################################
 
 @app.route('/post', methods=['POST'])
 def post_method():
     try:
         received_data = request.json
-        # validateData(received_data)
+        validateData(received_data)
+        logging.info(received_data)
 
         # Determine consent flags based on consent field
-        consent = received_data.get('consent', False)
-        consent_flags = [consent, consent, consent]
+        consent = received_data.get('consent')
+        consent_flags = [consent['researchConsent'], False, False]
+
         very_special_name = "test1"
 
-        # Generate PDF.
+        # Generate PDF with dynamic data
         generator = GeneratePDF()
         pdf_path = os.path.join(PDF_DIR, f"{very_special_name}.pdf")
         generator.generate_pdf(very_special_name, received_data['name'], "adult", consent_flags)
 
         # Send email of PDF
-        send_pdf(pdf_path, "zXXXXXXX@ad.unsw.edu.au")
+        send_email_with_pdf(pdf_path, "engin.k1@outlook.com")
 
         # Delete the generated PDF file from the server
         if os.path.exists(pdf_path):
@@ -84,6 +95,7 @@ def post_method():
         return jsonify(response_data), 200
 
     except Exception as e:
+        logging.error(e)
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
