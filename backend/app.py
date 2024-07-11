@@ -32,8 +32,8 @@ def validateData(received_data):
     # Check for required fields and empty values.
     required_fields = ['name', 'email', 'signature', 'consent']
     for field in required_fields:
-        # If any field other than consent is empty, return error.
-        if field not in received_data or not received_data[field]:
+        # If any field other than 'consent' is empty, return error.
+        if field not in received_data or received_data[field] == "":
             return jsonify({"error": f"Field '{field}' is required and cannot be empty."}), 400
 
     # Validate email format.
@@ -46,6 +46,13 @@ def validateData(received_data):
     consent = received_data['consent']
     if not isinstance(consent, dict) or 'researchConsent' not in consent or 'studentConsent' not in consent:
         return jsonify({"error": "Consent fields are invalid."}), 400
+    
+    # Check if consent fields are boolean.
+    if not isinstance(consent['researchConsent'], bool) or not isinstance(consent['studentConsent'], bool):
+        return jsonify({"error": "Consent fields must be boolean values."}), 400
+    
+    # Return success response if all validations pass.
+    return jsonify({"message": "Validation successful."}), 200
 
     # Validate phone number format and length.
     # phone_number = received_data['phone']
