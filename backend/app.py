@@ -19,9 +19,6 @@ EMAIL_FROM = "anullpointers@gmail.com"
 CLINIC_EMAIL = "nicholas.abreu@outlook.com"
 PSWD = "rtrjqzvtyuecbyxh"
 
-EMAIL_SUPPLIED = True
-PATIENT_EMAIL = "nicholas.abreu@outlook.com"
-
 # Function to set up email to be sent.
 def _send_email_to_clinic(pdf_path: str, patient_name: str) -> None:
     with open(pdf_path, 'rb') as attachment:
