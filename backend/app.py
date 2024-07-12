@@ -1,6 +1,7 @@
 import os
 import logging
 import secrets
+import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
@@ -47,8 +48,8 @@ def post_method():
         consent = received_data.get('consent')
         consent_flags = [consent['researchConsent'], False, False]
 
-        # Generate 16 byte token
-        token = secrets.token_hex(16)
+        # Generate 4 byte token with name prepended, removing unnecessary special characters
+        token = re.sub(r"[^a-zA-Z' -]", "", received_data['name']).replace(" ", "_") + " - " + secrets.token_hex(4)
 
         # Generate PDF with dynamic data
         generator = GeneratePDF()
