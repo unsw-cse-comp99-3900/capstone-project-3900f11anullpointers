@@ -7,12 +7,12 @@ from datetime import datetime
 import logging
 from typing import List
 from fpdf import FPDF
-from backend.src.doc_printing import Document
-from backend.src.fonts.fonts import Fonts
+from .doc_printing import Document
+from .fonts.fonts import Fonts
 
-TEXT_FOLDER = "form_text"
-SIGNATURE_FOLDER = "signatures"
-LOGO_FOLDER = "logo"
+TEXT_FOLDER = "src/form_text"
+SIGNATURE_FOLDER = "src/signatures"
+LOGO_FOLDER = "src/logo"
 LOGO_FILE = f"{LOGO_FOLDER}/logo.png"
 
 
@@ -44,26 +44,30 @@ class GeneratePDF:
             document.print()
 
             # Space
-            self.pdf.cell(0, 5, txt = "", ln = True)
+            self.pdf.cell(0, 5, text = "", ln = True)
 
             # Add signature
             self.pdf.image(f"{SIGNATURE_FOLDER}/{token}.png", h = 20)
 
             # Space
-            self.pdf.cell(0, 5, txt = "", ln = True)
+            self.pdf.cell(0, 5, text = "", ln = True)
 
             # Add client's name
-            self.pdf.cell(0, 5, txt = client_name, ln = True, align = "L")
+            self.pdf.cell(0, 5, text = client_name, ln = True, align = "L")
 
             # Add date
             date: str = datetime.now().strftime("%d %B %Y")
-            self.pdf.cell(0, 5, txt = date, ln = True, align = "L")
+            self.pdf.cell(0, 5, text = date, ln = True, align = "L")
+ 
+            #pdf_path = f"/app/pdfs/{token}.pdf"  # Path where PDF will be saved
+            pdf_path = f"{token}.pdf"
 
-            self.pdf.output(f"{token}.pdf")
+            self.pdf.output(name=pdf_path)
             logging.info("%s.pdf successfully generated", token)
 
-        except RuntimeError as e:
-            logging.error("PDF generation failed: %s", e)
+        except Exception as e:
+            logging.error("PDF generation failed: %s %s", e, type(e))
+            raise
 
 
     def _get_json_dict(self, form_name: str):
@@ -74,11 +78,11 @@ class GeneratePDF:
             logging.error("Cannot read {form_name} config file: %s", e)
             raise
 
-def main():
-    """Testing"""
-    generator = GeneratePDF()
-    generator.generate_pdf("test1", "Gerald", "adult", [True, False, True])
+# def main():
+    # """Testing"""
+    # generator = GeneratePDF()
+    # generator.generate_pdf("test1", "Gerald", "adult", [True, False, True])
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
