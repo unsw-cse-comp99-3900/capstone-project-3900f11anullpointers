@@ -1,10 +1,18 @@
 import { UseFormReturn } from "react-hook-form";
 import { CheckboxWithText } from "@/components/CheckboxWithText";
 import { CardDescription, CardTitle } from "./ui/card";
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { SignatureInput } from "@/components/ui/signature-input";
 
-const FHr = () => <hr className='my-4' />;
+const FHr = () => <hr className="my-4" />;
 
 type FormStep1Props = {
   form: UseFormReturn<any>;
@@ -13,18 +21,16 @@ type FormStep1Props = {
 export function FormStep1({ form }: FormStep1Props) {
   return (
     <div>
-      <CardTitle className='pb-3'>
-        Personal Information and Contact
-      </CardTitle>
+      <CardTitle className="pb-3">Personal Information and Contact</CardTitle>
       <FHr />
       <FormField
         control={form.control}
-        name='name'
+        name="name"
         render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>Full name</FormLabel>
             <FormControl>
-              <Input placeholder='Enter your name' {...field} />
+              <Input placeholder="Enter your name" {...field} />
             </FormControl>
             {fieldState.error && (
               <FormMessage className="text-red-500">
@@ -37,12 +43,12 @@ export function FormStep1({ form }: FormStep1Props) {
       <br />
       <FormField
         control={form.control}
-        name='email'
+        name="email"
         render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input placeholder='Enter your email' {...field} />
+              <Input placeholder="Enter your email" {...field} />
             </FormControl>
             {fieldState.error && (
               <FormMessage className="text-red-500">
@@ -63,7 +69,7 @@ type FormStep2Props = {
 export function FormStep2({ form }: FormStep2Props) {
   return (
     <div>
-      <CardTitle className='pb-3'>
+      <CardTitle className="pb-3">
         Use of Clinical Information for Research
       </CardTitle>
       <FHr />
@@ -79,12 +85,13 @@ export function FormStep2({ form }: FormStep2Props) {
             "I DO NOT CONSENT to the use of my de-identified* clinical information for the purpose of research",
           descriptionText: "",
         }}
-        submitButtonText='Submit'
-        mobileSettingsLink='/examples/forms'
+        submitButtonText="Submit"
+        mobileSettingsLink="/examples/forms"
       />
       <br />
       <CardDescription>
-        *De-identified information is data that has been stripped of all personal identifiers, such as name, address, and contact information.
+        *De-identified information is data that has been stripped of all
+        personal identifiers, such as name, address, and contact information.
       </CardDescription>
     </div>
   );
@@ -99,10 +106,8 @@ export function FormStep3({ form }: FormStep3Props) {
   const values = getValues();
 
   return (
-    <div className='space-y-4'>
-      <CardTitle className='pb-3'>
-        Review Your Information
-      </CardTitle>
+    <div className="space-y-4">
+      <CardTitle className="pb-3">Review Your Information</CardTitle>
       <FHr />
       <div>
         <strong>Name:</strong> {values.name}
@@ -111,23 +116,26 @@ export function FormStep3({ form }: FormStep3Props) {
         <strong>Email:</strong> {values.email}
       </div>
       <div>
-        <strong>Research Consent:</strong> {values.acceptResearchConsent ? "Accepted" : "Denied"}
+        <strong>Research Consent:</strong>{" "}
+        {values.acceptResearchConsent ? "Accepted" : "Denied"}
       </div>
       <div>
-        <strong>Student Consent:</strong> {values.acceptStudentConsent ? "Accepted" : "Denied"}
+        <strong>Student Consent:</strong>{" "}
+        {values.acceptStudentConsent ? "Accepted" : "Denied"}
       </div>
       <FHr />
       <FormDescription>
-        By signing below, you agree that the information you have provided is accurate
+        By signing below, you agree that the information you have provided is
+        accurate
       </FormDescription>
       <FormField
         control={form.control}
-        name='signature'
+        name="drawSignature"
         render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>Signature</FormLabel>
             <FormControl>
-              <Input placeholder='Type your name to sign' {...field} />
+              <SignatureInput field={field} fieldState={fieldState} />
             </FormControl>
             {fieldState.error && (
               <FormMessage className="text-red-500">

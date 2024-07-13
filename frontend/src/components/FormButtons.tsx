@@ -31,7 +31,7 @@ export function FormButtons({
     if (formStep === 0) {
       fieldsToValidate = ["name", "email"];
     } else if (formStep === 2) {
-      fieldsToValidate = ["signature"];
+      fieldsToValidate = ["drawSignature"];
     }
 
     const isValid = await trigger(fieldsToValidate);
@@ -42,12 +42,17 @@ export function FormButtons({
     setIsLoading(true);
     const formData = getValues();
 
+    if (!formData.drawSignature) {
+      setIsLoading(false);
+      return;
+    }
+
     console.log(formData);
     try {
       const reqFormData = {
         name: formData.name,
         email: formData.email,
-        signature: formData.signature,
+        signature: formData.drawSignature,
         consent: {
           researchConsent: formData.acceptResearchConsent,
           studentConsent: formData.acceptStudentConsent,
