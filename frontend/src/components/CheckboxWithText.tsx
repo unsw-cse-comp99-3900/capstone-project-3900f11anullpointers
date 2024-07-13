@@ -13,15 +13,15 @@ import {
 type CheckboxWithTextProps = {
   form: UseFormReturn<any>;
   checkbox1: {
+    name: string;
     labelText: string;
     descriptionText: string;
   };
   checkbox2: {
+    name: string;
     labelText: string;
     descriptionText: string;
   };
-  submitButtonText: string;
-  mobileSettingsLink: string;
 };
 
 export function CheckboxWithText({
@@ -33,7 +33,7 @@ export function CheckboxWithText({
     <div className='space-y-6'>
       <FormField
         control={form.control}
-        name='acceptResearchConsent'
+        name={checkbox1.name}
         render={({ field }) => (
           <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
             <FormControl>
@@ -53,7 +53,7 @@ export function CheckboxWithText({
       />
       <FormField
         control={form.control}
-        name='denyResearchConsent'
+        name={checkbox2.name}
         render={({ field }) => (
           <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
             <FormControl>

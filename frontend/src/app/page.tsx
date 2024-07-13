@@ -12,7 +12,7 @@ import {
   CardFooter
 } from "@/components/ui/card";
 import { CardHeaderContent } from "@/components/CardHeaderContent";
-import { FormStep1, FormStep2, FormStep3, FormSuccess } from "@/components/Forms";
+import { FormStep0, FormStep1, FormStep2, FormStep3, FormReviewStep, FormSuccess } from "@/components/Forms";
 import { FormButtons } from "@/components/FormButtons";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -31,6 +31,8 @@ export default function Home() {
       name: "",
       acceptResearchConsent: false,
       denyResearchConsent: false,
+      acceptContactConsent: false,
+      denyContactConsent: false,
       acceptStudentConsent: false,
       denyStudentConsent: false,
       signature: ""
@@ -48,10 +50,12 @@ export default function Home() {
   };
 
   const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {
-    "0": FormStep1,
-    "1": FormStep2,
-    "2": FormStep3,
-    "3": FormSuccess,
+    "0": FormStep0,
+    "1": FormStep1,
+    "2": FormStep2,
+    "3": FormStep3,
+    "4": FormReviewStep,
+    "5": FormSuccess,
   };
 
   return (
@@ -87,7 +91,7 @@ export default function Home() {
                         {Object.keys(formSteps).map((key) => {
                           const StepComponent = formSteps[key];
                           return (
-                            <div key={key} className="w-full flex-shrink-0 p-5">
+                            <div key={key} className="w-full flex-shrink-0 p-3">
                               <StepComponent form={form} />
                             </div>
                           );

@@ -3,6 +3,8 @@ import { z } from "zod";
 export const consentSchema = z.object({
   acceptResearchConsent: z.boolean(),
   denyResearchConsent: z.boolean(),
+  acceptContactConsent: z.boolean(),
+  denyContactConsent: z.boolean(),
   acceptStudentConsent: z.boolean(),
   denyStudentConsent: z.boolean(),
   email: z.string().email(),
@@ -16,8 +18,9 @@ export const consentSchema = z.object({
 }).refine(
   (schema) => {
     const researchConsentValid = !(schema.acceptResearchConsent && schema.denyResearchConsent);
+    const contactConsentValid = !(schema.acceptContactConsent && schema.denyContactConsent);
     const studentConsentValid = !(schema.acceptStudentConsent && schema.denyStudentConsent);
-    return researchConsentValid && studentConsentValid;
+    return researchConsentValid && studentConsentValid && contactConsentValid ;
   },
   {
     message: "You cannot both accept and deny consent.",
