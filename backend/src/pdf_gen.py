@@ -39,8 +39,8 @@ class GeneratePDF:
         image_file = BytesIO(image_data)
         self.pdf.image(image_file, h=h)
 
-    def generate_pdf(self, token: str, client_name: str, form_name: str,
-                     consent_flags: List[bool], siganture_base64: str) -> None:
+    def generate_pdf(self, client_name: str, form_name: str,
+                     consent_flags: List[bool], siganture_base64: str, submit_datetime: datetime) -> None:
         """Generates a PDF document with the specified token, client name, and form name"""
         self.pdf.add_page()
 
@@ -66,14 +66,18 @@ class GeneratePDF:
             self.pdf.cell(0, 5, text = client_name, ln = True, align = "L")
 
             # Add date
-            date: str = datetime.now().strftime("%d %B %Y")
+            date: str = submit_datetime.strftime("%d %B %Y")
             self.pdf.cell(0, 5, text = date, ln = True, align = "L")
  
-            #pdf_path = f"/app/pdfs/{token}.pdf"  # Path where PDF will be saved
-            pdf_path = f"{token}.pdf"
+            pdf_buffer = BytesIO()
+            self.pdf.output(pdf_buffer)
+            
+            pdf_content = pdf_buffer.getvalue()
+            pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
 
-            self.pdf.output(name=pdf_path)
-            logging.info("%s.pdf successfully generated", token)
+            logging.info("PDF successfully generated and encoded to base64")
+            
+            return pdf_base64
 
         except Exception as e:
             logging.error("PDF generation failed: %s %s", e, type(e))

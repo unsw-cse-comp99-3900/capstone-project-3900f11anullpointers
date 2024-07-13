@@ -5,6 +5,8 @@ from src.send_email import send_emails
 import os
 import logging
 from dotenv import find_dotenv, load_dotenv 
+from datetime import datetime
+import pytz
 
 load_dotenv(find_dotenv('.env'))
 load_dotenv(find_dotenv('.env.local'))
@@ -23,15 +25,15 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 PDF_DIR = ""
 
 # Function to set up email to be sent.
-def send_email_with_pdf(pdf_path, recipient_email):
+def send_email_with_pdf(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):
     SERVER = os.getenv('SMTP_HOST')
     PORT = os.getenv('SMTP_PORT')
     EMAIL_FROM = os.getenv('SMTP_USER')
     EMAIL_TO = recipient_email
     PSWD = os.getenv('SMTP_PSWD')
 
-    with open(pdf_path, 'rb') as attachment:
-        send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, "Consent Form.pdf", attachment)
+    send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, "Consent Form.pdf", 
+                pdf_base64, patient_name, patient_email, submit_datetime)
 
 @app.route('/post', methods=['POST'])
 def post_method():
@@ -39,25 +41,24 @@ def post_method():
         received_data = request.json
 
         logging.info(received_data)
+        
+        au_timezone = pytz.timezone('Australia/Sydney')
+        current_au_time = datetime.now(au_timezone)
 
         # Determine consent flags based on consent field
         consent = received_data.get('consent')
         consent_flags = [consent['researchConsent'], False, False]
 
-        very_special_name = "test1"
         signature = received_data.get('signature')
 
         # Generate PDF with dynamic data
         generator = GeneratePDF()
-        pdf_path = os.path.join(PDF_DIR, f"{very_special_name}.pdf")
-        generator.generate_pdf(very_special_name, received_data['name'], "adult", consent_flags, signature)
+        pdf_base64 = generator.generate_pdf(received_data['name'], "adult", consent_flags, signature, current_au_time)
 
+        patient_name = received_data.get('name')
+        patient_email = received_data.get('email')
         # Send email of PDF
-        send_email_with_pdf(pdf_path, os.getenv('RECIPIENT_EMAIL'))
-
-        # Delete the generated PDF file from the server
-        if os.path.exists(pdf_path):
-            os.remove(pdf_path)
+        send_email_with_pdf(os.getenv('RECIPIENT_EMAIL'), pdf_base64, patient_name, patient_email, current_au_time)
 
         response_data = {
             "message": "Form submission successful",
