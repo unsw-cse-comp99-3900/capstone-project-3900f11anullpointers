@@ -31,7 +31,7 @@ def send_email_with_pdf(pdf_path, recipient_email):
     PSWD = os.getenv('SMTP_PSWD')
 
     with open(pdf_path, 'rb') as attachment:
-        send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, os.path.basename(pdf_path), attachment)
+        send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, "Consent Form.pdf", attachment)
 
 @app.route('/post', methods=['POST'])
 def post_method():
