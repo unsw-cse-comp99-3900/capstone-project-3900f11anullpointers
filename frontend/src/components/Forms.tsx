@@ -135,7 +135,7 @@ export function FormStep3({ form }: FormStep3Props) {
           <FormItem>
             <FormLabel>Signature</FormLabel>
             <FormControl>
-              <SignatureInput field={field} fieldState={fieldState} />
+              <SignatureInput field={field} />
             </FormControl>
             {fieldState.error && (
               <FormMessage className="text-red-500">

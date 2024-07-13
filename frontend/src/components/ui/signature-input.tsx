@@ -6,13 +6,10 @@ import SignaturePad from "react-signature-canvas";
 interface SignatureInputProps {
   className?: string;
   field: any;
-  fieldState: any;
 }
 
-const SignatureInput = React.forwardRef<HTMLDivElement, SignatureInputProps>(
-  ({ className, field }) => {
-    const [imageURL, setImageURL] = React.useState<string | null>(null);
-
+const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
+  ({ className, field }, ref) => {
     const sigCanvas = React.useRef<SignaturePad>(null);
 
     const clear = () => {
@@ -33,6 +30,18 @@ const SignatureInput = React.forwardRef<HTMLDivElement, SignatureInputProps>(
     const handleBegin = () => {
       save();
     };
+
+    React.useEffect(() => {
+      const handleClearSignature = () => {
+        clear();
+      };
+
+      window.addEventListener("clearSignature", handleClearSignature);
+
+      return () => {
+        window.removeEventListener("clearSignature", handleClearSignature);
+      };
+    }, []);
 
     return (
       <div className="items-center no-select">

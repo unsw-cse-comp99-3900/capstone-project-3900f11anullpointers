@@ -46,6 +46,8 @@ export default function Home() {
     form.reset();
     setFormStep(0);
     setIsSubmitted(false);
+
+    window.dispatchEvent(new Event("clearSignature"));
   };
 
   const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {

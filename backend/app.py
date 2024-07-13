@@ -45,14 +45,15 @@ def post_method():
         consent_flags = [consent['researchConsent'], False, False]
 
         very_special_name = "test1"
+        signature = received_data.get('signature')
 
         # Generate PDF with dynamic data
         generator = GeneratePDF()
         pdf_path = os.path.join(PDF_DIR, f"{very_special_name}.pdf")
-        generator.generate_pdf(very_special_name, received_data['name'], "adult", consent_flags)
+        generator.generate_pdf(very_special_name, received_data['name'], "adult", consent_flags, signature)
 
         # Send email of PDF
-        #send_email_with_pdf(pdf_path, os.getenv('RECIPIENT_EMAIL'))
+        send_email_with_pdf(pdf_path, os.getenv('RECIPIENT_EMAIL'))
 
         # Delete the generated PDF file from the server
         if os.path.exists(pdf_path):

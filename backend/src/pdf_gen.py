@@ -9,6 +9,8 @@ from typing import List
 from fpdf import FPDF
 from .doc_printing import Document
 from .fonts.fonts import Fonts
+import base64
+from io import BytesIO
 
 TEXT_FOLDER = "src/form_text"
 SIGNATURE_FOLDER = "src/signatures"
@@ -28,9 +30,17 @@ class GeneratePDF:
             self.fonts = Fonts()
         except (RuntimeError, FileNotFoundError, json.JSONDecodeError) as e:
             logging.error("PDF generator cannot be made: %s", e)
+            
+    def add_base64_image(self, base64_data: str, h=None):
+        if "base64," in base64_data:
+            base64_data = base64_data.split("base64,")[1]
+        
+        image_data = base64.b64decode(base64_data)
+        image_file = BytesIO(image_data)
+        self.pdf.image(image_file, h=h)
 
     def generate_pdf(self, token: str, client_name: str, form_name: str,
-                     consent_flags: List[bool]) -> None:
+                     consent_flags: List[bool], siganture_base64: str) -> None:
         """Generates a PDF document with the specified token, client name, and form name"""
         self.pdf.add_page()
 
@@ -47,7 +57,7 @@ class GeneratePDF:
             self.pdf.cell(0, 5, text = "", ln = True)
 
             # Add signature
-            self.pdf.image(f"{SIGNATURE_FOLDER}/{token}.png", h = 20)
+            self.add_base64_image(siganture_base64, h = 20)
 
             # Space
             self.pdf.cell(0, 5, text = "", ln = True)

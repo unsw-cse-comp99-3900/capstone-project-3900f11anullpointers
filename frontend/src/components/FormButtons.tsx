@@ -39,6 +39,9 @@ export function FormButtons({
   };
 
   const handleFinalSubmit = async () => {
+    const isValid = await trigger(["drawSignature"]);
+    if (!isValid) return;
+
     setIsLoading(true);
     const formData = getValues();
 
