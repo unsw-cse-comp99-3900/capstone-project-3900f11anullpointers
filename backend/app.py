@@ -8,7 +8,7 @@ import logging
 import time
 
 
-TEMP_PDF_DIR = "/app/temp_pdfs"
+TEMP_PDF_DIR = "/temp_pdfs"
 os.makedirs(TEMP_PDF_DIR, exist_ok=True)
 
 app = Flask(__name__)
@@ -61,7 +61,7 @@ def post_method():
         generator.generate_pdf(very_special_name, received_data['name'], "adult", consent_flags)
 
         # Send email of PDF
-        email_sent = send_email_with_pdf(pdf_path, "nicholas.abreu@outlook.com")
+        email_sent = send_email_with_pdf(pdf_path, "z5361148@ad.unsw.edu.au")
         
         if not email_sent:
             # Move the PDF to the temporary storage directory if the email fails to send
