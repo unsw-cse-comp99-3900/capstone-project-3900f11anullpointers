@@ -160,14 +160,14 @@ class TestConsentBody(unittest.TestCase):
         body.print()
         self.fonts.set_to_body_bold.assert_called_with(self.pdf)
         self.assertTrue(
-            any(call[1]['txt'] == "[X] I CONSENT" for call in self.pdf.cell.call_args_list)
+            any(call[1]['text'] == "[X] I CONSENT" for call in self.pdf.cell.call_args_list)
         )
         self.assertTrue(
-            any(call[1]['txt'] == "[   ] I DO NOT CONSENT" for call in self.pdf.cell.call_args_list)
+            any(call[1]['text'] == "[   ] I DO NOT CONSENT" for call in self.pdf.cell.call_args_list)
         )
         self.fonts.set_to_body.assert_called_with(self.pdf)
         self.assertTrue(
-            any(call[1]['txt'] == self.body_text for call in self.pdf.cell.call_args_list)
+            any(call[1]['text'] == self.body_text for call in self.pdf.cell.call_args_list)
         )
 
     def test_print_not_accepted(self):
@@ -176,14 +176,14 @@ class TestConsentBody(unittest.TestCase):
         body.print()
         self.fonts.set_to_body_bold.assert_called_with(self.pdf)
         self.assertTrue(
-            any(call[1]['txt'] == "[   ] I CONSENT" for call in self.pdf.cell.call_args_list)
+            any(call[1]['text'] == "[   ] I CONSENT" for call in self.pdf.cell.call_args_list)
         )
         self.assertTrue(
-            any(call[1]['txt'] == "[X] I DO NOT CONSENT" for call in self.pdf.cell.call_args_list)
+            any(call[1]['text'] == "[X] I DO NOT CONSENT" for call in self.pdf.cell.call_args_list)
         )
         self.fonts.set_to_body.assert_called_with(self.pdf)
         self.assertTrue(
-            any(call[1]['txt'] == self.body_text for call in self.pdf.cell.call_args_list)
+            any(call[1]['text'] == self.body_text for call in self.pdf.cell.call_args_list)
         )
 
 class TestSubtitle(unittest.TestCase):
@@ -199,7 +199,7 @@ class TestSubtitle(unittest.TestCase):
         subtitle.print()
         self.fonts.set_to_subtitle.assert_called_once_with(self.pdf)
         self.assertTrue(
-            any(call[1]['txt'] == self.subtitle for call in self.pdf.cell.call_args_list)
+            any(call[1]['text'] == self.subtitle for call in self.pdf.cell.call_args_list)
         )
 
 
@@ -215,8 +215,9 @@ class TestBody(unittest.TestCase):
         body = Body(self.pdf, self.fonts, self.body)
         body.print()
         self.fonts.set_to_body.assert_called_once_with(self.pdf)
+        
         self.assertTrue(
-            any(call[1]['txt'] == self.body for call in self.pdf.multi_cell.call_args_list)
+            any(call[1]['text'] == self.body for call in self.pdf.multi_cell.call_args_list)
         )
 
 
