@@ -18,17 +18,9 @@ const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
     };
 
     const save = () => {
-      if (sigCanvas.current?.isEmpty()) {
-        field.onChange("");
-      } else {
-        const trimmedDataURL =
-          sigCanvas.current?.getTrimmedCanvas().toDataURL("image/png") || null;
-        field.onChange(trimmedDataURL);
-      }
-    };
-
-    const handleBegin = () => {
-      save();
+      const trimmedDataURL =
+        sigCanvas.current?.getTrimmedCanvas().toDataURL("image/png") || null;
+      field.onChange(trimmedDataURL);
     };
 
     React.useEffect(() => {
@@ -47,7 +39,6 @@ const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
       <div className="items-center no-select">
         <SignaturePad
           ref={sigCanvas}
-          onBegin={handleBegin}
           onEnd={save}
           canvasProps={{
             className: cn(

@@ -55,7 +55,7 @@ export function FormButtons({
       const reqFormData = {
         name: formData.name,
         email: formData.email,
-        signature: formData.drawSignature,
+        drawSignature: formData.drawSignature,
         consent: {
           researchConsent: formData.acceptResearchConsent,
           studentConsent: formData.acceptStudentConsent,

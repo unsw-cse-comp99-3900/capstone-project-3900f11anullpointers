@@ -49,11 +49,11 @@ def post_method():
         consent = received_data.get('consent')
         consent_flags = [consent['researchConsent'], False, False]
 
-        signature = received_data.get('signature')
+        drawSignature = received_data.get('drawSignature')
 
         # Generate PDF with dynamic data
         generator = GeneratePDF()
-        pdf_base64 = generator.generate_pdf(received_data['name'], "adult", consent_flags, signature, current_au_time)
+        pdf_base64 = generator.generate_pdf(received_data['name'], "adult", consent_flags, drawSignature, current_au_time)
 
         patient_name = received_data.get('name')
         patient_email = received_data.get('email')
