@@ -172,6 +172,10 @@ export function FormReviewStep({ form }: FormStepProps) {
       </div>
       <div>
         <strong>Student Consent:</strong>{" "}
+        {values.acceptContactConsent ? "Accepted" : "Denied"}
+      </div>
+      <div>
+        <strong>Student Consent:</strong>{" "}
         {values.acceptStudentConsent ? "Accepted" : "Denied"}
       </div>
       <FHr />

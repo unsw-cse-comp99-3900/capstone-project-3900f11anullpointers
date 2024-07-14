@@ -14,16 +14,45 @@ export const consentSchema = z.object({
     .max(255, { message: "Name is too long" }),
   signature: z
     .string()
-    .min(1, { message: "Please type your name to sign" }) // Ensure the signature is included and validated
-}).refine(
-  (schema) => {
-    const researchConsentValid = !(schema.acceptResearchConsent && schema.denyResearchConsent);
-    const contactConsentValid = !(schema.acceptContactConsent && schema.denyContactConsent);
-    const studentConsentValid = !(schema.acceptStudentConsent && schema.denyStudentConsent);
-    return researchConsentValid && studentConsentValid && contactConsentValid ;
-  },
-  {
-    message: "You cannot both accept and deny consent.",
-    path: ["consent"], // This will point the error to the 'consent' field, adjust as necessary
-  }
-);
+    .min(1, { message: "Please enter your full name to sign" }) // Ensure the signature is included and validated
+  }).superRefine((data, ctx) => {
+    if ((data.acceptResearchConsent && data.denyResearchConsent) || 
+      !data.acceptResearchConsent && !data.denyResearchConsent) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "You cannot both accept and deny research consent.",
+        path: ["acceptResearchConsent"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "You cannot both accept and deny research consent.",
+        path: ["denyResearchConsent"],
+      });
+    }
+    if (data.acceptContactConsent && data.denyContactConsent || 
+      !data.acceptContactConsent && !data.denyContactConsent) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "You cannot both accept and deny contact consent.",
+        path: ["acceptContactConsent"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "You cannot both accept and deny contact consent.",
+        path: ["denyContactConsent"],
+      });
+    }
+    if (data.acceptStudentConsent && data.denyStudentConsent || 
+      !data.acceptStudentConsent && !data.denyStudentConsent) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "You cannot both accept and deny student consent.",
+        path: ["acceptStudentConsent"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "You cannot both accept and deny student consent.",
+        path: ["denyStudentConsent"],
+      });
+    }
+  });
