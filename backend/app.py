@@ -1,10 +1,15 @@
+import shutil
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
 from src.send_email import send_emails
 import os
 import logging
+import time
 
+
+TEMP_PDF_DIR = "/app/temp_pdfs"
+os.makedirs(TEMP_PDF_DIR, exist_ok=True)
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -16,15 +21,26 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 PDF_DIR = ""
 
 # Function to set up email to be sent.
-def send_email_with_pdf(pdf_path, recipient_email):
+def send_email_with_pdf(pdf_path, recipient_email, retries=3, delay=5):
     SERVER = "smtp.gmail.com"
     PORT = 587
     EMAIL_FROM = "anullpointers@gmail.com"
     EMAIL_TO = recipient_email
     PSWD = "rtrjqzvtyuecbyxh"
 
-    with open(pdf_path, 'rb') as attachment:
-        send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, os.path.basename(pdf_path), attachment)
+    attempt = 0
+    while attempt < retries:
+        try:
+            with open(pdf_path, 'rb') as attachment:
+                send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, os.path.basename(pdf_path), attachment)
+            return True
+        except Exception as e:
+            attempt += 1
+            logging.error(f"Attempt {attempt} - Failed to send email: {e}")
+            if attempt < retries:
+                time.sleep(delay)
+    
+    return False
 
 @app.route('/post', methods=['POST'])
 def post_method():
@@ -45,11 +61,17 @@ def post_method():
         generator.generate_pdf(very_special_name, received_data['name'], "adult", consent_flags)
 
         # Send email of PDF
-        send_email_with_pdf(pdf_path, "nicholas.abreu@outlook.com")
-
-        # Delete the generated PDF file from the server
-        if os.path.exists(pdf_path):
-            os.remove(pdf_path)
+        email_sent = send_email_with_pdf(pdf_path, "nicholas.abreu@outlook.com")
+        
+        if not email_sent:
+            # Move the PDF to the temporary storage directory if the email fails to send
+            temp_pdf_path = os.path.join(TEMP_PDF_DIR, f"{very_special_name}.pdf")
+            shutil.move(pdf_path, temp_pdf_path)
+            logging.error(f"PDF moved to temporary storage: {temp_pdf_path}")
+        else:
+            # Delete the generated PDF file from the server if the email was sent successfully
+            if os.path.exists(pdf_path):
+                os.remove(pdf_path)
 
         response_data = {
             "message": "Form submission successful",
