@@ -47,7 +47,7 @@ class GeneratePDF:
             self.pdf.cell(0, 5, text = "", ln = True)
 
             # Add signature
-            self.pdf.image(f"{SIGNATURE_FOLDER}/{token}.png", h = 20)
+            self.pdf.image(f"{SIGNATURE_FOLDER}/test1.png", h = 20)
 
             # Space
             self.pdf.cell(0, 5, text = "", ln = True)
