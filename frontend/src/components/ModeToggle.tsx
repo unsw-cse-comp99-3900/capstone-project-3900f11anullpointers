@@ -1,11 +1,11 @@
 "use client";
 import * as React from "react";
-import { Moon, Sun, ZoomIn, ZoomOut } from "lucide-react";
+import { Moon, Sun, ZoomIn, ZoomOut, Contrast, EyeOff, Eye, Circle } from "lucide-react";
 import { useThemeContext } from "@/context/theme-context";
 import { Button } from "@/components/ui/button";
 
 export function ModeToggle() {
-  const { theme, textLarge, toggleTheme, toggleTextSize } = useThemeContext();
+  const { theme, textLarge, highContrast, dyslexicFont, toggleTheme, toggleTextSize, toggleHighContrast, toggleDyslexicFont } = useThemeContext();
 
   return (
     <div className="flex space-x-2">
@@ -46,12 +46,8 @@ export function ModeToggle() {
       >
         {textLarge ? (
           <>
-            <ZoomIn
-              className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
-                } transition-all rotate-90 scale-0`}
-            />
             <ZoomOut
-              className={`absolute ${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
+              className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
                 } transition-all rotate-0 scale-100`}
             />
           </>
@@ -61,12 +57,43 @@ export function ModeToggle() {
               className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
                 } transition-all rotate-0 scale-100`}
             />
-            <ZoomOut
-              className={`absolute ${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
-                } transition-all rotate-90 scale-0`}
-            />
           </>
         )}
+        <span className="sr-only">Toggle large text</span>
+      </Button>
+      <Button
+        variant="outline"
+        size={textLarge ? "lg" : "icon"}
+        onClick={toggleHighContrast}
+      > {
+          highContrast ? (
+            <Contrast
+              className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
+                } transition-all rotate-180 scale-100`}
+            />
+          ) : (
+            <Circle
+              className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
+                } transition-all rotate-0 scale-100`}
+            />
+          )
+        }
+      </Button>
+      <Button
+        variant="outline"
+        size={textLarge ? "lg" : "icon"}
+        onClick={toggleDyslexicFont}
+      >
+        {dyslexicFont ?
+          (<Eye
+            className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
+              } transition-all rotate-0 scale-100`}
+          />) :
+          (<EyeOff
+            className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"
+              } transition-all rotate-0 scale-100`} />)
+        }
+        <span className="sr-only">Toggle dyslexic font</span>
       </Button>
     </div>
   );

@@ -12,11 +12,11 @@ type FormStep1Props = {
 };
 
 export function FormStep1({ form }: FormStep1Props) {
-  const { textLarge } = useThemeContext();
+  const { textLarge, highContrast } = useThemeContext();
 
   return (
     <div className={textLarge ? "text-2xl" : "text-base"}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"}`}>
+      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
         Personal Information and Contact
       </CardTitle>
       <FHr />
@@ -43,12 +43,12 @@ export function FormStep1({ form }: FormStep1Props) {
         name='email'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel className={textLarge ? "text-xl" : "text-base"}>Email</FormLabel>
+            <FormLabel className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>Email</FormLabel>
             <FormControl>
               <Input className={textLarge ? "text-xl" : "text-base"} placeholder='Enter your email' {...field} />
             </FormControl>
             {fieldState.error && (
-              <FormMessage className={"text-red-500 " + (textLarge ? "text-xl" : "text-base")}>
+              <FormMessage className={`text-red-500 ${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
                 {fieldState.error.message}
               </FormMessage>
             )}
@@ -64,11 +64,11 @@ type FormStep2Props = {
 };
 
 export function FormStep2({ form }: FormStep2Props) {
-  const { textLarge } = useThemeContext();
+  const { textLarge, highContrast } = useThemeContext();
 
   return (
     <div className={textLarge ? "text-2xl" : "text-base"}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"}`}>
+      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
         Use of Clinical Information for Research
       </CardTitle>
       <FHr />
@@ -88,7 +88,7 @@ export function FormStep2({ form }: FormStep2Props) {
         mobileSettingsLink='/examples/forms'
       />
       <br />
-      <CardDescription className={textLarge ? "text-xl" : "text-base"}>
+      <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
         *De-identified information is data that has been stripped of all personal identifiers, such as name, address, and contact information.
       </CardDescription>
     </div>
@@ -100,7 +100,7 @@ type FormStep3Props = {
 };
 
 export function FormStep3({ form }: FormStep3Props) {
-  const { textLarge } = useThemeContext();
+  const { textLarge, highContrast } = useThemeContext();
   const { getValues } = form;
   const values = getValues();
 
@@ -123,7 +123,7 @@ export function FormStep3({ form }: FormStep3Props) {
         <strong>Student Consent:</strong> {values.acceptStudentConsent ? "Accepted" : "Denied"}
       </div>
       <FHr />
-      <FormDescription className={textLarge ? "text-xl" : "text-base"}>
+      <FormDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
         By signing below, you agree that the information you have provided is accurate
       </FormDescription>
       <FormField
@@ -148,13 +148,13 @@ export function FormStep3({ form }: FormStep3Props) {
 }
 
 export function FormSuccess() {
-  const { textLarge } = useThemeContext();
+  const { textLarge, highContrast } = useThemeContext();
 
   return (
     <div className={`text-center ${textLarge ? "text-2xl" : "text-base"}`}>
       <div>
-        <CardTitle className={`mb-5 ${textLarge ? "text-2xl" : "text-base"}`}>Form Submitted Successfully</CardTitle>
-        <CardDescription className={textLarge ? "text-xl" : "text-base"}>
+        <CardTitle className={`mb-5 ${textLarge ? "text-2xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>Form Submitted Successfully</CardTitle>
+        <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
           Your information has been submitted successfully. Thank you!
         </CardDescription>
       </div>

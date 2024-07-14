@@ -30,7 +30,7 @@ export function CheckboxWithText({
   checkbox1,
   checkbox2,
 }: CheckboxWithTextProps) {
-  const { textLarge } = useThemeContext();
+  const { textLarge, highContrast } = useThemeContext();
   
   return (
     <div className='space-y-6'>
@@ -46,7 +46,7 @@ export function CheckboxWithText({
               />
             </FormControl>
             <div className='space-y-1 leading-none'>
-              <FormLabel className={textLarge ? "text-xl" : "text-base"}>{checkbox1.labelText}</FormLabel>
+              <FormLabel className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>{checkbox1.labelText}</FormLabel>
               <FormDescription>
                 {checkbox1.descriptionText}
               </FormDescription>

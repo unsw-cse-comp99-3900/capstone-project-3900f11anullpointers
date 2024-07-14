@@ -1,5 +1,5 @@
 "use client";
-import { Inter } from "next/font/google";
+import { Lexend } from "next/font/google";
 import { motion } from "framer-motion";
 import { consentSchema } from "@/validators/auth";
 import { useForm, FormProvider } from "react-hook-form";
@@ -17,13 +17,20 @@ import { FormButtons } from "@/components/FormButtons";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import { useThemeContext } from "@/context/theme-context";
 
 type Input = z.infer<typeof consentSchema>;
+
+const lexend = Lexend({
+  subsets: ['latin'],
+});
 
 export default function Home() {
   const [formStep, setFormStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { dyslexicFont } = useThemeContext();
+
   const form = useForm<Input>({
     resolver: zodResolver(consentSchema),
     defaultValues: {
@@ -55,7 +62,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className={`flex min-h-screen flex-col items-center justify-between ${dyslexicFont ? lexend.className : ""}`}>
       <Header />
       <div className="flex flex-col items-center justify-center w-full max-w-xl mx-auto m-5 p-4 sm:p-6 md:p-8">
         <Card className="w-full">
