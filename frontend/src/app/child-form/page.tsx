@@ -1,7 +1,7 @@
 "use client";
 import { Inter } from "next/font/google";
 import { motion } from "framer-motion";
-import { consentSchema } from "@/validators/adult-auth";
+import { consentSchema } from "@/validators/child-auth";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,11 +11,9 @@ import {
   CardContent,
   CardFooter
 } from "@/components/ui/card";
-import { CardHeaderContent } from "@/components/CardHeaderContent";
-import { FormStep0, FormStep1, FormStep2, FormStep3, FormReviewStep, FormSuccess } from "@/components/Forms";
-import { FormButtons } from "@/components/FormButtons";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { CardHeaderContent } from "./components/CardHeaderContent";
+import { FormStep0, FormStep1, FormStep3, FormReviewStep, FormSuccess } from "./components/Forms";
+import { FormButtons } from "./components/FormButtons";
 import { Toaster } from "@/components/ui/toaster";
 
 type Input = z.infer<typeof consentSchema>;
@@ -29,11 +27,9 @@ export default function Home() {
     defaultValues: {
       email: "",
       name: "",
-      formType: "adult",
+      formType: "child",
       acceptResearchConsent: false,
       denyResearchConsent: false,
-      acceptContactConsent: false,
-      denyContactConsent: false,
       acceptStudentConsent: false,
       denyStudentConsent: false,
       signature: ""
@@ -53,10 +49,9 @@ export default function Home() {
   const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {
     "0": FormStep0,
     "1": FormStep1,
-    "2": FormStep2,
-    "3": FormStep3,
-    "4": FormReviewStep,
-    "5": FormSuccess,
+    "2": FormStep3,
+    "3": FormReviewStep,
+    "4": FormSuccess,
   };
 
   return (
