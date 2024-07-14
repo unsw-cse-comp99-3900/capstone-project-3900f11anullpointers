@@ -7,6 +7,7 @@ export const consentSchema = z.object({
   denyContactConsent: z.boolean(),
   acceptStudentConsent: z.boolean(),
   denyStudentConsent: z.boolean(),
+  formType: z.enum(["child", "adult"]),
   email: z.string().email(),
   name: z
     .string()
