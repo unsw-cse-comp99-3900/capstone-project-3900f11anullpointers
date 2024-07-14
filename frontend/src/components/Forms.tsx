@@ -109,6 +109,42 @@ export function FormStep1({ form }: FormStep2Props) {
 export function FormStep2({ form }: FormStepProps) {
   return (
     <div>
+      <CardTitle className='pb-3'>
+        Contact for Future Research Studies
+      </CardTitle>
+      <FHr />
+      <RadioWithText
+        form={form}
+        radioOptions={{
+          name: "contactConsent",
+          options: [
+            {
+            value: "acceptContactConsent",
+            labelText:
+              "I CONSENT to be contacted with invitations to take part in teaching or clinical studies",
+            descriptionText: "",
+            },
+            {
+              value: "denyContactConsent",
+              labelText:
+              "I DO NOT CONSENT to be contacted with invitations to take part in teaching or clinical studies",
+              descriptionText: "",
+            }
+          ]
+        }}
+      />
+      <br />
+      {/* <CardDescription>
+        *De-identified means we will exclude your name and contact details from
+        the research database
+      </CardDescription> */}
+    </div>
+  );
+}
+
+export function FormStep3({ form }: FormStepProps) {
+  return (
+    <div>
       <CardTitle className='pb-3'>Student Clinic Consent</CardTitle>
       <CardDescription className="font-bold text-gray-700">
         I acknowledge that I have been informed that the initial eye
