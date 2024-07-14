@@ -6,7 +6,8 @@ from email import encoders
 import os
 import base64
 from io import BytesIO
-from datetime import datetime
+from datetime import datetime   
+import logging
 
 def send_emails(server: str, port: int, email_from: str, email_to: str, 
                 pswd :str, attach_name:str , pdf_base64: str, 
@@ -81,6 +82,6 @@ def send_emails(server: str, port: int, email_from: str, email_to: str,
         TIE_server.sendmail(email_from, email_to, text)
         print(f"Email successfully sent to - {email_to}")
     except Exception as e:
-        print(e)
+        logging.error(e)
     finally:
         TIE_server.quit()
