@@ -1,5 +1,5 @@
 const ProgressBar = ({ step, totalSteps }: { step: number, totalSteps: number }) => {
-    const progress = (step / totalSteps) * 100;
+    const progress = (step / (totalSteps)) * 100;
 
     return (
         <div className="w-full bg-secondary rounded-full h-2.5">
