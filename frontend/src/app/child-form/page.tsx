@@ -1,7 +1,7 @@
 "use client";
-import { Lexend } from "next/font/google";
+import { Inter } from "next/font/google";
 import { motion } from "framer-motion";
-import { consentSchema } from "@/validators/adult-auth";
+import { consentSchema } from "@/validators/child-auth";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,37 +11,25 @@ import {
   CardContent,
   CardFooter
 } from "@/components/ui/card";
-import { CardHeaderContent } from "@/components/CardHeaderContent";
-import { FormStep0, FormStep1, FormStep2, FormStep3, FormReviewStep, FormSuccess } from "@/components/Forms";
-import { FormButtons } from "@/components/FormButtons";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { CardHeaderContent } from "./components/CardHeaderContent";
+import { FormStep0, FormStep1, FormStep3, FormReviewStep, FormSuccess } from "./components/Forms";
+import { FormButtons } from "./components/FormButtons";
 import { Toaster } from "@/components/ui/toaster";
-import { useThemeContext } from "@/context/theme-context";
-import TimeoutFeature from "@/components/TimeoutFeature";
 
 type Input = z.infer<typeof consentSchema>;
-
-const lexend = Lexend({
-  subsets: ['latin'],
-});
 
 export default function Home() {
   const [formStep, setFormStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { dyslexicFont } = useThemeContext();
-
   const form = useForm<Input>({
     resolver: zodResolver(consentSchema),
     defaultValues: {
       email: "",
       name: "",
-      formType: "adult",
+      formType: "child",
       acceptResearchConsent: false,
       denyResearchConsent: false,
-      acceptContactConsent: false,
-      denyContactConsent: false,
       acceptStudentConsent: false,
       denyStudentConsent: false,
       signature: ""
@@ -61,14 +49,13 @@ export default function Home() {
   const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {
     "0": FormStep0,
     "1": FormStep1,
-    "2": FormStep2,
-    "3": FormStep3,
-    "4": FormReviewStep,
-    "5": FormSuccess,
+    "2": FormStep3,
+    "3": FormReviewStep,
+    "4": FormSuccess,
   };
 
   return (
-    <main className={`flex min-h-screen flex-col items-center justify-between ${dyslexicFont ? lexend.className : ""}`}>
+    <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="flex flex-col items-center justify-center w-full max-w-xl mx-auto m-5 p-4 sm:p-6 md:p-8">
         <Card className="w-full">
           {isSubmitted ? (
@@ -121,7 +108,6 @@ export default function Home() {
         </Card>
         <Toaster />
       </div>
-      <TimeoutFeature />
     </main>
   );
 }

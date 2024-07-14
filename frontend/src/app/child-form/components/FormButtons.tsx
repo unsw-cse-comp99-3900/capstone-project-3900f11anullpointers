@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
-import { useThemeContext } from "@/context/theme-context";
 
 type FormButtonsProps = {
   formStep: number;
@@ -16,7 +15,6 @@ type FormButtonsProps = {
 
 export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, setIsSubmitted, handleRestart }: FormButtonsProps) {
   const { trigger, getValues } = useFormContext();
-  const { textLarge } = useThemeContext();
 
   const handleNext = async () => {
     let fieldsToValidate: string | readonly string[] | undefined = [];
@@ -25,10 +23,8 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
     } else if (formStep === 1) {
       fieldsToValidate = ["acceptResearchConsent", "denyResearchConsent"]
     } else if (formStep === 2) {
-      fieldsToValidate = ["acceptContactConsent", "denyContactConsent"]
-    } else if (formStep == 3) {
       fieldsToValidate = ["acceptStudentConsent", "denyStudentConsent"]
-    } else if (formStep === 4) {
+    } else if (formStep == 3) {
       fieldsToValidate = ['signature'];
     }
 
@@ -49,7 +45,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
         return
       }
       setIsLoading(true);
-
+      
       const reqFormData = {
         name: formData.name,
         email: formData.email,
@@ -57,16 +53,15 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
         formType: formData.formType,
         consent: {
           researchConsent: formData.acceptResearchConsent,
-          contactConsent: formData.acceptContactConsent,
           studentConsent: formData.acceptStudentConsent,
         }
       }
       // For debugging
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+/*       await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsLoading(false);
-      setFormStep(formStep + 1);
+      setFormStep(formStep + 1); */
 
-/*         const response = await fetch('http://localhost:3030/post', {
+        const response = await fetch('http://localhost:3030/post', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
@@ -80,7 +75,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
        }
 
        setIsLoading(false);
-       setFormStep(formStep + 1); */
+       setFormStep(formStep + 1);
 
     } catch (error: any) {
       setIsLoading(false);
@@ -94,11 +89,10 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
 
   return (
     <div className='flex justify-between'>
-      {formStep > 0 && formStep < 5 && (
+      {formStep > 0 && formStep < 4 && (
         <Button
           type='button'
           variant={"ghost"}
-          className={textLarge ? "text-xl" : ""}
           onClick={() => setFormStep(formStep - 1)}
           disabled={isLoading}
         >
@@ -106,33 +100,32 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
           Go Back
         </Button>
       )}
-      {formStep < 4 && (
+      {formStep < 3 && (
         <Button
           type='button'
           variant={"ghost"}
           className={cn("ml-auto", {
-            hidden: formStep === 4,
-          }) + (textLarge ? " text-xl" : "")}
+            hidden: formStep === 3,
+          })}
           onClick={handleNext}
           disabled={isLoading}
         >
-          {formStep === 3 ? 'Review' : 'Next Page'}
+          {formStep === 2 ? 'Review' : 'Next Page'}
           <ArrowRight className='w-4 h-4 ml-2' />
         </Button>
       )}
-      {formStep === 4 && (
+      {formStep === 3 && (
         <Button
           type='button'
           onClick={handleFinalSubmit}
           disabled={isLoading}
-          className={textLarge ? "text-xl" : ""}
         >
           {isLoading ? 'Submitting...' : 'Submit'}
         </Button>
       )}
-      {formStep === 5 && (
+      {formStep === 4 && (
         <Button
-          className={"w-full " + (textLarge ? "text-xl" : "")}
+          className="w-full"
           type='button'
           onClick={handleRestart}
         >

@@ -8,21 +8,22 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { useThemeContext } from "@/context/theme-context";
 
 type CheckboxWithTextProps = {
   form: UseFormReturn<any>;
   checkbox1: {
+    name: string;
     labelText: string;
     descriptionText: string;
   };
   checkbox2: {
+    name: string;
     labelText: string;
     descriptionText: string;
   };
-  submitButtonText: string;
-  mobileSettingsLink: string;
 };
 
 export function CheckboxWithText({
@@ -32,12 +33,23 @@ export function CheckboxWithText({
 }: CheckboxWithTextProps) {
   const { textLarge, highContrast } = useThemeContext();
   
+  const { errors } = form.formState;
+
+  const consentErrors = [
+    errors.acceptResearchConsent,
+    errors.denyResearchConsent,
+    errors.acceptContactConsent,
+    errors.denyContactConsent,
+    errors.acceptStudentConsent,
+    errors.denyStudentConsent,
+  ].filter(Boolean);
+
   return (
     <div className='space-y-6'>
       <FormField
         control={form.control}
-        name='acceptResearchConsent'
-        render={({ field }) => (
+        name={checkbox1.name}
+        render={({ field, fieldState }) => (
           <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
             <FormControl>
               <Checkbox
@@ -56,8 +68,8 @@ export function CheckboxWithText({
       />
       <FormField
         control={form.control}
-        name='denyResearchConsent'
-        render={({ field }) => (
+        name={checkbox2.name}
+        render={({ field, fieldState }) => (
           <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
             <FormControl>
               <Checkbox
@@ -74,6 +86,11 @@ export function CheckboxWithText({
           </FormItem>
         )}
       />
+      {consentErrors.length > 0 && (
+        <FormMessage className='text-red-500'>
+          Please select ONE option.
+        </FormMessage>
+      )}
     </div>
   );
 }

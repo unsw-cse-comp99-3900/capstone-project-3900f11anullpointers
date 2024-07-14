@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider as CustomThemeProvider } from "@/context/theme-context";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "UNSW Optometry Clinic",
-  description: "Consent form for the UNSW Optometry Clinic",
+  title: "UNSW Optometry",
+  description: "Information Discolsure and Consent",
 };
 
 export default function RootLayout({
@@ -18,7 +20,9 @@ export default function RootLayout({
       <body>
         <NextThemesProvider attribute="class" defaultTheme="system">
           <CustomThemeProvider>
+            <Header />
             {children}
+            <Footer />
           </CustomThemeProvider>
         </NextThemesProvider>
       </body>
