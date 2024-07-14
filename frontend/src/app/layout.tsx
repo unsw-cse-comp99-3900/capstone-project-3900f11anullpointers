@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider as CustomThemeProvider } from "@/context/theme-context";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,7 +23,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextThemesProvider attribute="class" defaultTheme="system">
           <CustomThemeProvider>
+            <Header />
             {children}
+            <Footer />
           </CustomThemeProvider>
         </NextThemesProvider>
       </body>
