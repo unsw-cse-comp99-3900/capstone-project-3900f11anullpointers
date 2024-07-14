@@ -45,8 +45,12 @@ def post_method():
         logging.info(received_data)
 
         # Determine consent flags based on consent field
+        form_type = received_data.get('formType')
         consent = received_data.get('consent')
-        consent_flags = [consent['researchConsent'], consent['contactConsent'], consent['studentConsent']]
+        if form_type == "child":
+            consent_flags = [consent['researchConsent'], consent['studentConsent']]
+        else:
+            consent_flags = [consent['researchConsent'], consent['contactConsent'], consent['studentConsent']]
 
         # Generate 4 byte token with name prepended, removing unnecessary special characters
         token = re.sub(r"[^a-zA-Z' -]", "", received_data['name']).replace(" ", "_") + " - " + secrets.token_hex(4)
