@@ -66,7 +66,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
       setIsLoading(false);
       setFormStep(formStep + 1);
 
-/*         const response = await fetch('http://localhost:3030/post', {
+        const response = await fetch('http://localhost:3030/post', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
        }
 
        setIsLoading(false);
-       setFormStep(formStep + 1); */
+       setFormStep(formStep + 1);
 
     } catch (error: any) {
       setIsLoading(false);

@@ -1,5 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
-import { RadioWithText } from "@/components/RadioWithText";
+import { CheckboxWithText } from "@/components/CheckboxWithText";
 import { CardDescription, CardTitle } from "./ui/card";
 import {
   FormField,
@@ -10,7 +10,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useThemeContext } from "@/context/theme-context";
 
 const FHr = () => <hr className='my-4' />;
 
@@ -19,25 +18,21 @@ type FormStepProps = {
 };
 
 export function FormStep0({ form }: FormStepProps) {
-  const { textLarge, highContrast } = useThemeContext();
-
   return (
-    <div className={textLarge ? "text-2xl" : "text-base"}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
-        Personal Information and Contact
-      </CardTitle>
+    <div>
+      <CardTitle className='pb-3'>Personal Information and Contact</CardTitle>
       <FHr />
       <FormField
         control={form.control}
         name='name'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel className={textLarge ? "text-xl" : "text-base"}>Full name</FormLabel>
+            <FormLabel>Full name</FormLabel>
             <FormControl>
-              <Input className={textLarge ? "text-xl" : "text-base"} placeholder='Enter your name' {...field} />
+              <Input placeholder='Enter your name' {...field} />
             </FormControl>
             {fieldState.error && (
-              <FormMessage className={"text-red-500 " + (textLarge ? "text-xl" : "text-base")}>
+              <FormMessage className='text-red-500'>
                 {fieldState.error.message}
               </FormMessage>
             )}
@@ -50,12 +45,12 @@ export function FormStep0({ form }: FormStepProps) {
         name='email'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>Email</FormLabel>
+            <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input className={textLarge ? "text-xl" : "text-base"} placeholder='Enter your email' {...field} />
+              <Input placeholder='Enter your email' {...field} />
             </FormControl>
             {fieldState.error && (
-              <FormMessage className={`text-red-500 ${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
+              <FormMessage className='text-red-500'>
                 {fieldState.error.message}
               </FormMessage>
             )}
@@ -66,39 +61,30 @@ export function FormStep0({ form }: FormStepProps) {
   );
 }
 
-type FormStep2Props = {
-  form: UseFormReturn<any>;
-};
-
-export function FormStep1({ form }: FormStep2Props) {
-  const { textLarge, highContrast } = useThemeContext();
-
+export function FormStep1({ form }: FormStepProps) {
   return (
-    <div className={textLarge ? "text-2xl" : "text-base"}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
-        Use of Clinical Information for Research
+    <div>
+      <CardTitle className='pb-3'>
+        Use of Clinical Information in Research Studies
       </CardTitle>
       <FHr />
-      <RadioWithText
+      <CheckboxWithText
         form={form}
-        radioOptions={{
-          name: "researchConsent",
-          options: [
-            {
-              value: "acceptResearchConsent",
-              labelText: "I CONSENT to the use of my de-identified* clinical information for the purpose of research",
-              descriptionText: "",
-            },
-            {
-              value: "denyResearchConsent",
-              labelText: "I DO NOT CONSENT to the use of my de-identified* clinical information for the purpose of research",
-              descriptionText: "",
-            },
-          ],
+        checkbox1={{
+          name: "acceptResearchConsent",
+          labelText:
+            "I CONSENT to the use of my de-identified* clinical information for the purpose of research",
+          descriptionText: "",
+        }}
+        checkbox2={{
+          name: "denyResearchConsent",
+          labelText:
+            "I DO NOT CONSENT to the use of my de-identified* clinical information for the purpose of research",
+          descriptionText: "",
         }}
       />
       <br />
-      <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
+      <CardDescription>
         *De-identified means we will exclude your name and contact details from
         the research database
       </CardDescription>
@@ -113,24 +99,19 @@ export function FormStep2({ form }: FormStepProps) {
         Contact for Future Research Studies
       </CardTitle>
       <FHr />
-      <RadioWithText
+      <CheckboxWithText
         form={form}
-        radioOptions={{
-          name: "contactConsent",
-          options: [
-            {
-            value: "acceptContactConsent",
-            labelText:
-              "I CONSENT to be contacted with invitations to take part in teaching or clinical studies",
-            descriptionText: "",
-            },
-            {
-              value: "denyContactConsent",
-              labelText:
-              "I DO NOT CONSENT to be contacted with invitations to take part in teaching or clinical studies",
-              descriptionText: "",
-            }
-          ]
+        checkbox1={{
+          name: "acceptContactConsent",
+          labelText:
+            "I CONSENT to be contacted with invitations to take part in teaching or clinical studies",
+          descriptionText: "",
+        }}
+        checkbox2={{
+          name: "denyContactConsent",
+          labelText:
+            "I DO NOT CONSENT to be contacted with invitations to take part in teaching or clinical studies",
+          descriptionText: "",
         }}
       />
       <br />
@@ -153,22 +134,18 @@ export function FormStep3({ form }: FormStepProps) {
         supervision of a qualified, APHRA registered optometrist.
       </CardDescription>
       <FHr />
-      <RadioWithText
+      <CheckboxWithText
         form={form}
-        radioOptions={{
-          name: "studentConsent",
-          options: [
-            {
-              value: "acceptStudentConsent",
-              labelText: "I CONSENT to be examined by a student under supervision",
-              descriptionText: "",
-            },
-            {
-              value: "denyStudentConsent",
-              labelText: "I DO NOT CONSENT to be examined by a student under supervision",
-              descriptionText: "",
-            },
-          ],
+        checkbox1={{
+          name: "acceptStudentConsent",
+          labelText: "I CONSENT to be examined by a student under supervision",
+          descriptionText: "",
+        }}
+        checkbox2={{
+          name: "denyStudentConsent",
+          labelText:
+            "I DO NOT CONSENT to be examined by a student under supervision",
+          descriptionText: "",
         }}
       />
     </div>
@@ -176,15 +153,12 @@ export function FormStep3({ form }: FormStepProps) {
 }
 
 export function FormReviewStep({ form }: FormStepProps) {
-  const { textLarge, highContrast } = useThemeContext();
   const { getValues } = form;
   const values = getValues();
 
   return (
-    <div className={`space-y-4 ${textLarge ? "text-2xl" : "text-base"}`}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"}`}>
-        Review Your Information
-      </CardTitle>
+    <div className='space-y-4'>
+      <CardTitle className='pb-3'>Review Your Information</CardTitle>
       <FHr />
       <div>
         <strong>Name:</strong> {values.name}
@@ -194,28 +168,29 @@ export function FormReviewStep({ form }: FormStepProps) {
       </div>
       <div>
         <strong>Research Consent:</strong>{" "}
-        {values.researchConsent === "acceptResearchConsent" ? "Accepted" : "Denied"}
+        {values.acceptResearchConsent ? "Accepted" : "Denied"}
       </div>
       <div>
         <strong>Contact Consent:</strong>{" "}
-        {values.contactConsent === "acceptContactConsent" ? "Accepted" : "Denied"}
+        {values.acceptContactConsent ? "Accepted" : "Denied"}
       </div>
       <div>
         <strong>Student Consent:</strong>{" "}
-        {values.studentConsent === "acceptStudentConsent" ? "Accepted" : "Denied"}
+        {values.acceptStudentConsent ? "Accepted" : "Denied"}
       </div>
       <FHr />
-      <FormDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
-        By signing below, you agree that the information you have provided is accurate
+      <FormDescription>
+        By signing below, you agree that the information you have provided is
+        accurate
       </FormDescription>
       <FormField
         control={form.control}
         name='signature'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel className={textLarge ? "text-xl" : "text-base"}>Signature</FormLabel>
+            <FormLabel>Signature</FormLabel>
             <FormControl>
-              <Input className={textLarge ? "text-xl" : "text-base"} placeholder='Type your name to sign' {...field} />
+              <Input placeholder='Type your name to sign' {...field} />
             </FormControl>
             {fieldState.error && (
               <FormMessage className='text-red-500'>
@@ -229,15 +204,12 @@ export function FormReviewStep({ form }: FormStepProps) {
   );
 }
 
-
 export function FormSuccess() {
-  const { textLarge, highContrast } = useThemeContext();
-
   return (
-    <div className={`text-center ${textLarge ? "text-2xl" : "text-base"}`}>
+    <div className='text-center'>
       <div>
-        <CardTitle className={`mb-5 ${textLarge ? "text-2xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>Form Submitted Successfully</CardTitle>
-        <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>
+        <CardTitle className='mb-5'>Form Submitted Successfully</CardTitle>
+        <CardDescription>
           Your information has been submitted successfully. Thank you!
         </CardDescription>
       </div>

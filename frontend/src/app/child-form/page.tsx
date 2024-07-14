@@ -28,10 +28,10 @@ export default function Home() {
       email: "",
       name: "",
       formType: "child",
-      // acceptResearchConsent: false,
-      // denyResearchConsent: false,
-      // acceptStudentConsent: false,
-      // denyStudentConsent: false,
+      acceptResearchConsent: false,
+      denyResearchConsent: false,
+      acceptStudentConsent: false,
+      denyStudentConsent: false,
       signature: ""
     },
   });

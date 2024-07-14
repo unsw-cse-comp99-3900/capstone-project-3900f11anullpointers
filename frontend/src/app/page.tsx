@@ -38,12 +38,12 @@ export default function Home() {
       email: "",
       name: "",
       formType: "adult",
-/*       acceptResearchConsent: false,
+      acceptResearchConsent: false,
       denyResearchConsent: false,
       acceptContactConsent: false,
       denyContactConsent: false,
       acceptStudentConsent: false,
-      denyStudentConsent: false, */
+      denyStudentConsent: false,
       signature: ""
     },
   });
