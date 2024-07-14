@@ -31,12 +31,12 @@ const TimeoutFeature = () => {
   const handleExtend = () => {
     setIsIdle(false);
     setShowPrompt(false);
-    resetTimer(); // Reset the timers and hide the prompt
+    resetTimer();
   };
 
   // Handle user activity
   const handleUserActivity = () => {
-    resetTimer(); // Reset the idle timer on user activity
+    resetTimer();
   };
 
   useEffect(() => {
