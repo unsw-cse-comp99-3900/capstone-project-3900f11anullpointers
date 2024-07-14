@@ -1,0 +1,29 @@
+{
+    "document": {
+        "title": "PATIENT CONSENT AND INFORMATION SHEET (CHILD)",
+        "sections": [
+            {
+                "type": "info",
+                "subtitle": "TEACHING AND RESEARCH",
+                "body": "The UNSW Optometry clinic is part of the School of Optometry and Vision Science, UNSW Australia. It is a teaching facility for both undergraduate and postgraduate optometry students, providing excellence in eye care and is the forefront of the latest research. Please indicate below whether you give consent for your child’s de-identified* information being used for teaching and research purposes. This has no bearing on your child’s clinical care."
+            },
+            {
+                "type": "consent",
+                "subtitle": "TEACHING AND RESEARCH",
+                "body": " to the use of my child’s de-identified* information for the purpose of teaching and research",
+                "footnote": "* de-identified means we exclude your name and contact details from the research database"
+            },
+            {
+                "type": "info",
+                "subtitle": "STUDENT CLINIC CONSENT",
+                "body": "I acknowledge that I have been informed that my child’s initial eye examination and subsequent care in the UNSW Optometry Clinic will be conducted by an optometry student under the supervision of a qualified, AHPRA registered optometrist."
+            },
+            {
+                "type": "consent",
+                "subtitle": "STUDENT CLINIC CONSENT",
+                "body": "to my child being examined by a student under supervision",
+                "footnote": null
+            }
+        ]
+    }
+}
