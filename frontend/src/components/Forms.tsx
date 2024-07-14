@@ -18,7 +18,7 @@ type FormStepProps = {
   form: UseFormReturn<any>;
 };
 
-export function FormStep1({ form }: FormStepProps) {
+export function FormStep0({ form }: FormStepProps) {
   const { textLarge, highContrast } = useThemeContext();
 
   return (
@@ -70,7 +70,7 @@ type FormStep2Props = {
   form: UseFormReturn<any>;
 };
 
-export function FormStep2({ form }: FormStep2Props) {
+export function FormStep1({ form }: FormStep2Props) {
   const { textLarge, highContrast } = useThemeContext();
 
   return (
@@ -106,7 +106,7 @@ export function FormStep2({ form }: FormStep2Props) {
   );
 }
 
-export function FormStep3({ form }: FormStepProps) {
+export function FormStep2({ form }: FormStepProps) {
   return (
     <div>
       <CardTitle className='pb-3'>Student Clinic Consent</CardTitle>
@@ -192,6 +192,7 @@ export function FormReviewStep({ form }: FormStepProps) {
     </div>
   );
 }
+
 
 export function FormSuccess() {
   const { textLarge, highContrast } = useThemeContext();
