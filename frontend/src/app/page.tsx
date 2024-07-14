@@ -18,6 +18,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { useThemeContext } from "@/context/theme-context";
+import TimeoutFeature from "@/components/TimeoutFeature";
 
 type Input = z.infer<typeof consentSchema>;
 
@@ -117,6 +118,7 @@ export default function Home() {
         <Toaster />
       </div>
       <Footer />
+      <TimeoutFeature />
     </main>
   );
 }
