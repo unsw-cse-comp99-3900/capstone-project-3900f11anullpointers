@@ -1,4 +1,4 @@
-import { z } from "zod";
+/* import { z } from "zod";
 
 export const consentSchema = z.object({
   acceptResearchConsent: z.boolean(),
@@ -41,4 +41,18 @@ export const consentSchema = z.object({
         path: ["denyStudentConsent"],
       });
     }
-  });
+  }); */
+
+import { z } from "zod";
+
+export const consentSchema = z.object({
+  formType: z.enum(["child", "adult"]),
+  email: z.string().email(),
+  name: z
+    .string()
+    .min(1, { message: "Please enter a name" })
+    .max(255, { message: "Name is too long" }),
+  signature: z
+    .string()
+    .min(1, { message: "Please enter your full name to sign" }) // Ensure the signature is included and validated
+});

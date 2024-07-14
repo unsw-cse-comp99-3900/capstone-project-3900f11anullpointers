@@ -1,5 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
-import { CheckboxWithText } from "@/components/CheckboxWithText";
+import { RadioWithText } from "@/components/RadioWithText";
 import { CardDescription, CardTitle } from "./ui/card";
 import {
   FormField,
@@ -18,7 +18,7 @@ type FormStepProps = {
   form: UseFormReturn<any>;
 };
 
-export function FormStep1({ form }: FormStep1Props) {
+export function FormStep1({ form }: FormStepProps) {
   const { textLarge, highContrast } = useThemeContext();
 
   return (
@@ -79,19 +79,22 @@ export function FormStep2({ form }: FormStep2Props) {
         Use of Clinical Information for Research
       </CardTitle>
       <FHr />
-      <CheckboxWithText
+      <RadioWithText
         form={form}
-        checkbox1={{
-          name: "acceptResearchConsent",
-          labelText:
-            "I CONSENT to the use of my de-identified* clinical information for the purpose of research",
-          descriptionText: "",
-        }}
-        checkbox2={{
-          name: "denyResearchConsent",
-          labelText:
-            "I DO NOT CONSENT to the use of my de-identified* clinical information for the purpose of research",
-          descriptionText: "",
+        radioOptions={{
+          name: "researchConsent",
+          options: [
+            {
+              value: "acceptResearchConsent",
+              labelText: "I CONSENT to the use of my de-identified* clinical information for the purpose of research",
+              descriptionText: "",
+            },
+            {
+              value: "denyResearchConsent",
+              labelText: "I DO NOT CONSENT to the use of my de-identified* clinical information for the purpose of research",
+              descriptionText: "",
+            },
+          ],
         }}
       />
       <br />
@@ -99,37 +102,6 @@ export function FormStep2({ form }: FormStep2Props) {
         *De-identified means we will exclude your name and contact details from
         the research database
       </CardDescription>
-    </div>
-  );
-}
-
-export function FormStep2({ form }: FormStepProps) {
-  return (
-    <div>
-      <CardTitle className='pb-3'>
-        Contact for Future Research Studies
-      </CardTitle>
-      <FHr />
-      <CheckboxWithText
-        form={form}
-        checkbox1={{
-          name: "acceptContactConsent",
-          labelText:
-            "I CONSENT to be contacted with invitations to take part in teaching or clinical studies",
-          descriptionText: "",
-        }}
-        checkbox2={{
-          name: "denyContactConsent",
-          labelText:
-            "I DO NOT CONSENT to be contacted with invitations to take part in teaching or clinical studies",
-          descriptionText: "",
-        }}
-      />
-      <br />
-      {/* <CardDescription>
-        *De-identified means we will exclude your name and contact details from
-        the research database
-      </CardDescription> */}
     </div>
   );
 }
@@ -145,26 +117,29 @@ export function FormStep3({ form }: FormStepProps) {
         supervision of a qualified, APHRA registered optometrist.
       </CardDescription>
       <FHr />
-      <CheckboxWithText
+      <RadioWithText
         form={form}
-        checkbox1={{
-          name: "acceptStudentConsent",
-          labelText: "I CONSENT to be examined by a student under supervision",
-          descriptionText: "",
-        }}
-        checkbox2={{
-          name: "denyStudentConsent",
-          labelText:
-            "I DO NOT CONSENT to be examined by a student under supervision",
-          descriptionText: "",
+        radioOptions={{
+          name: "studentConsent",
+          options: [
+            {
+              value: "acceptStudentConsent",
+              labelText: "I CONSENT to be examined by a student under supervision",
+              descriptionText: "",
+            },
+            {
+              value: "denyStudentConsent",
+              labelText: "I DO NOT CONSENT to be examined by a student under supervision",
+              descriptionText: "",
+            },
+          ],
         }}
       />
     </div>
   );
 }
 
-
-export function FormStep3({ form }: FormStep3Props) {
+export function FormReviewStep({ form }: FormStepProps) {
   const { textLarge, highContrast } = useThemeContext();
   const { getValues } = form;
   const values = getValues();
@@ -183,15 +158,15 @@ export function FormStep3({ form }: FormStep3Props) {
       </div>
       <div>
         <strong>Research Consent:</strong>{" "}
-        {values.acceptResearchConsent ? "Accepted" : "Denied"}
+        {values.researchConsent === "acceptResearchConsent" ? "Accepted" : "Denied"}
       </div>
       <div>
         <strong>Contact Consent:</strong>{" "}
-        {values.acceptContactConsent ? "Accepted" : "Denied"}
+        {values.contactConsent === "acceptContactConsent" ? "Accepted" : "Denied"}
       </div>
       <div>
         <strong>Student Consent:</strong>{" "}
-        {values.acceptStudentConsent ? "Accepted" : "Denied"}
+        {values.studentConsent === "acceptStudentConsent" ? "Accepted" : "Denied"}
       </div>
       <FHr />
       <FormDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""}`}>

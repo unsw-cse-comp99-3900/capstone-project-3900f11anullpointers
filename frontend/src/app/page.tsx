@@ -12,7 +12,8 @@ import {
   CardFooter
 } from "@/components/ui/card";
 import { CardHeaderContent } from "@/components/CardHeaderContent";
-import { FormStep0, FormStep1, FormStep2, FormStep3, FormReviewStep, FormSuccess } from "@/components/Forms";
+// import { FormStep0, FormStep1, FormStep2, FormStep3, FormReviewStep, FormSuccess } from "@/components/Forms";
+import { FormStep1, FormStep2, FormStep3, FormReviewStep, FormSuccess } from "@/components/Forms";
 import { FormButtons } from "@/components/FormButtons";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -38,12 +39,12 @@ export default function Home() {
       email: "",
       name: "",
       formType: "adult",
-      acceptResearchConsent: false,
+/*       acceptResearchConsent: false,
       denyResearchConsent: false,
       acceptContactConsent: false,
       denyContactConsent: false,
       acceptStudentConsent: false,
-      denyStudentConsent: false,
+      denyStudentConsent: false, */
       signature: ""
     },
   });
@@ -54,12 +55,12 @@ export default function Home() {
 
   const handleRestart = () => {
     form.reset();
-    setFormStep(0);
+    setFormStep(1); // Change to 1 when begin screen is added
     setIsSubmitted(false);
   };
 
   const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {
-    "0": FormStep0,
+    // "0": FormStep0,
     "1": FormStep1,
     "2": FormStep2,
     "3": FormStep3,

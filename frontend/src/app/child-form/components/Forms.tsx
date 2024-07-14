@@ -1,5 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
-import { CheckboxWithText } from "@/components/CheckboxWithText";
+import { RadioWithText } from "@/components/RadioWithText";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import {
   FormField,
@@ -73,19 +73,24 @@ export function FormStep1({ form }: FormStepProps) {
         <u>de-identified</u>* information being used for teaching and research
         purposes. This has no bearing on your child's clinical care.
       </CardDescription>
-      <CheckboxWithText
+      <RadioWithText
         form={form}
-        checkbox1={{
-          name: "acceptResearchConsent",
-          labelText:
-            "I CONSENT to the use of my child's de-identified* clinical information for the purpose of research",
-          descriptionText: "",
-        }}
-        checkbox2={{
-          name: "denyResearchConsent",
-          labelText:
-            "I DO NOT CONSENT to the use of my child's de-identified* clinical information for the purpose of research",
-          descriptionText: "",
+        radioOptions={{
+          name: "researchConsent",
+          options: [
+            {
+              value: "acceptResearchConsent",
+              labelText:
+                "I CONSENT to the use of my child's de-identified* clinical information for the purpose of research",
+              descriptionText: "",
+            },
+            {
+              value: "denyResearchConsent",
+              labelText:
+                "I DO NOT CONSENT to the use of my child's de-identified* clinical information for the purpose of research",
+              descriptionText: "",
+            },
+          ],
         }}
       />
       <br />
@@ -108,19 +113,24 @@ export function FormStep3({ form }: FormStepProps) {
         APHRA registered optometrist.
       </CardDescription>
       <FHr />
-      <CheckboxWithText
+      <RadioWithText
         form={form}
-        checkbox1={{
-          name: "acceptStudentConsent",
-          labelText:
-            "I CONSENT to my child being examined by a student under supervision",
-          descriptionText: "",
-        }}
-        checkbox2={{
-          name: "denyStudentConsent",
-          labelText:
-            "I DO NOT CONSENT to my child being examined by a student under supervision",
-          descriptionText: "",
+        radioOptions={{
+          name: "studentConsent",
+          options: [
+            {
+              value: "acceptStudentConsent",
+              labelText:
+                "I CONSENT to my child being examined by a student under supervision",
+              descriptionText: "",
+            },
+            {
+              value: "denyStudentConsent",
+              labelText:
+                "I DO NOT CONSENT to my child being examined by a student under supervision",
+              descriptionText: "",
+            },
+          ],
         }}
       />
     </div>
@@ -143,11 +153,11 @@ export function FormReviewStep({ form }: FormStepProps) {
       </div>
       <div>
         <strong>Research Consent:</strong>{" "}
-        {values.acceptResearchConsent ? "Accepted" : "Denied"}
+        {values.researchConsent === "acceptResearchConsent" ? "Accepted" : "Denied"}
       </div>
       <div>
         <strong>Student Consent:</strong>{" "}
-        {values.acceptStudentConsent ? "Accepted" : "Denied"}
+        {values.studentConsent === "acceptStudentConsent" ? "Accepted" : "Denied"}
       </div>
       <FHr />
       <FormDescription>
