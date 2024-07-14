@@ -27,9 +27,9 @@ class Title:
     def print(self):
         """Prints the title to the pdf"""
         self.fonts.set_to_title(self.pdf)
-        self.pdf.cell(200, 14, txt = self.title, ln = True, align = "C")
+        self.pdf.cell(200, 14, text = self.title, ln = True, align = "C")
         # Space
-        self.pdf.cell(0, 5, txt = "", ln = True)
+        self.pdf.cell(0, 5, text = "", ln = True)
 
 class Section(ABC):
     """Section interface"""
@@ -53,7 +53,7 @@ class InfoSection(Section):
         self.subtitle.print()
         self.body.print()
         # Space
-        self.pdf.cell(0, 6, txt = "", ln = True)
+        self.pdf.cell(0, 6, text = "", ln = True)
 
 class ConsentSection(Section):
     """Consent section class"""
@@ -72,12 +72,12 @@ class ConsentSection(Section):
         self.subtitle.print()
         self.body.print()
         # Space
-        self.pdf.cell(0, 3, txt = "", ln = True)
+        self.pdf.cell(0, 3, text = "", ln = True)
         if self.footnote is not None:
             self.footnote.print()
 
         # Space
-        self.pdf.cell(0, 6, txt = "", ln = True)
+        self.pdf.cell(0, 6, text = "", ln = True)
 
 class Sections:
     """Sections class"""
@@ -120,24 +120,24 @@ class ConsentBody:
         """Prints the consent body to the pdf"""
         if self.accepted:
             self.fonts.set_to_body_bold(self.pdf)
-            self.pdf.cell(24, 5, txt = "[X] I CONSENT", ln = 0, align = "L")
+            self.pdf.cell(24, 5, text = "[X] I CONSENT", ln = 0, align = "L")
             self.fonts.set_to_body(self.pdf)
-            self.pdf.cell(0, 5, txt = f"{self.body}", ln = True, align = "L")
+            self.pdf.cell(0, 5, text = f"{self.body}", ln = True, align = "L")
 
             self.fonts.set_to_body_bold(self.pdf)
-            self.pdf.cell(38, 5, txt = "[   ] I DO NOT CONSENT", ln = 0, align = "L")
+            self.pdf.cell(38, 5, text = "[   ] I DO NOT CONSENT", ln = 0, align = "L")
             self.fonts.set_to_body(self.pdf)
-            self.pdf.cell(0, 5, txt = f"{self.body}", ln = True, align = "L")
+            self.pdf.cell(0, 5, text = f"{self.body}", ln = True, align = "L")
         else:
             self.fonts.set_to_body_bold(self.pdf)
-            self.pdf.cell(24, 5, txt = "[   ] I CONSENT", ln = 0, align = "L")
+            self.pdf.cell(24, 5, text = "[   ] I CONSENT", ln = 0, align = "L")
             self.fonts.set_to_body(self.pdf)
-            self.pdf.cell(0, 5, txt = f"{self.body}", ln = True, align = "L")
+            self.pdf.cell(0, 5, text = f"{self.body}", ln = True, align = "L")
 
             self.fonts.set_to_body_bold(self.pdf)
-            self.pdf.cell(38, 5, txt = "[X] I DO NOT CONSENT", ln = 0, align = "L")
+            self.pdf.cell(38, 5, text = "[X] I DO NOT CONSENT", ln = 0, align = "L")
             self.fonts.set_to_body(self.pdf)
-            self.pdf.cell(0, 5, txt = f"{self.body}", ln = True, align = "L")
+            self.pdf.cell(0, 5, text = f"{self.body}", ln = True, align = "L")
 
 class Subtitle:
     """Subtitle class"""
@@ -149,9 +149,9 @@ class Subtitle:
     def print(self):
         """Prints the subtitle to the pdf"""
         self.fonts.set_to_subtitle(self.pdf)
-        self.pdf.cell(0, 5, txt = self.subtitle, ln = True, align = "L")
+        self.pdf.cell(0, 5, text = self.subtitle, ln = True, align = "L")
         # Space
-        self.pdf.cell(0, 2, txt = "", ln = True)
+        self.pdf.cell(0, 2, text = "", ln = True)
 
 class Body:
     """Body class"""
@@ -163,4 +163,4 @@ class Body:
     def print(self):
         """Prints the body to the pdf"""
         self.fonts.set_to_body(self.pdf)
-        self.pdf.multi_cell(0, 5, txt = self.body)
+        self.pdf.multi_cell(0, 5, text = self.body)
