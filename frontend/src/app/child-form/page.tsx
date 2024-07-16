@@ -15,6 +15,10 @@ import { CardHeaderContent } from "./components/CardHeaderContent";
 import { FormStep0, FormStep1, FormStep3, FormReviewStep, FormSuccess } from "./components/Forms";
 import { FormButtons } from "./components/FormButtons";
 import { Toaster } from "@/components/ui/toaster";
+import { Lexend } from "next/font/google";
+import { useThemeContext } from "@/context/theme-context";
+
+const lexend = Lexend({ subsets: ["latin"] });
 
 type Input = z.infer<typeof consentSchema>;
 
@@ -36,6 +40,8 @@ export default function Home() {
     },
   });
 
+  const { dyslexicFont, highContrast } = useThemeContext();
+
   async function onSubmit(data: Input) {
     console.log(data);
   }
@@ -55,7 +61,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className={`flex min-h-screen flex-col items-center justify-between ${dyslexicFont ? lexend.className : ""} ${highContrast ? "filter contrast-200" : ""}`}>
       <div className="flex flex-col items-center justify-center w-full max-w-xl mx-auto m-5 p-4 sm:p-6 md:p-8">
         <Card className="w-full">
           {isSubmitted ? (
