@@ -61,7 +61,7 @@ def send_emails(server: str, port: int, email_from: str, email_to: str,
     msg['From'] = email_from
     msg['To'] = email_to
     msg['Subject'] = subject
-    
+
     msg.attach(MIMEText(body, 'html'))
     
     attachment_decoded = base64.b64decode(pdf_base64)
@@ -71,9 +71,9 @@ def send_emails(server: str, port: int, email_from: str, email_to: str,
     encoders.encode_base64(attachment_package)
     attachment_package.add_header('Content-Disposition', f"attachment; filename= {attach_name}")
     msg.attach(attachment_package)
-    
+
     text = msg.as_string()
-    
+
     try:
         TIE_server = smtplib.SMTP(server, port)
         TIE_server.starttls()

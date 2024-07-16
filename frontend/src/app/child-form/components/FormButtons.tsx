@@ -4,9 +4,6 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 
-const BACKEND_HOST = process.env.NEXT_PUBLIC_HOST;
-const BACKEND_PORT = process.env.NEXT_PUBLIC_BACKEND_PORT;
-
 type FormButtonsProps = {
   formStep: number;
   setFormStep: (step: number) => void;
@@ -16,14 +13,7 @@ type FormButtonsProps = {
   handleRestart: () => void;
 };
 
-export function FormButtons({
-  formStep,
-  setFormStep,
-  isLoading,
-  setIsLoading,
-  setIsSubmitted,
-  handleRestart,
-}: FormButtonsProps) {
+export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, setIsSubmitted, handleRestart }: FormButtonsProps) {
   const { trigger, getValues } = useFormContext();
 
   const handleNext = async () => {
@@ -33,10 +23,8 @@ export function FormButtons({
     } else if (formStep === 1) {
       fieldsToValidate = ["acceptResearchConsent", "denyResearchConsent"]
     } else if (formStep === 2) {
-      fieldsToValidate = ["acceptContactConsent", "denyContactConsent"]
-    } else if (formStep == 3) {
       fieldsToValidate = ["acceptStudentConsent", "denyStudentConsent"]
-    } else if (formStep === 4) {
+    } else if (formStep == 3) {
       fieldsToValidate = ['drawSignature'];
     }
 
@@ -56,7 +44,7 @@ export function FormButtons({
       setIsLoading(false);
       return;
     }
-
+    
     console.log(formData);
     try {
       let fieldsToValidate: string = "drawSignature"
@@ -66,7 +54,7 @@ export function FormButtons({
         return
       }
       setIsLoading(true);
-
+      
       const reqFormData = {
         name: formData.name,
         email: formData.email,
@@ -74,32 +62,30 @@ export function FormButtons({
         formType: formData.formType,
         consent: {
           researchConsent: formData.acceptResearchConsent,
-          contactConsent: formData.acceptContactConsent,
           studentConsent: formData.acceptStudentConsent,
-        },
-      };
+        }
+      }
       // For debugging
-      /*       await new Promise((resolve) => setTimeout(resolve, 1000));
+/*       await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsLoading(false);
       setFormStep(formStep + 1); */
 
-      const backendURL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
-      console.log(backendURL);
-      const response = await fetch(`${backendURL}/post`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqFormData),
-      });
+        const response = await fetch('http://localhost:3030/post', {
+         method: 'POST',
+         headers: {
+           'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(reqFormData),
+       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Network response was not ok");
-      }
+       if (!response.ok) {
+         const errorData = await response.json();
+         throw new Error(errorData.message || 'Network response was not ok');
+       }
 
-      setIsLoading(false);
-      setFormStep(formStep + 1);
+       setIsLoading(false);
+       setFormStep(formStep + 1);
+
     } catch (error: any) {
       setIsLoading(false);
       toast({
@@ -112,32 +98,32 @@ export function FormButtons({
 
   return (
     <div className='flex justify-between'>
-      {formStep > 0 && formStep < 5 && (
+      {formStep > 0 && formStep < 4 && (
         <Button
-          type="button"
+          type='button'
           variant={"ghost"}
           onClick={() => setFormStep(formStep - 1)}
           disabled={isLoading}
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className='w-4 h-4 mr-2' />
           Go Back
         </Button>
       )}
-      {formStep < 4 && (
+      {formStep < 3 && (
         <Button
-          type="button"
+          type='button'
           variant={"ghost"}
           className={cn("ml-auto", {
-            hidden: formStep === 4,
+            hidden: formStep === 3,
           })}
           onClick={handleNext}
           disabled={isLoading}
         >
-          {formStep === 3 ? 'Review' : 'Next Page'}
+          {formStep === 2 ? 'Review' : 'Next Page'}
           <ArrowRight className='w-4 h-4 ml-2' />
         </Button>
       )}
-      {formStep === 4 && (
+      {formStep === 3 && (
         <Button
           type='button'
           onClick={handleFinalSubmit}
@@ -146,7 +132,7 @@ export function FormButtons({
           {isLoading ? 'Submitting...' : 'Submit'}
         </Button>
       )}
-      {formStep === 5 && (
+      {formStep === 4 && (
         <Button
           className="w-full"
           type='button'
@@ -158,3 +144,4 @@ export function FormButtons({
     </div>
   );
 }
+

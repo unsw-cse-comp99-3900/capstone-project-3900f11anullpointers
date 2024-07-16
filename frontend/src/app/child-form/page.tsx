@@ -1,17 +1,19 @@
 "use client";
 import { Inter } from "next/font/google";
 import { motion } from "framer-motion";
-import { consentSchema } from "@/validators/adult-auth";
+import { consentSchema } from "@/validators/child-auth";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { CardHeaderContent } from "@/components/CardHeaderContent";
-import { FormStep0, FormStep1, FormStep2, FormStep3, FormReviewStep, FormSuccess } from "@/components/Forms";
-import { FormButtons } from "@/components/FormButtons";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import {
+  Card,
+  CardContent,
+  CardFooter
+} from "@/components/ui/card";
+import { CardHeaderContent } from "./components/CardHeaderContent";
+import { FormStep0, FormStep1, FormStep3, FormReviewStep, FormSuccess } from "./components/Forms";
+import { FormButtons } from "./components/FormButtons";
 import { Toaster } from "@/components/ui/toaster";
 import TimeoutFeature from "@/components/TimeoutFeature";
 
@@ -26,14 +28,12 @@ export default function Home() {
     defaultValues: {
       email: "",
       name: "",
-      formType: "adult",
+      formType: "child",
       acceptResearchConsent: false,
       denyResearchConsent: false,
-      acceptContactConsent: false,
-      denyContactConsent: false,
       acceptStudentConsent: false,
       denyStudentConsent: false,
-      drawSignature: "",
+      drawSignature: ""
     },
   });
 
@@ -52,10 +52,9 @@ export default function Home() {
   const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {
     "0": FormStep0,
     "1": FormStep1,
-    "2": FormStep2,
-    "3": FormStep3,
-    "4": FormReviewStep,
-    "5": FormSuccess,
+    "2": FormStep3,
+    "3": FormReviewStep,
+    "4": FormSuccess,
   };
 
   return (
@@ -68,10 +67,7 @@ export default function Home() {
             </CardContent>
           ) : (
             <>
-              <CardHeaderContent
-                step={formStep}
-                totalSteps={Object.keys(formSteps).length - 1}
-              />
+              <CardHeaderContent step={formStep} totalSteps={Object.keys(formSteps).length - 1} />
               <CardContent>
                 <FormProvider {...form}>
                   <form
@@ -106,14 +102,7 @@ export default function Home() {
               <CardFooter>
                 <div className="w-full">
                   <FormProvider {...form}>
-                    <FormButtons
-                      formStep={formStep}
-                      setFormStep={setFormStep}
-                      isLoading={isLoading}
-                      setIsLoading={setIsLoading}
-                      setIsSubmitted={setIsSubmitted}
-                      handleRestart={handleRestart}
-                    />
+                    <FormButtons formStep={formStep} setFormStep={setFormStep} isLoading={isLoading} setIsLoading={setIsLoading} setIsSubmitted={setIsSubmitted} handleRestart={handleRestart} />
                   </FormProvider>
                 </div>
               </CardFooter>

@@ -2,6 +2,7 @@ import * as React from "react";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
 import SignaturePad from "react-signature-canvas";
+import { useThemeContext } from "@/context/theme-context";
 
 interface SignatureInputProps {
   className?: string;
@@ -42,7 +43,7 @@ const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
           onEnd={save}
           canvasProps={{
             className: cn(
-              "border border-input bg-background rounded-md touch-none w-full h-28",
+              "border border-input bg-white rounded-md touch-none w-full h-28",
               className
             ),
           }}

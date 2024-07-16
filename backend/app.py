@@ -1,3 +1,7 @@
+import os
+import logging
+import secrets
+import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
@@ -72,4 +76,4 @@ def post_method():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=3030)
+    app.run(debug=True, host='0.0.0.0', port=3030, threaded=True)
