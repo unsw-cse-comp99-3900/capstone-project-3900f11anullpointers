@@ -1,0 +1,23 @@
+.large-text {
+  font-size: 30pt;
+}
+
+.large-text .input {
+  font-size: 18pt;
+}
+
+.large-text .form-label {
+  font-size: 18pt;
+}
+
+.large-text .form-message {
+  font-size: 18pt;
+}
+
+.high-contrast {
+  filter: contrast(200%);
+}
+
+.dyslexic-font {
+  font-family: 'OpenDyslexic', sans-serif;
+}
