@@ -23,10 +23,8 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
     } else if (formStep === 1) {
       fieldsToValidate = ["acceptResearchConsent", "denyResearchConsent"]
     } else if (formStep === 2) {
-      fieldsToValidate = ["acceptContactConsent", "denyContactConsent"]
-    } else if (formStep == 3) {
       fieldsToValidate = ["acceptStudentConsent", "denyStudentConsent"]
-    } else if (formStep === 4) {
+    } else if (formStep == 3) {
       fieldsToValidate = ['signature'];
     }
 
@@ -47,7 +45,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
         return
       }
       setIsLoading(true);
-
+      
       const reqFormData = {
         name: formData.name,
         email: formData.email,
@@ -55,7 +53,6 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
         formType: formData.formType,
         consent: {
           researchConsent: formData.acceptResearchConsent,
-          contactConsent: formData.acceptContactConsent,
           studentConsent: formData.acceptStudentConsent,
         }
       }
@@ -92,7 +89,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
 
   return (
     <div className='flex justify-between'>
-      {formStep > 0 && formStep < 5 && (
+      {formStep > 0 && formStep < 4 && (
         <Button
           type='button'
           variant={"ghost"}
@@ -103,21 +100,21 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
           Go Back
         </Button>
       )}
-      {formStep < 4 && (
+      {formStep < 3 && (
         <Button
           type='button'
           variant={"ghost"}
           className={cn("ml-auto", {
-            hidden: formStep === 4,
+            hidden: formStep === 3,
           })}
           onClick={handleNext}
           disabled={isLoading}
         >
-          {formStep === 3 ? 'Review' : 'Next Page'}
+          {formStep === 2 ? 'Review' : 'Next Page'}
           <ArrowRight className='w-4 h-4 ml-2' />
         </Button>
       )}
-      {formStep === 4 && (
+      {formStep === 3 && (
         <Button
           type='button'
           onClick={handleFinalSubmit}
@@ -126,7 +123,7 @@ export function FormButtons({ formStep, setFormStep, isLoading, setIsLoading, se
           {isLoading ? 'Submitting...' : 'Submit'}
         </Button>
       )}
-      {formStep === 5 && (
+      {formStep === 4 && (
         <Button
           className="w-full"
           type='button'
