@@ -3,6 +3,10 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
+import { useThemeContext } from "@/context/theme-context";
+import { Lexend } from "next/font/google";
+
+const lexend = Lexend({ subsets: ["latin"] });
 
 const BACKEND_HOST = process.env.NEXT_PUBLIC_HOST;
 const BACKEND_PORT = process.env.NEXT_PUBLIC_BACKEND_PORT;
@@ -110,6 +114,8 @@ export function FormButtons({
     }
   };
 
+  const { textLarge, highContrast, dyslexicFont } = useThemeContext();
+
   return (
     <div className='flex justify-between'>
       {formStep > 0 && formStep < 5 && (
@@ -118,6 +124,7 @@ export function FormButtons({
           variant={"ghost"}
           onClick={() => setFormStep(formStep - 1)}
           disabled={isLoading}
+          className={`${textLarge ? 'text-xl' : 'text-sm'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Go Back
@@ -127,9 +134,13 @@ export function FormButtons({
         <Button
           type="button"
           variant={"ghost"}
-          className={cn("ml-auto", {
-            hidden: formStep === 4,
-          })}
+          className={cn(
+            { 'text-xl': textLarge, 'text-sm': !textLarge },
+            { 'filter contrast-200': highContrast },
+            { [lexend.className]: dyslexicFont },
+            'ml-auto',
+            { hidden: formStep === 4 }
+          )}
           onClick={handleNext}
           disabled={isLoading}
         >
@@ -142,13 +153,14 @@ export function FormButtons({
           type='button'
           onClick={handleFinalSubmit}
           disabled={isLoading}
+          className={`${textLarge ? 'text-xl' : 'text-sm'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}
         >
           {isLoading ? 'Submitting...' : 'Submit'}
         </Button>
       )}
       {formStep === 5 && (
         <Button
-          className="w-full"
+          className={`w-full ${textLarge ? 'text-xl' : 'text-sm'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}
           type='button'
           onClick={handleRestart}
         >

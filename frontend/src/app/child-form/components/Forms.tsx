@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SignatureInput } from "@/components/ui/signature-input";
+import { useThemeContext } from "@/context/theme-context";
+import { Lexend } from "next/font/google";
+
+const lexend = Lexend({ subsets: ["latin"] });
 
 const FHr = () => <hr className='my-4' />;
 
@@ -19,18 +23,20 @@ type FormStepProps = {
 };
 
 export function FormStep0({ form }: FormStepProps) {
+  const { textLarge, highContrast, dyslexicFont } = useThemeContext();
+
   return (
-    <div>
-      <CardTitle className='pb-3'>Personal Information and Contact</CardTitle>
+    <div className={textLarge ? "text-2xl" : "text-base"}>
+      <CardTitle className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${dyslexicFont ? lexend.className : ""}`}>Personal Information and Contact</CardTitle>
       <FHr />
       <FormField
         control={form.control}
         name='name'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel>Parent/ Guardian's Full name</FormLabel>
+            <FormLabel className={`pb-3 ${textLarge ? "text-xl" : ""} ${dyslexicFont ? lexend.className : ""}`}>Parent/ Guardian's Full name</FormLabel>
             <FormControl>
-              <Input placeholder='Enter your full name' {...field} />
+              <Input className={`pb-3 ${textLarge ? "text-xl" : ""} ${dyslexicFont ? lexend.className : ""}`} placeholder='Enter your full name' {...field} />
             </FormControl>
             {fieldState.error && (
               <FormMessage className='text-red-500'>
@@ -46,9 +52,9 @@ export function FormStep0({ form }: FormStepProps) {
         name='email'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel className={`pb-3 ${textLarge ? "text-xl" : ""} ${dyslexicFont ? lexend.className : ""}`}>Email</FormLabel>
             <FormControl>
-              <Input placeholder='Enter your email' {...field} />
+              <Input className={`pb-3 ${textLarge ? "text-xl" : ""} ${dyslexicFont ? lexend.className : ""}`} placeholder='Enter your email' {...field} />
             </FormControl>
             {fieldState.error && (
               <FormMessage className='text-red-500'>
@@ -63,13 +69,15 @@ export function FormStep0({ form }: FormStepProps) {
 }
 
 export function FormStep1({ form }: FormStepProps) {
+  const { textLarge, highContrast, dyslexicFont } = useThemeContext();
+
   return (
-    <div>
-      <CardTitle className='pb-3'>
+    <div className={textLarge ? "text-2xl" : "text-base"}>
+      <CardTitle className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${dyslexicFont ? lexend.className : ""}`}>
         Use of Clinical Information in Research Studies
       </CardTitle>
       <FHr />
-      <CardDescription className="pb-3">
+      <CardDescription className={`pb-3 ${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>
         Please indicate below whether you give consent for your child's{" "}
         <u>de-identified</u>* information being used for teaching and research
         purposes. This has no bearing on your child's clinical care.
@@ -90,7 +98,7 @@ export function FormStep1({ form }: FormStepProps) {
         }}
       />
       <br />
-      <CardDescription>
+      <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>
         *De-identified means we will exclude your name and contact details from
         the research database
       </CardDescription>
@@ -99,10 +107,12 @@ export function FormStep1({ form }: FormStepProps) {
 }
 
 export function FormStep3({ form }: FormStepProps) {
+  const { textLarge, highContrast, dyslexicFont } = useThemeContext();
+
   return (
     <div>
-      <CardTitle className='pb-3'>Student Clinic Consent</CardTitle>
-      <CardDescription className='font-bold text-gray-700'>
+      <CardTitle className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${dyslexicFont ? lexend.className : ""}`}>Student Clinic Consent</CardTitle>
+      <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""} font-bold text-gray-700`}>
         I acknowledge that I have been informed that my child's initial eye
         examination and subsequent care in the UNSW Optometry Clinic will be
         conducted by an optometry student under the supervision of a qualified,
@@ -129,12 +139,13 @@ export function FormStep3({ form }: FormStepProps) {
 }
 
 export function FormReviewStep({ form }: FormStepProps) {
+  const { textLarge, highContrast, dyslexicFont } = useThemeContext();
   const { getValues } = form;
   const values = getValues();
 
   return (
-    <div className='space-y-4'>
-      <CardTitle className='pb-3'>Review Your Information</CardTitle>
+    <div className={`space-y-4 ${textLarge ? "text-2xl" : "text-base"} ${dyslexicFont ? lexend.className : ""}`}>
+      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"} ${dyslexicFont ? lexend.className : ""}`}>Review Your Information</CardTitle>
       <FHr />
       <div>
         <strong>Name:</strong> {values.name}
@@ -151,7 +162,7 @@ export function FormReviewStep({ form }: FormStepProps) {
         {values.acceptStudentConsent ? "Accepted" : "Denied"}
       </div>
       <FHr />
-      <FormDescription>
+      <FormDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>
         By signing below, you agree that the information you have provided is
         accurate
       </FormDescription>
@@ -160,7 +171,7 @@ export function FormReviewStep({ form }: FormStepProps) {
         name='drawSignature'
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel>Parent's Signature</FormLabel>
+            <FormLabel className={`${textLarge ? "text-xl" : "text-base"} ${dyslexicFont ? lexend.className : ""}`}>Parent's Signature</FormLabel>
             <FormControl>
               <SignatureInput field={field} />
             </FormControl>
@@ -177,11 +188,13 @@ export function FormReviewStep({ form }: FormStepProps) {
 }
 
 export function FormSuccess() {
+  const { textLarge, highContrast, dyslexicFont } = useThemeContext();
+
   return (
-    <div className='text-center'>
+    <div className={`text-center ${textLarge ? "text-2xl" : "text-base"}`}>
       <div>
-        <CardTitle className='mb-5'>Form Submitted Successfully</CardTitle>
-        <CardDescription>
+        <CardTitle className={`mb-5 ${textLarge ? "text-2xl" : "text-base"} ${dyslexicFont ? lexend.className : ""}`}>Form Submitted Successfully</CardTitle>
+        <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>
           Your information has been submitted successfully. Thank you!
         </CardDescription>
       </div>

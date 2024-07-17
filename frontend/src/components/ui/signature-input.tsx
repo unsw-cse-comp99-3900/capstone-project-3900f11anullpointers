@@ -3,6 +3,9 @@ import { Button } from "./button";
 import { cn } from "@/lib/utils";
 import SignaturePad from "react-signature-canvas";
 import { useThemeContext } from "@/context/theme-context";
+import { Lexend } from "next/font/google";
+
+const lexend = Lexend({ subsets: ["latin"] });
 
 interface SignatureInputProps {
   className?: string;
@@ -36,6 +39,8 @@ const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
       };
     }, []);
 
+    const { textLarge, highContrast, dyslexicFont } = useThemeContext();
+
     return (
       <div className="items-center no-select">
         <SignaturePad
@@ -49,7 +54,7 @@ const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
           }}
         />
         <div className="flex mt-4 space-x-2">
-          <Button onClick={clear} variant="outline">
+          <Button onClick={clear} variant="outline" className={`${textLarge ? 'text-xl' : 'text-sm'} ${dyslexicFont ? lexend.className : ""}`}>
             Clear
           </Button>
         </div>
