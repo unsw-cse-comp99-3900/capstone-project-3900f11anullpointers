@@ -5,7 +5,7 @@ import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
-from src.send_email import send_emails
+from src.send_email import send_email_to_clinic, send_email_to_patient
 import os
 import logging
 from dotenv import find_dotenv, load_dotenv 
@@ -28,16 +28,20 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 # PDF_DIR = '/app/pdfs'
 PDF_DIR = ""
 
-# Function to set up email to be sent.
-def send_email_with_pdf(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):
-    SERVER = os.getenv('SMTP_HOST')
-    PORT = os.getenv('SMTP_PORT')
-    EMAIL_FROM = os.getenv('SMTP_USER')
-    EMAIL_TO = recipient_email
-    PSWD = os.getenv('SMTP_PSWD')
+# Function to set up email to be sent to clinic and patient
+def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):
+    server = os.getenv('SMTP_HOST')
+    port = os.getenv('SMTP_PORT')
+    email_from = os.getenv('SMTP_USER')
+    email_to = recipient_email
+    pswd = os.getenv('SMTP_PSWD')
 
-    send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, "Consent Form.pdf", 
+    token = re.sub(r"[^a-zA-Z' -]", "", patient_name).replace(" ", "_") + " - " + secrets.token_hex(4)
+
+    send_email_to_clinic(server, port, email_from, email_to, pswd, f"{token}.pdf",
                 pdf_base64, patient_name, patient_email, submit_datetime)
+
+    send_email_to_patient(server, port, email_from, patient_email, pswd, patient_name)
 
 @app.route('/post', methods=['POST'])
 def post_method():
@@ -45,24 +49,38 @@ def post_method():
         received_data = request.json
 
         logging.info(received_data)
-        
+
         au_timezone = pytz.timezone('Australia/Sydney')
         current_au_time = datetime.now(au_timezone)
 
+        draw_signature = received_data.get('drawSignature')
+        form_type = received_data.get('formType')
+        generator = GeneratePDF()
+
         # Determine consent flags based on consent field
         consent = received_data.get('consent')
-        consent_flags = [consent['researchConsent'], False, False]
 
-        drawSignature = received_data.get('drawSignature')
+        if form_type == "adult":
+            consent_flags = [consent['researchConsent'], consent['contactConsent'], consent['studentConsent']]
+        elif form_type == "child":
+            consent_flags = [consent['researchConsent'], consent['studentConsent']]
+        else:
+            raise FileNotFoundError(f"Form type is not available: {form_type}")
 
         # Generate PDF with dynamic data
-        generator = GeneratePDF()
-        pdf_base64 = generator.generate_pdf(received_data['name'], "adult", consent_flags, drawSignature, current_au_time)
+        pdf_base64 = generator.generate_pdf(
+            received_data['name'],
+            form_type,
+            consent_flags,
+            draw_signature,
+            current_au_time
+        )
 
         patient_name = received_data.get('name')
         patient_email = received_data.get('email')
-        # Send email of PDF
-        send_email_with_pdf(os.getenv('RECIPIENT_EMAIL'), pdf_base64, patient_name, patient_email, current_au_time)
+
+        send_emails(os.getenv('RECIPIENT_EMAIL'), pdf_base64,
+                    patient_name, patient_email, current_au_time)
 
         response_data = {
             "message": "Form submission successful",

@@ -9,13 +9,10 @@ from io import BytesIO
 from datetime import datetime   
 import logging
 
-def send_emails(server: str, port: int, email_from: str, email_to: str, 
-                pswd :str, attach_name:str , pdf_base64: str, 
+def send_email_to_clinic(server: str, port: int, email_from: str, email_to: str,
+                pswd :str, attach_name:str , pdf_base64: str,
                 patient_name: str, patient_email: str, submit_datetime: datetime) -> None:
     subject = "Patient Consent Form Submission"
-    patient_name = patient_name
-    patient_email = patient_email
-    
     current_time = submit_datetime.strftime("%H:%M %p")
     current_date = submit_datetime.strftime("%B %d, %Y")
     
@@ -55,7 +52,7 @@ def send_emails(server: str, port: int, email_from: str, email_to: str,
         </div>
     </body>
     </html>
-    """    
+    """
     
     msg = MIMEMultipart()
     msg['From'] = email_from
@@ -63,14 +60,104 @@ def send_emails(server: str, port: int, email_from: str, email_to: str,
     msg['Subject'] = subject
 
     msg.attach(MIMEText(body, 'html'))
-    
+
     attachment_decoded = base64.b64decode(pdf_base64)
-    
+
     attachment_package = MIMEBase('application', 'pdf')
     attachment_package.set_payload(attachment_decoded)
     encoders.encode_base64(attachment_package)
     attachment_package.add_header('Content-Disposition', f"attachment; filename= {attach_name}")
     msg.attach(attachment_package)
+
+    text = msg.as_string()
+
+    try:
+        TIE_server = smtplib.SMTP(server, port)
+        TIE_server.starttls()
+        TIE_server.login(email_from, pswd)
+
+        TIE_server.sendmail(email_from, email_to, text)
+        print(f"Email successfully sent to - {email_to}")
+    except Exception as e:
+        logging.error(e)
+    finally:
+        TIE_server.quit()
+
+def send_email_to_patient(server: str, port: int, email_from: str, email_to: str, 
+                          pswd :str, patient_name: str) -> None:
+    subject = "Confirmation of Consent Form Submission - UNSW Optometry Clinic"
+
+    body = f"""\
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Confirmation Email</title>
+    </head>
+    <body
+        style="
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        "
+    >
+        <div
+        style="
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            background-color: #ffffff;
+        "
+        >
+        <div
+            style="
+            text-align: center;
+            border-bottom: 1px solid #dddddd;
+            padding-bottom: 20px;
+            "
+        >
+            <h1 style="margin: 0; color: black">Confirmation Email</h1>
+        </div>
+
+        <div style="padding: 20px; color: black">
+            <h2 style="margin-top: 0">Dear {patient_name},</h2>
+            <p>
+            Thanks for filling out the consent form for the UNSW Optometry Clinic.
+            We appreciate your time and effort in providing us with your information and consent.
+            </p>
+
+            <p>
+            Thank you for choosing UNSW Optometry Clinic.
+            </p>
+        </div>
+
+        <div
+            style="
+            text-align: center;
+            border-top: 1px solid #dddddd;
+            padding-top: 20px;
+            font-size: 12px;
+            color: #888888;
+            "
+        >
+            <p>This is an automated message, please do not reply.</p>
+            <p>&copy; 2024 Your Company. All rights reserved.</p>
+        </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    msg = MIMEMultipart()
+    msg['From'] = email_from
+    msg['To'] = email_to
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'html'))
 
     text = msg.as_string()
 
