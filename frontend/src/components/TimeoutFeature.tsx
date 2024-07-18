@@ -24,7 +24,7 @@ const TimeoutFeature = () => {
         setShowPrompt(false);
         window.location.reload(); // Reset form
       }, 15000); // 15 seconds to press the "Extend" button
-    }, 10000); // 5 minutes before showing the prompt
+    }, 300000); // 5 minutes before showing the prompt
   };
 
   // Handle Extend button click

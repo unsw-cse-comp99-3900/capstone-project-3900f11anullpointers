@@ -6,17 +6,14 @@ import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { CardHeaderContent } from "@/components/CardHeaderContent";
 import { FormStep0, FormStep1, FormStep2, FormStep3, FormReviewStep, FormSuccess } from "@/components/Forms";
 import { FormButtons } from "@/components/FormButtons";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import TimeoutFeature from "@/components/TimeoutFeature";
 
 type Input = z.infer<typeof consentSchema>;
 
@@ -36,7 +33,7 @@ export default function Home() {
       denyContactConsent: false,
       acceptStudentConsent: false,
       denyStudentConsent: false,
-      signature: ""
+      drawSignature: "",
     },
   });
 
@@ -48,6 +45,8 @@ export default function Home() {
     form.reset();
     setFormStep(0);
     setIsSubmitted(false);
+
+    window.dispatchEvent(new Event("clearSignature"));
   };
 
   const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {
@@ -69,7 +68,10 @@ export default function Home() {
             </CardContent>
           ) : (
             <>
-              <CardHeaderContent step={formStep} totalSteps={Object.keys(formSteps).length - 1} />
+              <CardHeaderContent
+                step={formStep}
+                totalSteps={Object.keys(formSteps).length - 1}
+              />
               <CardContent>
                 <FormProvider {...form}>
                   <form
@@ -104,7 +106,14 @@ export default function Home() {
               <CardFooter>
                 <div className="w-full">
                   <FormProvider {...form}>
-                    <FormButtons formStep={formStep} setFormStep={setFormStep} isLoading={isLoading} setIsLoading={setIsLoading} setIsSubmitted={setIsSubmitted} handleRestart={handleRestart} />
+                    <FormButtons
+                      formStep={formStep}
+                      setFormStep={setFormStep}
+                      isLoading={isLoading}
+                      setIsLoading={setIsLoading}
+                      setIsSubmitted={setIsSubmitted}
+                      handleRestart={handleRestart}
+                    />
                   </FormProvider>
                 </div>
               </CardFooter>
@@ -113,6 +122,7 @@ export default function Home() {
         </Card>
         <Toaster />
       </div>
+      <TimeoutFeature />
     </main>
   );
 }

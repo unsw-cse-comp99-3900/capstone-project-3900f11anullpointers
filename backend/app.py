@@ -5,111 +5,82 @@ import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
+from src.send_email import send_email_to_clinic, send_email_to_patient
 import os
 import logging
-import re
-from src.send_email import send_clinic_email, send_patient_email
+from dotenv import find_dotenv, load_dotenv 
+from datetime import datetime
+import pytz
+
+load_dotenv(find_dotenv('.env'))
+load_dotenv(find_dotenv('.env.local'))
+
+FRONTEND_HOST = os.getenv('NEXT_PUBLIC_HOST')
+FRONTEND_PORT = os.getenv('NEXT_PUBLIC_FRONTEND_PORT')
+FRONTEND_URL = f"http://{FRONTEND_HOST}:{FRONTEND_PORT}"
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": FRONTEND_URL}})
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
 # Docker directory where PDFs are stored
 # PDF_DIR = '/app/pdfs'
 PDF_DIR = ""
-SERVER = "smtp.gmail.com"
-PORT = 587
-EMAIL_FROM = "anullpointers@gmail.com"
-CLINIC_EMAIL = "nicholas.abreu@outlook.com"
-PSWD = "rtrjqzvtyuecbyxh"
 
-################### Helper Functions ###################
-# Function to set up email to be sent.
-def _send_email_to_clinic(pdf_path: str, patient_name: str) -> None:
-    with open(pdf_path, 'rb') as attachment:
-        send_clinic_email(
-            SERVER,
-            PORT,
-            EMAIL_FROM,
-            CLINIC_EMAIL,
-            PSWD,
-            patient_name,
-            os.path.basename(pdf_path),
-            attachment
-        )
+# Function to set up email to be sent to clinic and patient
+def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):
+    server = os.getenv('SMTP_HOST')
+    port = os.getenv('SMTP_PORT')
+    email_from = os.getenv('SMTP_USER')
+    email_to = recipient_email
+    pswd = os.getenv('SMTP_PSWD')
 
-def _send_email_to_patient(email: str, patient_name: str) -> None:
-    send_patient_email(SERVER, PORT, EMAIL_FROM, email, PSWD, patient_name)
+    token = re.sub(r"[^a-zA-Z' -]", "", patient_name).replace(" ", "_") + " - " + secrets.token_hex(4)
 
-# Function to validate user data.
-def validateData(received_data):
-    # Check for required fields and empty values.
-    required_fields = ['name', 'email', 'signature', 'consent']
-    for field in required_fields:
-        # If any field other than 'consent' is empty, return error.
-        if field not in received_data or received_data[field] == "":
-            return jsonify({"error": f"Field '{field}' is required and cannot be empty."}), 400
+    send_email_to_clinic(server, port, email_from, email_to, pswd, f"{token}.pdf",
+                pdf_base64, patient_name, patient_email, submit_datetime)
 
-    # Validate email format.
-    email = received_data['email']
-    email_regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-    if not re.match(email_regex, email):
-        return jsonify({"error": "Invalid email format."}), 400
-    
-    # Validate consent field.
-    consent = received_data['consent']
-    if not isinstance(consent, dict) or 'researchConsent' not in consent or 'studentConsent' not in consent:
-        return jsonify({"error": "Consent fields are invalid."}), 400
-    
-    # Check if consent fields are boolean.
-    if not isinstance(consent['researchConsent'], bool) or not isinstance(consent['studentConsent'], bool):
-        return jsonify({"error": "Consent fields must be boolean values."}), 400
-    
-    # Return success response if all validations pass.
-    return jsonify({"message": "Validation successful."}), 200
-
-    # Validate phone number format and length.
-    # phone_number = received_data['phone']
-    # if not (phone_number.isdigit() and len(phone_number) == 10):
-    #     return jsonify({"error": "Phone number must be a 10-digit numeric value."}), 400
-
-    # Validate date of birth format and values.
-    # dob = received_data['dob']
-    # if not (len(dob) == 10 and dob[4] == dob[7] == '-' and dob[:4].isdigit() and dob[5:7].isdigit() and dob[8:].isdigit()):
-    #     return jsonify({"error": "Invalid date of birth format. Use DD-MM-YYYY."}), 400
-
-    # yyyy, mm, dd = map(int, dob.split('-'))
-    # if not (0 < dd <= 31 and 0 < mm <= 12):
-    #     return jsonify({"error": "Invalid date of birth values. Check day, month, and year."}), 400
-########################################################
+    send_email_to_patient(server, port, email_from, patient_email, pswd, patient_name)
 
 @app.route('/post', methods=['POST'])
 def post_method():
     try:
         received_data = request.json
-        validateData(received_data)
+
+        logging.info(received_data)
+
+        au_timezone = pytz.timezone('Australia/Sydney')
+        current_au_time = datetime.now(au_timezone)
+
+        draw_signature = received_data.get('drawSignature')
+        form_type = received_data.get('formType')
+        generator = GeneratePDF()
 
         # Determine consent flags based on consent field
         consent = received_data.get('consent')
-        consent_flags = [consent['researchConsent'], False, False]
 
-        # Generate 4 byte token with name prepended, removing unnecessary special characters
-        token = re.sub(r"[^a-zA-Z' -]", "", received_data['name']).replace(" ", "_") + " - " + secrets.token_hex(4)
+        if form_type == "adult":
+            consent_flags = [consent['researchConsent'], consent['contactConsent'], consent['studentConsent']]
+        elif form_type == "child":
+            consent_flags = [consent['researchConsent'], consent['studentConsent']]
+        else:
+            raise FileNotFoundError(f"Form type is not available: {form_type}")
 
         # Generate PDF with dynamic data
-        generator = GeneratePDF()
-        pdf_path = os.path.join(PDF_DIR, f"{token}.pdf")
-        generator.generate_pdf(token, received_data['name'], "adult", consent_flags)
+        pdf_base64 = generator.generate_pdf(
+            received_data['name'],
+            form_type,
+            consent_flags,
+            draw_signature,
+            current_au_time
+        )
 
-        # Send email of PDF to clinic
-        _send_email_to_clinic(pdf_path, received_data['name'])
-        # Send confirmation email to patient
-        _send_email_to_patient(received_data["email"], received_data['name'])
+        patient_name = received_data.get('name')
+        patient_email = received_data.get('email')
 
-        # Delete the generated PDF file from the server
-        if os.path.exists(pdf_path):
-            os.remove(pdf_path)
+        send_emails(os.getenv('RECIPIENT_EMAIL'), pdf_base64,
+                    patient_name, patient_email, current_au_time)
 
         response_data = {
             "message": "Form submission successful",
