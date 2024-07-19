@@ -106,18 +106,6 @@ def post_method():
         pdf_path = os.path.join(PDF_DIR, f"{token}.pdf")
         generator.generate_pdf(token, received_data['name'], "adult", consent_flags)
 
-        # Send email of PDF
-        email_sent = send_email_with_pdf(pdf_path, "z5361148@ad.unsw.edu.au")
-        
-        if not email_sent:
-            # Move the PDF to the temporary storage directory if the email fails to send
-            temp_pdf_path = os.path.join(TEMP_PDF_DIR, f"{very_special_name}.pdf")
-            shutil.move(pdf_path, temp_pdf_path)
-            logging.error(f"PDF moved to temporary storage: {temp_pdf_path}")
-        else:
-            # Delete the generated PDF file from the server if the email was sent successfully
-            if os.path.exists(pdf_path):
-                os.remove(pdf_path)
         # Send email of PDF to clinic
         _send_email_to_clinic(pdf_path, received_data['name'])
         # Send confirmation email to patient
