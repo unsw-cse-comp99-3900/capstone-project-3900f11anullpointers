@@ -52,9 +52,16 @@ const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
               className
             ),
           }}
+          clearOnResize={false}
         />
         <div className="flex mt-4 space-x-2">
-          <Button onClick={clear} variant="outline" className={`${textLarge ? 'text-xl' : 'text-sm'} ${dyslexicFont ? lexend.className : ""}`}>
+          <Button
+            onClick={clear}
+            variant="outline"
+            className={`${textLarge ? "text-xl" : "text-sm"} ${
+              dyslexicFont ? lexend.className : ""
+            }`}
+          >
             Clear
           </Button>
         </div>
