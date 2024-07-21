@@ -35,18 +35,17 @@ export function FormButtons({
     if (formStep === 0) {
       fieldsToValidate = ["name", "email"];
     } else if (formStep === 1) {
-      fieldsToValidate = ["acceptResearchConsent", "denyResearchConsent"]
+      fieldsToValidate = ["acceptResearchConsent", "denyResearchConsent"];
     } else if (formStep === 2) {
-      fieldsToValidate = ["acceptContactConsent", "denyContactConsent"]
+      fieldsToValidate = ["acceptContactConsent", "denyContactConsent"];
     } else if (formStep == 3) {
-      fieldsToValidate = ["acceptStudentConsent", "denyStudentConsent"]
+      fieldsToValidate = ["acceptStudentConsent", "denyStudentConsent"];
     } else if (formStep === 4) {
-      fieldsToValidate = ['drawSignature'];
+      fieldsToValidate = ["drawSignature"];
     }
 
     const isValid = await trigger(fieldsToValidate);
     isValid && setFormStep(formStep + 1);
-    console.log("UP!!", formStep)
   };
 
   const handleFinalSubmit = async () => {
@@ -61,13 +60,12 @@ export function FormButtons({
       return;
     }
 
-    console.log(formData);
     try {
-      let fieldsToValidate: string = "drawSignature"
-  
+      let fieldsToValidate: string = "drawSignature";
+
       const isValid = await trigger(fieldsToValidate);
-      if (!isValid){
-        return
+      if (!isValid) {
+        return;
       }
       setIsLoading(true);
 
@@ -88,7 +86,6 @@ export function FormButtons({
       setFormStep(formStep + 1); */
 
       const backendURL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
-      console.log(backendURL);
       const response = await fetch(`${backendURL}/post`, {
         method: "POST",
         headers: {
@@ -117,14 +114,16 @@ export function FormButtons({
   const { textLarge, highContrast, dyslexicFont } = useThemeContext();
 
   return (
-    <div className='flex justify-between'>
+    <div className="flex justify-between">
       {formStep > 0 && formStep < 5 && (
         <Button
           type="button"
           variant={"ghost"}
           onClick={() => setFormStep(formStep - 1)}
           disabled={isLoading}
-          className={`${textLarge ? 'text-xl' : 'text-sm'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}
+          className={`${textLarge ? "text-xl" : "text-sm"} ${
+            highContrast ? "filter contrast-200" : ""
+          } ${dyslexicFont ? lexend.className : ""}`}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Go Back
@@ -135,33 +134,37 @@ export function FormButtons({
           type="button"
           variant={"ghost"}
           className={cn(
-            { 'text-xl': textLarge, 'text-sm': !textLarge },
-            { 'filter contrast-200': highContrast },
+            { "text-xl": textLarge, "text-sm": !textLarge },
+            { "filter contrast-200": highContrast },
             { [lexend.className]: dyslexicFont },
-            'ml-auto',
+            "ml-auto",
             { hidden: formStep === 4 }
           )}
           onClick={handleNext}
           disabled={isLoading}
         >
-          {formStep === 3 ? 'Review' : 'Next Page'}
-          <ArrowRight className='w-4 h-4 ml-2' />
+          {formStep === 3 ? "Review" : "Next Page"}
+          <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       )}
       {formStep === 4 && (
         <Button
-          type='button'
+          type="button"
           onClick={handleFinalSubmit}
           disabled={isLoading}
-          className={`${textLarge ? 'text-xl' : 'text-sm'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}
+          className={`${textLarge ? "text-xl" : "text-sm"} ${
+            highContrast ? "filter contrast-200" : ""
+          } ${dyslexicFont ? lexend.className : ""}`}
         >
-          {isLoading ? 'Submitting...' : 'Submit'}
+          {isLoading ? "Submitting..." : "Submit"}
         </Button>
       )}
       {formStep === 5 && (
         <Button
-          className={`w-full ${textLarge ? 'text-xl' : 'text-sm'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}
-          type='button'
+          className={`w-full ${textLarge ? "text-xl" : "text-sm"} ${
+            highContrast ? "filter contrast-200" : ""
+          } ${dyslexicFont ? lexend.className : ""}`}
+          type="button"
           onClick={handleRestart}
         >
           Restart

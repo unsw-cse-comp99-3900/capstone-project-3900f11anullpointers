@@ -47,26 +47,28 @@ export function CheckboxWithText({
     errors.denyStudentConsent,
   ].filter(Boolean);
 
-  console.log(consentErrors);
-
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       <FormField
         control={form.control}
         name={checkbox1.name}
         render={({ field, fieldState }) => (
-          <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
+          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
             <FormControl>
               <Checkbox
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />
             </FormControl>
-            <div className='space-y-1 leading-none'>
-              <FormLabel className={`${textLarge ? 'text-xl' : 'text-base'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>{checkbox1.labelText}</FormLabel>
-              <FormDescription>
-                {checkbox1.descriptionText}
-              </FormDescription>
+            <div className="space-y-1 leading-none">
+              <FormLabel
+                className={`${textLarge ? "text-xl" : "text-base"} ${
+                  highContrast ? "filter contrast-200" : ""
+                } ${dyslexicFont ? lexend.className : ""}`}
+              >
+                {checkbox1.labelText}
+              </FormLabel>
+              <FormDescription>{checkbox1.descriptionText}</FormDescription>
             </div>
           </FormItem>
         )}
@@ -75,24 +77,28 @@ export function CheckboxWithText({
         control={form.control}
         name={checkbox2.name}
         render={({ field, fieldState }) => (
-          <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
+          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
             <FormControl>
               <Checkbox
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />
             </FormControl>
-            <div className='space-y-1 leading-none'>
-              <FormLabel className={`${textLarge ? 'text-xl' : 'text-base'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>{checkbox2.labelText}</FormLabel>
-              <FormDescription>
-                {checkbox2.descriptionText}
-              </FormDescription>
+            <div className="space-y-1 leading-none">
+              <FormLabel
+                className={`${textLarge ? "text-xl" : "text-base"} ${
+                  highContrast ? "filter contrast-200" : ""
+                } ${dyslexicFont ? lexend.className : ""}`}
+              >
+                {checkbox2.labelText}
+              </FormLabel>
+              <FormDescription>{checkbox2.descriptionText}</FormDescription>
             </div>
           </FormItem>
         )}
       />
       {consentErrors.length > 0 && (
-        <FormMessage className='text-red-500'>
+        <FormMessage className="text-red-500">
           Please select ONE option.
         </FormMessage>
       )}
