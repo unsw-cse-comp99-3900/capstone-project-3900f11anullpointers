@@ -48,8 +48,6 @@ def post_method():
     try:
         received_data = request.json
 
-        logging.info(received_data)
-
         au_timezone = pytz.timezone('Australia/Sydney')
         current_au_time = datetime.now(au_timezone)
 
