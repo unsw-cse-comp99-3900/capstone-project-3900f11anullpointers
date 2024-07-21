@@ -17,9 +17,9 @@ SIGNATURE_FOLDER = "src/signatures"
 LOGO_FOLDER = "src/logo"
 LOGO_FILE = f"{LOGO_FOLDER}/logo.png"
 
-
+logging.getLogger('fontTools.subset').level = logging.WARN
+logging.getLogger('fontTools.ttLib.ttFont').level = logging.WARN
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
-
 
 class GeneratePDF:
     """Class used to generate a consent form PDF"""
