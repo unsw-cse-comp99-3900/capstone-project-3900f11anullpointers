@@ -5,12 +5,15 @@ import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
-from src.send_email import send_email_to_clinic, send_email_to_patient
+from src.send_email import SendEmail
 import os
 import logging
 from dotenv import find_dotenv, load_dotenv 
 from datetime import datetime
 import pytz
+import time
+import threading
+
 
 load_dotenv(find_dotenv('.env'))
 load_dotenv(find_dotenv('.env.local'))
@@ -24,24 +27,35 @@ CORS(app, resources={r"/*": {"origins": FRONTEND_URL}})
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
-# Docker directory where PDFs are stored
-# PDF_DIR = '/app/pdfs'
-PDF_DIR = ""
+server = os.getenv('SMTP_HOST')
+port = os.getenv('SMTP_PORT')
+user = os.getenv('SMTP_USER')
+pswd = os.getenv('SMTP_PSWD')
+smtp_server = SendEmail(server, port, user, pswd)
 
 # Function to set up email to be sent to clinic and patient
-def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):
-    server = os.getenv('SMTP_HOST')
-    port = os.getenv('SMTP_PORT')
-    email_from = os.getenv('SMTP_USER')
+def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):    
     email_to = recipient_email
-    pswd = os.getenv('SMTP_PSWD')
 
     token = re.sub(r"[^a-zA-Z' -]", "", patient_name).replace(" ", "_") + " - " + secrets.token_hex(4)
 
-    send_email_to_clinic(server, port, email_from, email_to, pswd, f"{token}.pdf",
-                pdf_base64, patient_name, patient_email, submit_datetime)
+    start = time.time()
 
-    send_email_to_patient(server, port, email_from, patient_email, pswd, patient_name)
+    t1 = threading.Thread(target=smtp_server.send_email_to_clinic, args=(email_to, f"{token}.pdf", pdf_base64, patient_name, patient_email, submit_datetime))
+    t2 = threading.Thread(target=smtp_server.send_email_to_patient, args=(patient_email, patient_name))
+    
+    t1.start()
+    t2.start()
+    
+    t1.join()
+    t2.join()
+    
+    # smtp_server.send_email_to_clinic(email_to, f"{token}.pdf", pdf_base64, patient_name, patient_email, submit_datetime)
+    # smtp_server.send_email_to_patient(patient_email, patient_name)
+    
+    end = time.time()
+
+    logging.info(f"Emails took {end-start:.2f} sec to send")
 
 @app.route('/post', methods=['POST'])
 def post_method():
