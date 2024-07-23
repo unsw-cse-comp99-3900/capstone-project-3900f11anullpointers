@@ -4,20 +4,11 @@ This module handles the PDF generation and email sending for form submissions
 through a Flask web application. The app listens for POST requests and processes 
 the received data to generate a PDF and send emails to specified recipients.
 
-Dependencies:
-- os
-- logging
-- secrets
-- re
-- flask
-- flask_cors
-- dotenv
-- datetime
-- pytz
-
 Functions:
-- send_emails: Sends emails with the generated PDF attached.
 - post_method: Endpoint for handling form submissions.
+
+Private Functions:
+- send_emails: Sends emails with the generated PDF attached.
 """
 
 import os
@@ -25,12 +16,12 @@ import logging
 import secrets
 import re
 from typing import Any, Dict, List
+from datetime import datetime
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
 from src.send_email import send_email_to_clinic, send_email_to_patient
 from dotenv import find_dotenv, load_dotenv
-from datetime import datetime
 import pytz
 
 load_dotenv(find_dotenv(".env"))
@@ -45,18 +36,9 @@ CORS(app, resources={r"/*": {"origins": FRONTEND_URL}})
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
-def send_emails(recipient_email: str, pdf_base64, patient_name: str,
+def _send_emails(recipient_email: str, pdf_base64, patient_name: str,
                 patient_email: str, submit_datetime: datetime) -> None:
-    """
-    Sends emails with the generated PDF attached.
-
-    Args:
-        recipient_email (str): The email address of the recipient (clinic).
-        pdf_base64 (str): The base64 encoded PDF data.
-        patient_name (str): The name of the patient.
-        patient_email (str): The email address of the patient.
-        submit_datetime (datetime): The datetime when the form was submitted.
-    """
+    """Sends emails with the generated PDF attached."""
     server: str = os.getenv("SMTP_HOST")
     port: str = os.getenv("SMTP_PORT")
     email_from: str = os.getenv("SMTP_USER")
@@ -121,7 +103,7 @@ def post_method() -> Response:
         patient_name: str = received_data.get("name")
         patient_email: str = received_data.get("email")
 
-        send_emails(os.getenv("RECIPIENT_EMAIL"), pdf_base64,
+        _send_emails(os.getenv("RECIPIENT_EMAIL"), pdf_base64,
                     patient_name, patient_email, current_au_time)
 
         response_data: Dict[str, Any] = {

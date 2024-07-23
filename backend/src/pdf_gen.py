@@ -1,4 +1,4 @@
-"""PDF generator script
+"""Module for generating PDFs.
 
 This module is responsible for generating consent form PDFs using the FPDF library. 
 It defines the GeneratePDF class, which handles the creation and formatting of 
@@ -7,24 +7,6 @@ the PDF documents, including adding logo, signatures, and text content.
 Classes:
 - GeneratePDF: Handles the generation of a PDF document with consent information, 
   client signatures, and other details.
-
-Functions:
-- GeneratePDF.__init__: Initializes the PDF generator with necessary fonts.
-- GeneratePDF._add_base64_image: Adds an image to the PDF from a base64-encoded string.
-- GeneratePDF.generate_pdf: Generates a PDF document with client information, 
-  form content, and a signature.
-- GeneratePDF._get_json_dict: Retrieves the JSON configuration for the specified form.
-
-Dependencies:
-- json: For loading form configuration from JSON files.
-- base64: For encoding and decoding base64 data.
-- logging: For logging errors and information.
-- datetime: For handling date and time.
-- typing: For type hints.
-- io: For handling in-memory byte streams.
-- fpdf: The library used for PDF generation.
-- .doc_printing: Module containing the Document class used for printing document content.
-- .fonts.fonts: Module containing the Fonts class used for setting PDF fonts.
 
 Constants:
 - TEXT_FOLDER: Directory containing form text configuration files.
@@ -61,59 +43,64 @@ class GeneratePDF:
         except (RuntimeError, FileNotFoundError, json.JSONDecodeError) as e:
             logging.error("PDF generator cannot be made: %s", e)
 
-    def _add_base64_image(self, base64_data: str, h=None):
-        if "base64," in base64_data:
-            base64_data: str = base64_data.split("base64,")[1]
+    def _add_base64_image(self, base64_data: str, h=None) -> None:
+        try:
+            if "base64," in base64_data:
+                base64_data: str = base64_data.split("base64,")[1]
 
-        image_data: bytes = base64.b64decode(base64_data)
-        image_file: BytesIO = BytesIO(image_data)
-        self.pdf.image(image_file, h=h)
+            image_data: bytes = base64.b64decode(base64_data)
+            image_file: BytesIO = BytesIO(image_data)
+            self.pdf.image(image_file, h=h)
+        except (ValueError, TypeError) as e:
+            logging.error("Error addding base64 image: %s", e)
 
-    def generate_pdf(self, client_name: str, form_name: str,
-                     consent_flags: List[bool], siganture_base64: str, submit_datetime: datetime) -> str:
+    def generate_pdf(self, client_name: str, form_name: str, consent_flags: List[bool],
+                     siganture_base64: str, submit_datetime: datetime) -> str:
         """Generates a PDF document with client information, form content, and a signature."""
         self.pdf.add_page()
 
+
+        # Add logo
+        self.pdf.image(LOGO_FILE, w=25, x=15, y=11)
+
+        # Print document text
+        form_dict: Dict[str, Any] = self._get_json_dict(form_name)
+        document: Document = Document(self.pdf, self.fonts,
+                                        consent_flags, form_dict["document"])
         try:
-            # Add logo
-            self.pdf.image(LOGO_FILE, w=25, x=15, y=11)
-
-            # Print document text
-            form_dict: Dict[str, Any] = self._get_json_dict(form_name)
-            document: Document = Document(self.pdf, self.fonts,
-                                          consent_flags, form_dict["document"])
             document.print()
+        except RuntimeError as e:
+            logging.error("Unable to print to pdf document: %s", e)
 
-            # Space
-            self.pdf.cell(0, 5, text = "", ln=True)
+        # Space
+        self.pdf.cell(0, 5, text = "", ln=True)
 
-            # Add signature
-            self._add_base64_image(siganture_base64, h=20)
+        # Add signature
+        self._add_base64_image(siganture_base64, h=20)
 
-            # Space
-            self.pdf.cell(0, 5, text="", ln = True)
+        # Space
+        self.pdf.cell(0, 5, text="", ln = True)
 
-            # Add client's name
-            self.pdf.cell(0, 5, text=client_name, ln=True, align="L")
+        # Add client's name
+        self.pdf.cell(0, 5, text=client_name, ln=True, align="L")
 
-            # Add date
-            date: str = submit_datetime.strftime("%d %B %Y")
-            self.pdf.cell(0, 5, text=date, ln=True, align="L")
+        # Add date
+        date: str = submit_datetime.strftime("%d %B %Y")
+        self.pdf.cell(0, 5, text=date, ln=True, align="L")
 
-            pdf_buffer = BytesIO()
+        pdf_buffer: BytesIO = BytesIO()
+
+        try:
             self.pdf.output(pdf_buffer)
+        except RuntimeError as e:
+            logging.error("Unable to output pdf document: %s", e)
 
-            pdf_content = pdf_buffer.getvalue()
-            pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+        pdf_content: bytes = pdf_buffer.getvalue()
+        pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
 
-            logging.info("PDF successfully generated and encoded to base64")
+        logging.info("PDF successfully generated and encoded to base64")
 
-            return pdf_base64
-
-        except Exception as e:
-            logging.error("PDF generation failed: %s %s", e, type(e))
-            raise
-
+        return pdf_base64
 
     def _get_json_dict(self, form_name: str) -> Dict[str, Any]:
         try:
