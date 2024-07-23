@@ -1,13 +1,26 @@
+import os
+import logging
+import secrets
+import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
-from src.send_email import send_emails
+from src.send_email import send_email_to_clinic, send_email_to_patient
 import os
 import logging
+from dotenv import find_dotenv, load_dotenv 
+from datetime import datetime
+import pytz
 
+load_dotenv(find_dotenv('.env'))
+load_dotenv(find_dotenv('.env.local'))
+
+FRONTEND_HOST = os.getenv('NEXT_PUBLIC_HOST')
+FRONTEND_PORT = os.getenv('NEXT_PUBLIC_FRONTEND_PORT')
+FRONTEND_URL = f"http://{FRONTEND_HOST}:{FRONTEND_PORT}"
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": FRONTEND_URL}})
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
@@ -15,16 +28,20 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 # PDF_DIR = '/app/pdfs'
 PDF_DIR = ""
 
-# Function to set up email to be sent.
-def send_email_with_pdf(pdf_path, recipient_email):
-    SERVER = "smtp.gmail.com"
-    PORT = 587
-    EMAIL_FROM = "anullpointers@gmail.com"
-    EMAIL_TO = recipient_email
-    PSWD = "rtrjqzvtyuecbyxh"
+# Function to set up email to be sent to clinic and patient
+def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):
+    server = os.getenv('SMTP_HOST')
+    port = os.getenv('SMTP_PORT')
+    email_from = os.getenv('SMTP_USER')
+    email_to = recipient_email
+    pswd = os.getenv('SMTP_PSWD')
 
-    with open(pdf_path, 'rb') as attachment:
-        send_emails(SERVER, PORT, EMAIL_FROM, EMAIL_TO, PSWD, os.path.basename(pdf_path), attachment)
+    token = re.sub(r"[^a-zA-Z' -]", "", patient_name).replace(" ", "_") + " - " + secrets.token_hex(4)
+
+    send_email_to_clinic(server, port, email_from, email_to, pswd, f"{token}.pdf",
+                pdf_base64, patient_name, patient_email, submit_datetime)
+
+    send_email_to_patient(server, port, email_from, patient_email, pswd, patient_name)
 
 @app.route('/post', methods=['POST'])
 def post_method():
@@ -33,23 +50,37 @@ def post_method():
 
         logging.info(received_data)
 
+        au_timezone = pytz.timezone('Australia/Sydney')
+        current_au_time = datetime.now(au_timezone)
+
+        draw_signature = received_data.get('drawSignature')
+        form_type = received_data.get('formType')
+        generator = GeneratePDF()
+
         # Determine consent flags based on consent field
         consent = received_data.get('consent')
-        consent_flags = [consent['researchConsent'], False, False]
 
-        very_special_name = "test1"
+        if form_type == "adult":
+            consent_flags = [consent['researchConsent'], consent['contactConsent'], consent['studentConsent']]
+        elif form_type == "child":
+            consent_flags = [consent['researchConsent'], consent['studentConsent']]
+        else:
+            raise FileNotFoundError(f"Form type is not available: {form_type}")
 
         # Generate PDF with dynamic data
-        generator = GeneratePDF()
-        pdf_path = os.path.join(PDF_DIR, f"{very_special_name}.pdf")
-        generator.generate_pdf(very_special_name, received_data['name'], "adult", consent_flags)
+        pdf_base64 = generator.generate_pdf(
+            received_data['name'],
+            form_type,
+            consent_flags,
+            draw_signature,
+            current_au_time
+        )
 
-        # Send email of PDF
-        send_email_with_pdf(pdf_path, "nicholas.abreu@outlook.com")
+        patient_name = received_data.get('name')
+        patient_email = received_data.get('email')
 
-        # Delete the generated PDF file from the server
-        if os.path.exists(pdf_path):
-            os.remove(pdf_path)
+        send_emails(os.getenv('RECIPIENT_EMAIL'), pdf_base64,
+                    patient_name, patient_email, current_au_time)
 
         response_data = {
             "message": "Form submission successful",
@@ -63,4 +94,4 @@ def post_method():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=3030)
+    app.run(debug=True, host='0.0.0.0', port=3030, threaded=True)
