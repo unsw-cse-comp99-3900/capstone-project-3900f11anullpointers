@@ -101,18 +101,18 @@ def send_email_to_clinic(server: str, port: int, email_from: str, email_to: str,
     """
 
     msg: MIMEMultipart = MIMEMultipart()
-    msg['From'] = email_from
-    msg['To'] = email_to
-    msg['Subject'] = subject
+    msg["From"] = email_from
+    msg["To"] = email_to
+    msg["Subject"] = subject
 
-    msg.attach(MIMEText(body, 'html'))
+    msg.attach(MIMEText(body, "html"))
 
     attachment_decoded: bytes = base64.b64decode(pdf_base64)
 
-    attachment_package: MIMEBase = MIMEBase('application', 'pdf')
+    attachment_package: MIMEBase = MIMEBase("application", "pdf")
     attachment_package.set_payload(attachment_decoded)
     encoders.encode_base64(attachment_package)
-    attachment_package.add_header('Content-Disposition', f"attachment; filename= {attach_name}")
+    attachment_package.add_header("Content-Disposition", f"attachment; filename= {attach_name}")
     msg.attach(attachment_package)
 
     text: str = msg.as_string()
@@ -198,11 +198,11 @@ def send_email_to_patient(server: str, port: int, email_from: str, email_to: str
     """
 
     msg: MIMEMultipart = MIMEMultipart()
-    msg['From'] = email_from
-    msg['To'] = email_to
-    msg['Subject'] = PATIENT_SUBJECT
+    msg["From"] = email_from
+    msg["To"] = email_to
+    msg["Subject"] = PATIENT_SUBJECT
 
-    msg.attach(MIMEText(body, 'html'))
+    msg.attach(MIMEText(body, "html"))
 
     text: str = msg.as_string()
 

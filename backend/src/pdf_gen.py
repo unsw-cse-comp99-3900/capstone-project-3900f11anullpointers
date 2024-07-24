@@ -96,7 +96,7 @@ class GeneratePDF:
             logging.error("Unable to output pdf document: %s", e)
 
         pdf_content: bytes = pdf_buffer.getvalue()
-        pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+        pdf_base64 = base64.b64encode(pdf_content).decode("utf-8")
 
         logging.info("PDF successfully generated and encoded to base64")
 
