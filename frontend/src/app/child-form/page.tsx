@@ -6,16 +6,14 @@ import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter
-} from "@/components/ui/card";
-import { CardHeaderContent } from "./components/CardHeaderContent";
-import { FormStep0, FormStep1, FormStep3, FormReviewStep, FormSuccess } from "./components/Forms";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { FormButtons } from "./components/FormButtons";
 import { Toaster } from "@/components/ui/toaster";
 import TimeoutFeature from "@/components/TimeoutFeature";
+import { StepWrapper } from "@/components/StepWrapper";
+import { formSteps } from "../../components/formConfigs/ChildFormStepConfig";
+import { SuccessStep } from "@/components/formSteps/SuccessStep";
+import { CardHeaderContent } from "@/components/CardHeaderContent";
 
 type Input = z.infer<typeof consentSchema>;
 
@@ -33,7 +31,7 @@ export default function Home() {
       denyResearchConsent: false,
       acceptStudentConsent: false,
       denyStudentConsent: false,
-      drawSignature: ""
+      drawSignature: "",
     },
   });
 
@@ -49,34 +47,34 @@ export default function Home() {
     window.dispatchEvent(new Event("clearSignature"));
   };
 
-  const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {
-    "0": FormStep0,
-    "1": FormStep1,
-    "2": FormStep3,
-    "3": FormReviewStep,
-    "4": FormSuccess,
-  };
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
-      <div className="flex flex-col items-center justify-center w-full max-w-xl mx-auto m-5 p-4 sm:p-6 md:p-8">
-        <Card className="w-full">
+    <main className='flex min-h-screen flex-col items-center justify-between'>
+      <div className='flex flex-col items-center justify-center w-full max-w-xl mx-auto m-5 p-4 sm:p-6 md:p-8'>
+        <Card className='w-full'>
           {isSubmitted ? (
             <CardContent>
-              <FormSuccess />
+              <SuccessStep />
             </CardContent>
           ) : (
             <>
-              <CardHeaderContent step={formStep} totalSteps={Object.keys(formSteps).length - 1} />
+              <CardHeaderContent
+                step={formStep}
+                totalSteps={formSteps.length - 1}
+                title="Patient's Consent & Information Sheet (Children)"
+                description='The UNSW Optometry Clinic is part of the School of Optometry and
+                Vision Science, UNSW Australia. It is a teaching facility for both
+                undergraduate and postgraduate optometry students, providing
+                excellence in eye care and is at the forefront of the latest research.'
+              />
               <CardContent>
                 <FormProvider {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-3 overflow-hidden"
+                    className='space-y-3 overflow-hidden'
                   >
-                    <div className="flex flex-col space-between">
+                    <div className='flex flex-col space-between'>
                       <motion.div
-                        className="flex w-full"
+                        className='flex w-full'
                         initial={false}
                         animate={{
                           x: `-${formStep * 100}%`,
@@ -86,23 +84,27 @@ export default function Home() {
                           duration: 0.5,
                         }}
                       >
-                        {Object.keys(formSteps).map((key) => {
-                          const StepComponent = formSteps[key];
-                          return (
-                            <div key={key} className="w-full flex-shrink-0 p-3">
-                              <StepComponent form={form} />
-                            </div>
-                          );
-                        })}
+                        {formSteps.map((_, index) => (
+                          <div key={index} className='w-full flex-shrink-0 p-3'>
+                            <StepWrapper form={form} step={index} />
+                          </div>
+                        ))}
                       </motion.div>
                     </div>
                   </form>
                 </FormProvider>
               </CardContent>
               <CardFooter>
-                <div className="w-full">
+                <div className='w-full'>
                   <FormProvider {...form}>
-                    <FormButtons formStep={formStep} setFormStep={setFormStep} isLoading={isLoading} setIsLoading={setIsLoading} setIsSubmitted={setIsSubmitted} handleRestart={handleRestart} />
+                    <FormButtons
+                      formStep={formStep}
+                      setFormStep={setFormStep}
+                      isLoading={isLoading}
+                      setIsLoading={setIsLoading}
+                      setIsSubmitted={setIsSubmitted}
+                      handleRestart={handleRestart}
+                    />
                   </FormProvider>
                 </div>
               </CardFooter>

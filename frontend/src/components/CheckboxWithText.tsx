@@ -1,5 +1,4 @@
 "use client";
-
 import { UseFormReturn } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,7 +14,7 @@ import { Lexend } from "next/font/google";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
-type CheckboxWithTextProps = {
+export type CheckboxWithTextProps = {
   form: UseFormReturn<any>;
   checkbox1: {
     name: string;
@@ -46,8 +45,6 @@ export function CheckboxWithText({
     errors.acceptStudentConsent,
     errors.denyStudentConsent,
   ].filter(Boolean);
-
-  console.log(consentErrors);
 
   return (
     <div className='space-y-6'>
