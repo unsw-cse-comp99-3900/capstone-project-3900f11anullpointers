@@ -1,4 +1,4 @@
-"""Module for sendig emails.
+"""Module for sending emails.
 
 This module provides functionality to send emails with consent forms as a PDF to the
 clinic emailand also allows sending of a confirmation email to the patient's email.
