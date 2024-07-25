@@ -15,6 +15,7 @@ import { CardHeaderContent } from "./components/CardHeaderContent";
 import { FormStep0, FormStep1, FormStep3, FormReviewStep, FormSuccess } from "./components/Forms";
 import { FormButtons } from "./components/FormButtons";
 import { Toaster } from "@/components/ui/toaster";
+import TimeoutFeature from "@/components/TimeoutFeature";
 
 type Input = z.infer<typeof consentSchema>;
 
@@ -32,7 +33,7 @@ export default function Home() {
       denyResearchConsent: false,
       acceptStudentConsent: false,
       denyStudentConsent: false,
-      signature: ""
+      drawSignature: ""
     },
   });
 
@@ -44,6 +45,8 @@ export default function Home() {
     form.reset();
     setFormStep(0);
     setIsSubmitted(false);
+
+    window.dispatchEvent(new Event("clearSignature"));
   };
 
   const formSteps: { [key: string]: React.ComponentType<{ form: any }> } = {
@@ -108,6 +111,7 @@ export default function Home() {
         </Card>
         <Toaster />
       </div>
+      <TimeoutFeature />
     </main>
   );
 }

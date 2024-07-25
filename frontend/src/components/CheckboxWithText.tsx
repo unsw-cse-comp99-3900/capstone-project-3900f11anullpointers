@@ -10,6 +10,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useThemeContext } from "@/context/theme-context";
+import { Lexend } from "next/font/google";
+
+const lexend = Lexend({ subsets: ["latin"] });
 
 type CheckboxWithTextProps = {
   form: UseFormReturn<any>;
@@ -30,6 +34,8 @@ export function CheckboxWithText({
   checkbox1,
   checkbox2,
 }: CheckboxWithTextProps) {
+  const { textLarge, highContrast, dyslexicFont } = useThemeContext();
+
   const { errors } = form.formState;
 
   const consentErrors = [
@@ -40,6 +46,8 @@ export function CheckboxWithText({
     errors.acceptStudentConsent,
     errors.denyStudentConsent,
   ].filter(Boolean);
+
+  console.log(consentErrors);
 
   return (
     <div className='space-y-6'>
@@ -55,7 +63,7 @@ export function CheckboxWithText({
               />
             </FormControl>
             <div className='space-y-1 leading-none'>
-              <FormLabel>{checkbox1.labelText}</FormLabel>
+              <FormLabel className={`${textLarge ? 'text-xl' : 'text-base'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>{checkbox1.labelText}</FormLabel>
               <FormDescription>
                 {checkbox1.descriptionText}
               </FormDescription>
@@ -75,7 +83,7 @@ export function CheckboxWithText({
               />
             </FormControl>
             <div className='space-y-1 leading-none'>
-              <FormLabel>{checkbox2.labelText}</FormLabel>
+              <FormLabel className={`${textLarge ? 'text-xl' : 'text-base'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>{checkbox2.labelText}</FormLabel>
               <FormDescription>
                 {checkbox2.descriptionText}
               </FormDescription>

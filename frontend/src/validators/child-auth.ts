@@ -11,12 +11,12 @@ export const consentSchema = z.object({
     .string()
     .min(1, { message: "Please enter a name" })
     .max(255, { message: "Name is too long" }),
-  signature: z
+  drawSignature: z
     .string()
-    .min(1, { message: "Please enter your full name to sign" }) // Ensure the signature is included and validated
+    .min(1, { message: "Please draw your signature to sign" }), // Ensure the signature is included and validated
   }).superRefine((data, ctx) => {
     if ((data.acceptResearchConsent && data.denyResearchConsent) || 
-      !data.acceptResearchConsent && !data.denyResearchConsent) {
+      (!data.acceptResearchConsent && !data.denyResearchConsent)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "You cannot both accept and deny research consent.",
@@ -28,8 +28,8 @@ export const consentSchema = z.object({
         path: ["denyResearchConsent"],
       });
     }
-    if (data.acceptStudentConsent && data.denyStudentConsent || 
-      !data.acceptStudentConsent && !data.denyStudentConsent) {
+    if ((data.acceptStudentConsent && data.denyStudentConsent) || 
+      (!data.acceptStudentConsent && !data.denyStudentConsent)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "You cannot both accept and deny student consent.",
