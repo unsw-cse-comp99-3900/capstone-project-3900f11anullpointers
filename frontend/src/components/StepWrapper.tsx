@@ -1,4 +1,4 @@
-import { formSteps } from "./formConfigs/AdultFormStepConfig";
+import { formSteps } from "../forms/AdultFormStepConfig";
 import { UseFormReturn } from "react-hook-form";
 
 type StepWrapperProps = {

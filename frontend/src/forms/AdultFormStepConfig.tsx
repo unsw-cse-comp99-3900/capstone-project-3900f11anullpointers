@@ -89,7 +89,11 @@ export const formSteps: FormStepConfig[] = [
   },
   {
     component: ReviewStep,
-    props: {},
+    props: {
+      showResearchConsent: true,
+      showContactConsent: true,
+      showStudentConsent: true,
+    },
   },
   {
     component: SuccessStep,

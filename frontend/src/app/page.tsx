@@ -12,7 +12,7 @@ import { FormButtons } from "@/components/FormButtons";
 import { Toaster } from "@/components/ui/toaster";
 import TimeoutFeature from "@/components/TimeoutFeature";
 import { StepWrapper } from "@/components/StepWrapper";
-import { formSteps } from "../components/formConfigs/AdultFormStepConfig";
+import { formSteps } from "../forms/AdultFormStepConfig";
 import { SuccessStep } from "@/components/formSteps/SuccessStep";
 
 type Input = z.infer<typeof consentSchema>;

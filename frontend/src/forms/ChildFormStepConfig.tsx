@@ -73,7 +73,9 @@ export const formSteps: FormStepConfig[] = [
   {
     component: ReviewStep,
     props: {
-      showContactConsent: false
+      showResearchConsent: true,
+      showContactConsent: false,
+      showStudentConsent: true,
     },
   },
   {
