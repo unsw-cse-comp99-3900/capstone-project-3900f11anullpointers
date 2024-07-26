@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from 'next-themes';
-import './TimeoutFeature.css';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button";
 
 const TimeoutFeature = () => {
   const [isIdle, setIsIdle] = useState(false);
@@ -64,12 +72,17 @@ const TimeoutFeature = () => {
   return (
     <div>
       {showPrompt && isIdle && (
-        <div className={`overlay ${theme}`}>
-          <div className={`prompt ${theme}`}>
-            <p>You have been inactive for five minutes. Please press "Extend" to continue your session, or the form will reset.</p>
-            <button onClick={handleExtend}>Extend</button>
-          </div>
-        </div>
+        <Dialog open={showPrompt} onOpenChange={setShowPrompt}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Inactivity Alert</DialogTitle>
+              <DialogDescription>
+                You have been inactive for five minutes. Please press "Extend" to continue your session, or the form will reset.
+              </DialogDescription>
+            </DialogHeader>
+              <Button onClick={handleExtend}>Extend</Button>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );
