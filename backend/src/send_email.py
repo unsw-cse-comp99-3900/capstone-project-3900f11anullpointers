@@ -70,7 +70,7 @@ def send_email_to_clinic(server: str, port: int, email_from: str, email_to: str,
     msg.attach(attachment_package)
 
     text = msg.as_string()
-
+    TIE_server = None
     try:
         TIE_server = smtplib.SMTP(server, port)
         TIE_server.starttls()
@@ -162,6 +162,7 @@ def send_email_to_patient(server: str, port: int, email_from: str, email_to: str
 
     text = msg.as_string()
 
+    TIE_server = None
     try:
         TIE_server = smtplib.SMTP(server, port)
         TIE_server.starttls()
@@ -172,4 +173,5 @@ def send_email_to_patient(server: str, port: int, email_from: str, email_to: str
     except Exception as e:
         logging.error(e)
     finally:
-        TIE_server.quit()
+        if TIE_server:
+            TIE_server.quit()

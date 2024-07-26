@@ -8,3 +8,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3030:3030"
+    
+  tests:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["python", "-m", "unittest", "discover", "-s", "tests"]

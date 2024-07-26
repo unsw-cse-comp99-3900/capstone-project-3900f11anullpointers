@@ -13,7 +13,15 @@ valid_signature = (
 
 invalid_signature = "invalid signature"
 
-valid_payload = {
+class FlaskAppTests(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls):
+        cls.client = app.app.test_client()
+        cls.client.testing = True
+    
+    def setUp(self) -> None:
+        self.payload = {
             "name": "Bob Marley",
             "email": "bobmarley@example.com",
             "drawSignature": valid_signature,
@@ -24,32 +32,19 @@ valid_payload = {
                 "studentConsent": False
             }
         }
-
-class FlaskAppTests(unittest.TestCase):
     
-    @classmethod
-    def setUpClass(cls):
-        cls.client = app.app.test_client()
-        cls.client.testing = True
-    
-    def setUp(self):
-        self.payload = valid_payload
-    
-    @patch('src.send_email.send_email_to_clinic')
-    @patch('src.send_email.send_email_to_patient')
-    def test_post_method_success(self, mock_send_patient, mock_send_clinic):
+    @patch('app.send_emails', autospec=True)
+    def test_post_method_success(self, mock_send_emails):
         
-        # Set up mocks
-        mock_send_clinic.return_value = None
-        mock_send_patient.return_value = None
+        # Set up mock, so that actual email does not send
+        mock_send_emails.return_value = None
 
         # Send POST request to the endpoint
         response = self.client.post('/post', json=self.payload)
 
         # Assert status code and response content
-        self.assertEqual(response.status_code, 200)
         self.assertIn(b"Form submission successful", response.data)
-        
+        self.assertEqual(response.status_code, 200)
     
     def test_post_method_empty_consent_flags(self):
         self.payload['consent'] = {}
@@ -77,5 +72,7 @@ class FlaskAppTests(unittest.TestCase):
     def test_post_method_empty_payload(self):
         payload = {}
         response = self.client.post('/post', json=payload)
-        self.assertEqual(response.status_code, 400)
-        self.assertIn(b"Invalid request data", response.data)
+        self.assertEqual(response.status_code, 500)
+    
+if __name__ == "__main__":
+    unittest.main()

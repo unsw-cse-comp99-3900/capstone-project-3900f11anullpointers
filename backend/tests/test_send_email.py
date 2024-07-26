@@ -45,7 +45,8 @@ class TestSendClinicEmails(unittest.TestCase):
             send_email_to_clinic(self.server, self.port, self.email_from, self.email_to, 
                                 self.pswd, self.attachment_name, self.attachment_content,
                                 self.patient_name, self.patient_email, self.datetime)        
-            self.assertEqual(str(e.exception), "Failed to connect")
+        
+        self.assertEqual(str(e.exception.strerror), "Failed to connect")
         
     @patch('smtplib.SMTP')
     def test_send_clinic_email_message_content(self, mock_smtp):
@@ -94,7 +95,7 @@ class TestSendPatientEmails(unittest.TestCase):
         mock_server.sendmail.assert_called_with(self.email_from, self.email_to, ANY)
         self.assertIn(self.email_to, mock_server.sendmail.call_args[0][1])
 
-    @patch('smtplib.SMTP')
+    @patch('smtplib.SMTP.__init__')
     def test_send_patient_email_exception(self, mock_smtp):
         # Mock the SMTP server to raise an exception
         mock_smtp.side_effect = smtplib.SMTPException("Failed to connect")
@@ -102,7 +103,7 @@ class TestSendPatientEmails(unittest.TestCase):
         with self.assertRaises(smtplib.SMTPException) as e:
             send_email_to_patient(self.server, self.port, self.email_from, self.email_to, 
                              self.pswd, self.patient_name)      
-            self.assertEqual(str(e.exception), "Failed to connect")
+        self.assertEqual(str(e.msg), "Failed to connect")
         
     @patch('smtplib.SMTP')
     def test_send_patient_email_message_content(self, mock_smtp):
