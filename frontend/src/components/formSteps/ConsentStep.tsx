@@ -8,7 +8,7 @@ const lexend = Lexend({ subsets: ["latin"] });
 
 const FHr = () => <hr className="my-4" />;
 
-type ConsentStepProps = {
+export type ConsentStepProps = {
   form: UseFormReturn<any>;
   title: string;
   checkboxes: CheckboxWithTextProps;

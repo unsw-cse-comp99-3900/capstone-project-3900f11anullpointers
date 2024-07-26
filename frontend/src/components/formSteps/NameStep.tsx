@@ -15,7 +15,7 @@ const lexend = Lexend({ subsets: ["latin"] });
 
 const FHr = () => <hr className="my-4" />;
 
-type NameStepProps = {
+export type NameStepProps = {
   form: UseFormReturn<any>;
 };
 

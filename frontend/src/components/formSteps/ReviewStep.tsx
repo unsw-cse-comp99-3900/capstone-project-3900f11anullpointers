@@ -8,7 +8,6 @@ import {
   FormDescription,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { SignatureInput } from "@/components/ui/signature-input";
 import { useThemeContext } from "@/context/theme-context";
 import { Lexend } from "next/font/google";
@@ -17,7 +16,7 @@ const lexend = Lexend({ subsets: ["latin"] });
 
 const FHr = () => <hr className='my-4' />;
 
-type FormStepProps = {
+export type ReviewStepProps = {
   form: UseFormReturn<any>;
   showResearchConsent?: boolean;
   showContactConsent?: boolean;
@@ -29,7 +28,7 @@ export function ReviewStep({
   showResearchConsent = true,
   showContactConsent = true,
   showStudentConsent = true,
-}: FormStepProps) {
+}: ReviewStepProps) {
   const { textLarge, highContrast, dyslexicFont } = useThemeContext();
   const { getValues } = form;
   const values = getValues();

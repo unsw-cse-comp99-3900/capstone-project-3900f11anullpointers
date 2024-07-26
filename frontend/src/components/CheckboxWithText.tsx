@@ -42,10 +42,11 @@ export function CheckboxWithText({
     errors.denyResearchConsent,
     errors.acceptContactConsent,
     errors.denyContactConsent,
-    errors.acceptStudentConsent,
-    errors.denyStudentConsent,
+    // errors.acceptStudentConsent,
+    // errors.denyStudentConsent,
   ].filter(Boolean);
 
+  console.log(consentErrors)
   return (
     <div className='space-y-6'>
       <FormField

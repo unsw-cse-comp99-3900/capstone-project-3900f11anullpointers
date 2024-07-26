@@ -40,7 +40,7 @@ export const formSteps: FormStepConfig[] = [
           descriptionText: "",
         },
       },
-      description:
+      postDescription:
         "*De-identified means we will exclude your child's name and contact details from the research database",
     },
   },
@@ -65,8 +65,7 @@ export const formSteps: FormStepConfig[] = [
             "I DO NOT CONSENT to my child being examined by a student under supervision",
           descriptionText: "",
         },
-      },
-      description:
+      },      postDescription:
         "*De-identified means we will exclude your child's name and contact details from the research database",
     },
   },
