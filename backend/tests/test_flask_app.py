@@ -40,7 +40,7 @@ class FlaskAppTests(unittest.TestCase):
         }
 
         # Ensure that actual emails are not sent while testing 
-        self.patcher = patch('app.send_emails')
+        self.patcher = patch('app._send_emails')
         self.mock_send_emails = self.patcher.start()
         self.mock_send_emails.return_value = None
         

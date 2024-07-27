@@ -16,7 +16,7 @@ class TestSendClinicEmails(unittest.TestCase):
         self.server = "smtp.gmail.com"
         self.port = 587
         self.email_from = "anullpointers@gmail.com"
-        self.email_to = "z5361148@ad.unsw.edu.au"
+        self.email_to = "tommihaljevic77@gmail.com"
         self.pswd = "jrowigmvzvtoifhz"
         self.attachment_name = "bobs_consent_info.pdf"
         self.attachment_content = base64.b64encode(b'pdf content test bobby').decode('utf-8')
@@ -24,7 +24,7 @@ class TestSendClinicEmails(unittest.TestCase):
         self.patient_email = "z5361148@ad.unsw.edu.au"
         self.datetime = datetime.now()
 
-    @patch('src.send_email.smtplib.SMTP')
+    @patch('src.send_email.SMTP')
     def test_send_clinic_email_success(self, mock_smtp):
         """
         Tests that the `send_email_to_clinic` function sends an email successfully.
@@ -48,8 +48,9 @@ class TestSendClinicEmails(unittest.TestCase):
         mock_server.sendmail.assert_called_with(self.email_from, self.email_to, ANY)
         self.assertIn(self.email_to, mock_server.sendmail.call_args[0][1])
 
-    @patch('src.send_email.smtplib.SMTP')
-    def test_send_clinic_email_exception(self, mock_smtp):
+    @patch('src.send_email.logging')
+    @patch('src.send_email.SMTP')
+    def test_send_clinic_email_exception(self, mock_smtp, mock_logging):
         """
         Tests that the `send_email_to_clinic` function handles SMTP exceptions correctly.
         """
@@ -64,8 +65,42 @@ class TestSendClinicEmails(unittest.TestCase):
             )
         
         self.assertEqual(str(e.exception.args[1]), "Failed to connect")
+        mock_logging.error.assert_called_with("Server didn't reply properly to the HELO greeting: %s", smtplib.SMTPHeloError)
+        
+        
+    @patch('src.send_email.logging')
+    @patch('src.send_email.SMTP')
+    def test_send_clinic_email_all_SMTP_exceptions(self, mock_smtp, mock_logging):
+        exception_handlers = {
+            smtplib.SMTPAuthenticationError: "Failed to authenticate with the mail server",
+            smtplib.SMTPConnectError: "Failed to connect to the mail server",
+            smtplib.SMTPHeloError: "Server didn't reply properly to the HELO greeting",
+            smtplib.SMTPSenderRefused: "Sender address was refused by the server",
+            smtplib.SMTPRecipientsRefused: "Recipient address was refused by the server",
+            smtplib.SMTPDataError: "The server replied with an unexpected error code",
+            smtplib.SMTPNotSupportedError: "The command or option is not supported by the server",
+            smtplib.SMTPServerDisconnected: "Server unexpectedly disconnected",
+            smtplib.SMTPException: "An error occurred while sending the email"
+        }
+        
+        for k in exception_handlers.keys():
+            if k is smtplib.SMTPSenderRefused:
+                mock_smtp.side_effect = k(1, b"error", "bob")
+            elif k is smtplib.SMTPRecipientsRefused:
+                mock_smtp.side_effect = k('bob')
+            else:
+                mock_smtp.side_effect = k(1, "error")
 
-    @patch('src.send_email.smtplib.SMTP')
+            with self.assertRaises(k) as e:
+                send_email_to_clinic(
+                    self.server, self.port, self.email_from, self.email_to, 
+                    self.pswd, self.attachment_name, self.attachment_content,
+                    self.patient_name, self.patient_email, self.datetime
+                )
+        
+            mock_logging.error.assert_called_with(f"{exception_handlers[k]}: %s", k)
+
+    @patch('src.send_email.SMTP')
     def test_send_clinic_email_message_content(self, mock_smtp):
         """
         Tests that the `send_email_to_clinic` function sends an email with the correct content.
@@ -105,7 +140,7 @@ class TestSendPatientEmails(unittest.TestCase):
         self.pswd = "jrowigmvzvtoifhz"
         self.patient_name = 'Bob Marley'
 
-    @patch('src.send_email.smtplib.SMTP')
+    @patch('src.send_email.SMTP')
     def test_send_patient_email_success(self, mock_smtp):
         """
         Tests that the `send_email_to_patient` function sends an email successfully.
@@ -126,7 +161,7 @@ class TestSendPatientEmails(unittest.TestCase):
         mock_server.sendmail.assert_called_with(self.email_from, self.email_to, ANY)
         self.assertIn(self.email_to, mock_server.sendmail.call_args[0][1])
 
-    @patch('src.send_email.smtplib.SMTP')
+    @patch('src.send_email.SMTP')
     def test_send_patient_email_exception(self, mock_smtp):
         """
         Tests that the `send_email_to_patient` function handles SMTP exceptions correctly.
@@ -140,7 +175,7 @@ class TestSendPatientEmails(unittest.TestCase):
         
         self.assertEqual(str(e.exception.args[1]), "Failed to connect")
 
-    @patch('src.send_email.smtplib.SMTP')
+    @patch('src.send_email.SMTP')
     def test_send_patient_email_message_content(self, mock_smtp):
         """
         Tests that the `send_email_to_patient` function sends an email with the correct content.
