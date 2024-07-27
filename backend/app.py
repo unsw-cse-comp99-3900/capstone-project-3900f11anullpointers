@@ -33,16 +33,31 @@ user = os.getenv('SMTP_USER')
 pswd = os.getenv('SMTP_PSWD')
 smtp_server = SendEmail(server, port, user, pswd)
 
-# Function to set up email to be sent to clinic and patient
-def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):    
-    email_to = recipient_email
-
+def send_email_clinic(email_to, pdf_base64, patient_name, patient_email, submit_datetime):
     token = re.sub(r"[^a-zA-Z' -]", "", patient_name).replace(" ", "_") + " - " + secrets.token_hex(4)
 
     start = time.time()
-
-    t1 = threading.Thread(target=smtp_server.send_email_to_clinic, args=(email_to, f"{token}.pdf", pdf_base64, patient_name, patient_email, submit_datetime))
-    t2 = threading.Thread(target=smtp_server.send_email_to_patient, args=(patient_email, patient_name))
+    connection = smtp_server.start()
+    smtp_server.send_email_to_clinic(connection, email_to, f"{token}.pdf", pdf_base64, patient_name, patient_email, submit_datetime)
+    smtp_server.close(connection)
+    end = time.time()
+    logging.info(f"Email successfully sent to the clinic. Elapsed time: {end-start:.2f}")
+    
+    
+def send_email_patient(patient_email, patient_name):
+    start = time.time()
+    connection = smtp_server.start()
+    smtp_server.send_email_to_patient(connection, patient_email, patient_name)
+    smtp_server.close(connection)
+    end = time.time()
+    logging.info(f"Email successfully sent to the patient. Elapsed time: {end-start:.2f}")
+    
+# Function to set up email to be sent to clinic and patient
+def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):  
+    start = time.time()
+    
+    t1 = threading.Thread(target=send_email_clinic, args=(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime))
+    t2 = threading.Thread(target=send_email_patient, args=(patient_email, patient_name))
     
     t1.start()
     t2.start()

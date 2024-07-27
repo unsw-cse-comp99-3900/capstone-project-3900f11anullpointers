@@ -8,19 +8,29 @@ import base64
 from datetime import datetime   
 import logging
 import threading
+import time
 
 class SendEmail:
     def __init__(self, server, port, user, pswd):
+        self.server = server
+        self.port = port
         self.user = user
-        self.lock = threading.Lock()
+        self.pswd = pswd
+            
+    def start(self) -> smtplib.SMTP:
         try:
-            self.smtp_server = smtplib.SMTP(server, port)
-            self.smtp_server.starttls()
-            self.smtp_server.login(user, pswd)
+            connection = smtplib.SMTP(self.server, self.port)
+            connection.starttls()
+            connection.login(self.user, self.pswd)
         except Exception as e:
             logging.error(e)
+        
+        return connection
     
-    def send_email(self, email_to, subject, body, attach_name="Consent Form.pdf", pdf_base64=None):
+    def close(self, connection) -> None:
+        connection.close()
+    
+    def send_email(self, connection, email_to, subject, body, attach_name="Consent Form.pdf", pdf_base64=None):
         msg = MIMEMultipart()
         msg['From'] = self.user
         msg['To'] = email_to
@@ -37,10 +47,9 @@ class SendEmail:
             msg.attach(attachment_package)
 
         text = msg.as_string()
-        with self.lock:
-            self.smtp_server.sendmail(self.user, email_to, text)
+        connection.sendmail(self.user, email_to, text)
             
-    def send_email_to_clinic(self, email_to: str, attach_name:str , pdf_base64: str,
+    def send_email_to_clinic(self, connection, email_to: str, attach_name:str , pdf_base64: str,
                     patient_name: str, patient_email: str, submit_datetime: datetime) -> None:
         subject = "Patient Consent Form Submission"
         current_time = submit_datetime.strftime("%l:%M %p")
@@ -85,13 +94,12 @@ class SendEmail:
         """
         
         try:
-            self.send_email(email_to, subject, body, attach_name=attach_name, pdf_base64=pdf_base64)
-            logging.info("Email successfully sent to the clinic")
+            self.send_email(connection, email_to, subject, body, attach_name=attach_name, pdf_base64=pdf_base64)
         except Exception as e:
             logging.error(e)
             
 
-    def send_email_to_patient(self, email_to: str, patient_name: str) -> None:
+    def send_email_to_patient(self, connection, email_to: str, patient_name: str) -> None:
         subject = "Confirmation of Consent Form Submission - UNSW Optometry Clinic"
 
         body = f"""\
@@ -160,7 +168,6 @@ class SendEmail:
         """
         
         try:
-            self.send_email(email_to, subject, body)
-            logging.info("Email successfully sent to the patient")
+            self.send_email(connection, email_to, subject, body)
         except Exception as e:
             logging.error(e)
