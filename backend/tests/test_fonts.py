@@ -3,8 +3,7 @@ import unittest
 from unittest.mock import mock_open, patch, MagicMock
 import json
 from fpdf import FPDF
-
-from fonts.fonts import (
+from src.fonts.fonts import (
     Fonts,
     TITLE_SIZE,
     SUBTITLE_SIZE,

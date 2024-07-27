@@ -1,14 +1,11 @@
 
 import unittest
-import base64
 from unittest.mock import MagicMock, patch, mock_open
 from fpdf import FPDF
-import logging
 import json
 from datetime import datetime
 
 from src.fonts.fonts import Fonts
-import src.pdf_gen
 from src.pdf_gen import (
     GeneratePDF
 )
