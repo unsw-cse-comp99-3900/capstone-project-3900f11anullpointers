@@ -1,4 +1,23 @@
-"""Fonts class"""
+"""
+This module provides functionality for loading and applying custom fonts to an FPDF object.
+
+Classes:
+- Fonts:
+    Loads font configurations from a JSON file and
+    provides methods to set these fonts for an FPDF object.
+
+Constants:
+- TITLE_SIZE (int): The font size for titles.
+- SUBTITLE_SIZE (int): The font size for subtitles.
+- BODY_SIZE (int): The font size for body text.
+- FONTS_FOLDER (str): The folder path where the font files are stored.
+- FONTS_FILE (str): The JSON file name containing font configurations.
+
+Exception Handling:
+- The module handles FileNotFoundError and json.JSONDecodeError 
+  when loading the font configuration file.
+- RuntimeError is handled when setting a font that is not found.
+"""
 import json
 import logging
 from fpdf import FPDF
