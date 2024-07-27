@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock, ANY
 import smtplib, base64
 from datetime import datetime
-from src.send_email import send_email_to_clinic,  send_email_to_patient
+from src.send_email import send_email_to_clinic, send_email_to_patient
 
 class TestSendClinicEmails(unittest.TestCase):
     def setUp(self) -> None:
@@ -12,12 +12,12 @@ class TestSendClinicEmails(unittest.TestCase):
         self.email_to = "z5361148@ad.unsw.edu.au"
         self.pswd = "jrowigmvzvtoifhz"
         self.attachment_name = "bobs_consent_info.pdf"
-        self.attachment_content = base64.b64encode(b'pdf content').decode('utf-8')
+        self.attachment_content = base64.b64encode(b'pdf content test bobby').decode('utf-8')
         self.patient_name = 'Bob Marley'
         self.patient_email = "z5361148@ad.unsw.edu.au"
         self.datetime = datetime.now()
         
-    @patch('smtplib.SMTP')
+    @patch('src.send_email.smtplib.SMTP')
     def test_send_clinic_email_success(self, mock_smtp):
         # Mock the SMTP server
         mock_server = MagicMock()
@@ -36,27 +36,27 @@ class TestSendClinicEmails(unittest.TestCase):
         mock_server.sendmail.assert_called_with(self.email_from, self.email_to, ANY)
         self.assertIn(self.email_to, mock_server.sendmail.call_args[0][1])
 
-    @patch('smtplib.SMTP')
+    @patch('src.send_email.smtplib.SMTP')
     def test_send_clinc_email_exception(self, mock_smtp):
         # Mock the SMTP server to raise an exception
-        mock_smtp.side_effect = smtplib.SMTPException("Failed to connect")
+        mock_smtp.side_effect = smtplib.SMTPHeloError(1, "Failed to connect")
 
-        with self.assertRaises(smtplib.SMTPException) as e:
+        with self.assertRaises(smtplib.SMTPHeloError) as e:
             send_email_to_clinic(self.server, self.port, self.email_from, self.email_to, 
                                 self.pswd, self.attachment_name, self.attachment_content,
                                 self.patient_name, self.patient_email, self.datetime)        
         
-        self.assertEqual(str(e.exception.strerror), "Failed to connect")
+        self.assertEqual(str(e.exception.args[1]), "Failed to connect")
         
-    @patch('smtplib.SMTP')
+    @patch('src.send_email.smtplib.SMTP')
     def test_send_clinic_email_message_content(self, mock_smtp):
         # Mock the SMTP server
         mock_server = MagicMock()
+        
         mock_smtp.return_value = mock_server
-        pdf_content = base64.b64encode(b'test that content is correct\nTest1\nTest2').decode('utf-8')
         # Call the send_emails function
         send_email_to_clinic(self.server, self.port, self.email_from, self.email_to, 
-                        self.pswd, self.attachment_name, pdf_content,
+                        self.pswd, self.attachment_name, self.attachment_content,
                         self.patient_name, self.patient_email, self.datetime)
 
         # Get the email content
@@ -77,7 +77,7 @@ class TestSendPatientEmails(unittest.TestCase):
         self.patient_name = 'Bob Marley'
 
         
-    @patch('smtplib.SMTP')
+    @patch('src.send_email.smtplib.SMTP')
     def test_send_patient_email_success(self, mock_smtp):
         # Mock the SMTP server
         mock_server = MagicMock()
@@ -95,17 +95,17 @@ class TestSendPatientEmails(unittest.TestCase):
         mock_server.sendmail.assert_called_with(self.email_from, self.email_to, ANY)
         self.assertIn(self.email_to, mock_server.sendmail.call_args[0][1])
 
-    @patch('smtplib.SMTP.__init__')
+    @patch('src.send_email.smtplib.SMTP')
     def test_send_patient_email_exception(self, mock_smtp):
         # Mock the SMTP server to raise an exception
-        mock_smtp.side_effect = smtplib.SMTPException("Failed to connect")
+        mock_smtp.side_effect = smtplib.SMTPHeloError(1, "Failed to connect")
 
-        with self.assertRaises(smtplib.SMTPException) as e:
+        with self.assertRaises(smtplib.SMTPHeloError) as e:
             send_email_to_patient(self.server, self.port, self.email_from, self.email_to, 
                              self.pswd, self.patient_name)      
-        self.assertEqual(str(e.msg), "Failed to connect")
+        self.assertEqual(str(e.exception.args[1]), "Failed to connect")
         
-    @patch('smtplib.SMTP')
+    @patch('src.send_email.smtplib.SMTP')
     def test_send_patient_email_message_content(self, mock_smtp):
         # Mock the SMTP server
         mock_server = MagicMock()
@@ -121,9 +121,7 @@ class TestSendPatientEmails(unittest.TestCase):
         # Check if the email content is correctly formed
         self.assertIn("Content-Type: text/html", email_content)
         self.assertIn("Subject: Confirmation of Consent Form Submission - UNSW Optometry Clinic", email_content)
-        self.assertIn("Dear Bob Marley,", email_content)    
+        self.assertIn("Dear Bob Marley,", email_content)
     
-
-
 if __name__ == '__main__':
     unittest.main()

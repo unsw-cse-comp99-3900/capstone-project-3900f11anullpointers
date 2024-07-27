@@ -32,54 +32,39 @@ class testWorkingGeneration(unittest.TestCase):
         except:
             self.fail("Unexpected failure")
 
-# class testGeneratePDFInit(unittest.TestCase):
+class testGeneratePDFInit(unittest.TestCase):
 
-#     def setUp(self) -> None:
-#         self.fonts_mock = MagicMock(spec=Fonts)
-#         self.generator_mock = MagicMock(spec=GeneratePDF)
-#         self.generator_mock.pdf = MagicMock(spec=FPDF) 
-#         self.generator_mock.Fonts = MagicMock(spec=Fonts)
+    def setUp(self):
+        self.patcher = patch('src.pdf_gen.Fonts')
+        self.mock_fonts = self.patcher.start()
 
-#     @patch('src.fonts.fonts.Fonts')
-#     @patch('src.pdf_gen.FPDF')
-#     def test_init_successful(self, mock_fonts, mock_fpdf):
-#         """Test successful initialization of GeneratePDF"""
-#         mock_fonts.return_value = MagicMock()
-#         instance = GeneratePDF()
-#         self.assertIsInstance(instance, GeneratePDF)
-#         mock_fpdf.assert_called_once()
+    def tearDown(self):
+        self.patcher.stop()
 
+    def test_init_successful(self):
+        """Test successful initialization of GeneratePDF"""
+        self.mock_fonts.return_value = MagicMock(spec=Fonts)
+        instance = GeneratePDF()
+        self.assertIsInstance(instance, GeneratePDF)
+        self.mock_fonts.assert_called_once()
 
-#     @patch('src.pdf_gen.Fonts', autospec=True)
-#     @patch('logging.error')
-#     def test_init_runtime_error(self, MockFonts, mock_logging_error):
-#         MockFonts.side_effect = FileNotFoundError("fonts/font_config.json not found")
+    def test_init_runtime_error(self):
+        self.mock_fonts.side_effect = RuntimeError("fonts/font_config.json not found")
         
-#         with self.assertRaises(FileNotFoundError):
-#             GeneratePDF()       
-#         mock_logging_error.assert_called_with("Cannot read fonts/font_config.json config file: fonts/font_config.json not found")
+        with self.assertRaises(RuntimeError):
+            GeneratePDF()       
 
-#     @patch('src.pdf_gen.Fonts')
-#     @patch('logging.error')
-#     def test_init_file_not_found_error(self, MockFonts, mock_logging_error):
-#         MockFonts.return_value = self.fonts_mock
-#         self.fonts_mock.side_effect = FileNotFoundError("Fonts configuration file not found")
+    def test_init_file_not_found_error(self):
+        self.mock_fonts.side_effect = FileNotFoundError("Fonts configuration file not found")
         
-#         with self.assertRaises(FileNotFoundError):
-#             GeneratePDF()
+        with self.assertRaises(FileNotFoundError):
+            GeneratePDF()
 
-#         mock_logging_error.assert_called_with("PDF generator cannot be made: Fonts configuration file not found")
-
-#     @patch('src.pdf_gen.Fonts')
-#     @patch('logging.error')
-#     def test_init_json_decode_error(self, MockFonts, mock_logging_error):
-#         MockFonts.return_value = self.fonts_mock
-#         self.fonts_mock.side_effect = json.JSONDecodeError("JSON decode error", "", 0)
+    def test_init_json_decode_error(self):
+        self.mock_fonts.side_effect = json.JSONDecodeError("JSON decode error", "", 0)
         
-#         with self.assertRaises(json.JSONDecodeError):
-#             GeneratePDF()
-
-#         mock_logging_error.assert_called_with("PDF generator cannot be made: JSON decode error")
+        with self.assertRaises(json.JSONDecodeError):
+            GeneratePDF()
 
 class testPDFGeneration(unittest.TestCase):
     def setUp(self) -> None:
@@ -98,29 +83,29 @@ class testPDFGeneration(unittest.TestCase):
         self.generator.generate_pdf('bob marley', 'adult', [True, True, False], signature_sample, self.timestamp)
         self.assertIsInstance(self.generator.pdf, FPDF)
         
-    # def test_invalid_flags(self):
-    #     with self.assertRaises(Exception):
-    #         self.generator.generate_pdf('bob marley', 'adult', ['a', 1, 4], signature_sample, self.timestamp)
+    def test_invalid_flags(self):
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf('bob marley', 'adult', ['a', 1, 4], signature_sample, self.timestamp)
 
-    # def test_empty_flags(self):
-    #     with self.assertRaises(Exception):
-    #         self.generator.generate_pdf('bob marley', 'adult', [], signature_sample,  self.timestamp)
+    def test_empty_flags(self):
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf('bob marley', 'adult', [], signature_sample,  self.timestamp)
     
-    # def test_too_little_flags_adult(self):
-    #     with self.assertRaises(Exception):
-    #         self.generator.generate_pdf('bob marley', 'adult', [False, False], signature_sample, self.timestamp)
+    def test_too_little_flags_adult(self):
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf('bob marley', 'adult', [False, False], signature_sample, self.timestamp)
     
-    # def test_too_many_flags_adult(self):    
-    #     with self.assertRaises(Exception):
-    #         self.generator.generate_pdf('bob marley', 'adult', [False, False, True, True], signature_sample, self.timestamp)
+    def test_too_many_flags_adult(self):    
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf('bob marley', 'adult', [False, False, True, True], signature_sample, self.timestamp)
         
-    # def test_too_many_flags_child(self):
-    #     with self.assertRaises(Exception):
-    #         self.generator.generate_pdf('bob marley', 'child', [False, False, True], signature_sample, self.timestamp)
+    def test_too_many_flags_child(self):
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf('bob marley', 'child', [False, False, True], signature_sample, self.timestamp)
             
-    # def test_too_little_flags_child(self):    
-    #     with self.assertRaises(Exception):
-    #         self.generator.generate_pdf('bob marley', 'child', [False], signature_sample, self.timestamp)
+    def test_too_little_flags_child(self):    
+        with self.assertRaises(Exception):
+            self.generator.generate_pdf('bob marley', 'child', [False], signature_sample, self.timestamp)
     
     def test_invalid_form_type(self):
         with self.assertRaises(FileNotFoundError):

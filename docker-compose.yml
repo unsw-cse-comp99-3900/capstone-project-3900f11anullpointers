@@ -13,4 +13,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: ["python", "-m", "unittest", "discover", "-s", "tests"]
+    environment:
+      - LOG_LEVEL=ERROR
+    logging:
+      driver: "none"
+    command: ["python", "tests/run_tests.py"]
