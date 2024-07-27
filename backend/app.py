@@ -41,8 +41,7 @@ def send_email_clinic(email_to, pdf_base64, patient_name, patient_email, submit_
     smtp_server.send_email_to_clinic(connection, email_to, f"{token}.pdf", pdf_base64, patient_name, patient_email, submit_datetime)
     smtp_server.close(connection)
     end = time.time()
-    logging.info(f"Email successfully sent to the clinic. Elapsed time: {end-start:.2f}")
-    
+    logging.info(f"Email successfully sent to the clinic. Elapsed time: {end-start:.2f} sec")
     
 def send_email_patient(patient_email, patient_name):
     start = time.time()
@@ -50,7 +49,7 @@ def send_email_patient(patient_email, patient_name):
     smtp_server.send_email_to_patient(connection, patient_email, patient_name)
     smtp_server.close(connection)
     end = time.time()
-    logging.info(f"Email successfully sent to the patient. Elapsed time: {end-start:.2f}")
+    logging.info(f"Email successfully sent to the patient. Elapsed time: {end-start:.2f} sec")
     
 # Function to set up email to be sent to clinic and patient
 def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):  
@@ -65,12 +64,8 @@ def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit
     t1.join()
     t2.join()
     
-    # smtp_server.send_email_to_clinic(email_to, f"{token}.pdf", pdf_base64, patient_name, patient_email, submit_datetime)
-    # smtp_server.send_email_to_patient(patient_email, patient_name)
-    
     end = time.time()
-
-    logging.info(f"Emails took {end-start:.2f} sec to send")
+    logging.info(f"Emails sent successfully. Total elapsed time: {end-start:.2f} sec")
 
 @app.route('/post', methods=['POST'])
 def post_method():
