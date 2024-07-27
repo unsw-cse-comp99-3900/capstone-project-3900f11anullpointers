@@ -77,9 +77,10 @@ def send_email_to_clinic(server: str, port: int, email_from: str, email_to: str,
         TIE_server.login(email_from, pswd)
 
         TIE_server.sendmail(email_from, email_to, text)
-        print(f"Email successfully sent to - {email_to}")
+        logging.info(f"Email successfully sent to - {email_to}")
     except Exception as e:
         logging.error(e)
+        raise e
     finally:
         if TIE_server:
             TIE_server.quit()
@@ -169,9 +170,10 @@ def send_email_to_patient(server: str, port: int, email_from: str, email_to: str
         TIE_server.login(email_from, pswd)
 
         TIE_server.sendmail(email_from, email_to, text)
-        print(f"Email successfully sent to - {email_to}")
+        logging.info(f"Email successfully sent to - {email_to}")
     except Exception as e:
         logging.error(e)
+        raise e
     finally:
         if TIE_server:
             TIE_server.quit()

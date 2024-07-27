@@ -30,6 +30,7 @@ class GeneratePDF:
             self.fonts = Fonts()
         except (RuntimeError, FileNotFoundError, json.JSONDecodeError) as e:
             logging.error("PDF generator cannot be made: %s", e)
+            raise e
             
     def add_base64_image(self, base64_data: str, h=None):
         if "base64," in base64_data:
@@ -81,7 +82,7 @@ class GeneratePDF:
 
         except Exception as e:
             logging.error("PDF generation failed: %s %s", e, type(e))
-            raise
+            raise e
 
 
     def _get_json_dict(self, form_name: str):
@@ -90,7 +91,7 @@ class GeneratePDF:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             logging.error("Cannot read {form_name} config file: %s", e)
-            raise
+            raise e
 
 # def main():
     # """Testing"""
