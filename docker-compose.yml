@@ -8,3 +8,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3030:3030"
+    
+  tests:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - LOG_LEVEL=ERROR
+    logging:
+      driver: "none"
+    command: ["python", "tests/run_tests.py"]

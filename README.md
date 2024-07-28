@@ -36,8 +36,12 @@ Below is the structure of the project:
 │       ├── signatures
 │       │   └── test1.png
 │       └── tests
+│           ├── run_tests.py
 │           ├── test_doc_printing.py
-│           └── test_fonts.py
+│           ├── test_flask_app.py
+│           ├── test_fonts.py
+│           ├── test_pdf_gen.py
+│           └── test_send_email.py
 ├── docker-compose.yml
 ├── frontend
 │   ├── Dockerfile
