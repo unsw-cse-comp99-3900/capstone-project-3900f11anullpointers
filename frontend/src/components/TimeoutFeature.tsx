@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import {
@@ -17,38 +18,32 @@ const TimeoutFeature = () => {
   const promptTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { theme } = useTheme();
 
-  // Reset timers
   const resetTimer = () => {
     if (timeoutId.current) clearTimeout(timeoutId.current);
     if (promptTimeoutId.current) clearTimeout(promptTimeoutId.current);
 
-    // Set the timeout to show the prompt after 5 minutes
     timeoutId.current = setTimeout(() => {
       setIsIdle(true);
       setShowPrompt(true);
 
-      // Start the timeout for the prompt
       promptTimeoutId.current = setTimeout(() => {
         setShowPrompt(false);
-        window.location.href = window.location.href; // Refresh the page
+        window.location.reload(); // Refresh the page
       }, 15000); // 15 seconds to press the "Extend" button
     }, 300000); // 5 minutes before showing the prompt
   };
 
-  // Handle Extend button click
   const handleExtend = () => {
     setIsIdle(false);
     setShowPrompt(false);
     resetTimer();
   };
 
-  // Handle user activity
   const handleUserActivity = () => {
     resetTimer();
   };
 
   useEffect(() => {
-    // Event listeners to track user activity
     window.addEventListener('touchstart', handleUserActivity);
     window.addEventListener('touchmove', handleUserActivity);
     window.addEventListener('keydown', handleUserActivity);
@@ -57,7 +52,6 @@ const TimeoutFeature = () => {
 
     resetTimer();
 
-    // Clean up listeners
     return () => {
       window.removeEventListener('touchstart', handleUserActivity);
       window.removeEventListener('touchmove', handleUserActivity);

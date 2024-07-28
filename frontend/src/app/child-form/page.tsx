@@ -15,15 +15,17 @@ import { SuccessStep } from "@/components/formSteps/SuccessStep";
 import { CardHeaderContent } from "@/components/CardHeaderContent";
 import { Button } from "@/components/ui/button";
 import { useThemeContext } from "@/context/theme-context";
+import { Lexend } from "next/font/google";
 
 type Input = z.infer<typeof consentSchema>;
+const lexend = Lexend({ subsets: ["latin"] });
 
 export default function Home() {
   const [formStep, setFormStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { textLarge } = useThemeContext();
+  const { textLarge, dyslexicFont } = useThemeContext();
 
   const form = useForm<Input>({
     resolver: zodResolver(consentSchema),
@@ -93,7 +95,7 @@ export default function Home() {
                 in eye care and is at the forefront of the latest research.'
               />
               <a href='/' className="w-full flex justify-end pr-10">
-                <Button variant='ghost' className={` ${textLarge ? "text-lg" : ""}`}>
+                <Button variant='ghost' className={` ${textLarge ? "text-lg" : ""} ${dyslexicFont ? lexend.className : ""}`}>
                   Fill out the adult form instead
                 </Button>
               </a>

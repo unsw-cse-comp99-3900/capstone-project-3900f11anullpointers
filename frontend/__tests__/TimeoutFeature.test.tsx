@@ -1,4 +1,3 @@
-// src/__tests__/TimeoutFeature.test.tsx
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TimeoutFeature from '@/components/TimeoutFeature';

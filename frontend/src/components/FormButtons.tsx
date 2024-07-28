@@ -46,7 +46,6 @@ export function FormButtons({
 
     const isValid = await trigger(fieldsToValidate);
     isValid && setFormStep(formStep + 1);
-    console.log("UP!!", formStep)
   };
 
   const handleFinalSubmit = async () => {
@@ -83,12 +82,11 @@ export function FormButtons({
         },
       };
       // For debugging
-      /*       await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsLoading(false);
-      setFormStep(formStep + 1); */
+      setFormStep(formStep + 1);
 
       const backendURL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
-      console.log(backendURL);
       const response = await fetch(`${backendURL}/post`, {
         method: "POST",
         headers: {
@@ -105,12 +103,12 @@ export function FormButtons({
       setIsLoading(false);
       setFormStep(formStep + 1);
     } catch (error: any) {
-      setIsLoading(false);
+/*       setIsLoading(false);
       toast({
         variant: "destructive",
         title: "Something went wrong",
         description: error.message,
-      });
+      }); */
     }
   };
 

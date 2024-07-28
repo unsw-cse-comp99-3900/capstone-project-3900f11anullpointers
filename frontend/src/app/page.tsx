@@ -15,15 +15,17 @@ import { formSteps } from "../forms/AdultFormStepConfig";
 import { SuccessStep } from "@/components/formSteps/SuccessStep";
 import { Button } from "@/components/ui/button";
 import { useThemeContext } from "@/context/theme-context";
+import { Lexend } from "next/font/google";
 
 type Input = z.infer<typeof consentSchema>;
+const lexend = Lexend({ subsets: ["latin"] });
 
 export default function Home() {
   const [formStep, setFormStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { textLarge } = useThemeContext();
+  const { textLarge, dyslexicFont } = useThemeContext();
 
   const form = useForm<Input>({
     resolver: zodResolver(consentSchema),
@@ -92,7 +94,7 @@ export default function Home() {
                 forefront of the latest research.'
               />
               <a href='/child-form' className="w-full flex justify-end pr-10">
-                <Button variant='ghost' className={` ${textLarge ? "text-lg" : ""}`}>
+                <Button variant='ghost' className={` ${textLarge ? "text-lg" : ""} ${dyslexicFont ? lexend.className : ""}`}>
                   Fill out the child form instead
                 </Button>
               </a>

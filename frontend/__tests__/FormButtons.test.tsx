@@ -1,4 +1,3 @@
-// src/__tests__/FormButtons.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { FormButtons } from '@/components/FormButtons';
