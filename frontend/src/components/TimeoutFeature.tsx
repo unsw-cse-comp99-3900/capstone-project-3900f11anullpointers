@@ -30,7 +30,7 @@ const TimeoutFeature = () => {
       // Start the timeout for the prompt
       promptTimeoutId.current = setTimeout(() => {
         setShowPrompt(false);
-        window.location.reload(); // Reset form
+        window.location.href = window.location.href; // Refresh the page
       }, 15000); // 15 seconds to press the "Extend" button
     }, 300000); // 5 minutes before showing the prompt
   };
