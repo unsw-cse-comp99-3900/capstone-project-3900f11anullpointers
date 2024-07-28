@@ -3,6 +3,16 @@ from unittest.mock import patch, MagicMock, ANY
 import smtplib, base64
 from datetime import datetime
 from src.send_email import send_email_to_clinic, send_email_to_patient
+from dotenv import find_dotenv, load_dotenv
+import os
+
+load_dotenv(find_dotenv(".env"))
+load_dotenv(find_dotenv(".env.local"))
+
+server: str = os.getenv("SMTP_HOST")
+port: str = os.getenv("SMTP_PORT")
+email_from: str = os.getenv("SMTP_USER")
+pswd: str = os.getenv("SMTP_PSWD")
 
 class TestSendClinicEmails(unittest.TestCase):
     """
@@ -13,11 +23,11 @@ class TestSendClinicEmails(unittest.TestCase):
         """
         Sets up the test environment with common parameters used across tests.
         """
-        self.server = "smtp.gmail.com"
-        self.port = 587
-        self.email_from = "anullpointers@gmail.com"
+        self.server = server
+        self.port = port
+        self.email_from = email_from
         self.email_to = "tommihaljevic77@gmail.com"
-        self.pswd = "jrowigmvzvtoifhz"
+        self.pswd = pswd
         self.attachment_name = "bobs_consent_info.pdf"
         self.attachment_content = base64.b64encode(b'pdf content test bobby').decode('utf-8')
         self.patient_name = 'Bob Marley'
@@ -133,11 +143,11 @@ class TestSendPatientEmails(unittest.TestCase):
         """
         Sets up the test environment with common parameters used across tests.
         """
-        self.server = "smtp.gmail.com"
-        self.port = 587
-        self.email_from = "anullpointers@gmail.com"
+        self.server = server
+        self.port = port
+        self.email_from = email_from
         self.email_to = "z5361148@ad.unsw.edu.au"
-        self.pswd = "jrowigmvzvtoifhz"
+        self.pswd = pswd
         self.patient_name = 'Bob Marley'
 
     @patch('src.send_email.SMTP')
