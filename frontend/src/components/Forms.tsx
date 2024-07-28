@@ -27,19 +27,37 @@ export function FormStep0({ form }: FormStepProps) {
 
   return (
     <div className={textLarge ? "text-2xl" : "text-base"}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${dyslexicFont ? lexend.className : ""}`}>Personal Information and Contact</CardTitle>
+      <CardTitle
+        className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${
+          dyslexicFont ? lexend.className : ""
+        }`}
+      >
+        Personal Information and Contact
+      </CardTitle>
       <FHr />
       <FormField
         control={form.control}
         name="name"
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel className={`pb-3 ${textLarge ? "text-xl" : ""} ${dyslexicFont ? lexend.className : ""}`}>Full name</FormLabel>
+            <FormLabel
+              className={`pb-3 ${textLarge ? "text-xl" : ""} ${
+                dyslexicFont ? lexend.className : ""
+              }`}
+            >
+              Full name
+            </FormLabel>
             <FormControl>
-              <Input className={`pb-3 ${textLarge ? "text-xl" : ""} ${dyslexicFont ? lexend.className : ""}`} placeholder="Enter your name" {...field} />
+              <Input
+                className={`pb-3 ${textLarge ? "text-xl" : ""} ${
+                  dyslexicFont ? lexend.className : ""
+                }`}
+                placeholder="Enter your name"
+                {...field}
+              />
             </FormControl>
             {fieldState.error && (
-              <FormMessage className='text-red-500'>
+              <FormMessage className="text-red-500">
                 {fieldState.error.message}
               </FormMessage>
             )}
@@ -52,12 +70,24 @@ export function FormStep0({ form }: FormStepProps) {
         name="email"
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel className={`pb-3 ${textLarge ? "text-xl" : ""} ${dyslexicFont ? lexend.className : ""}`}>Email</FormLabel>
+            <FormLabel
+              className={`pb-3 ${textLarge ? "text-xl" : ""} ${
+                dyslexicFont ? lexend.className : ""
+              }`}
+            >
+              Email
+            </FormLabel>
             <FormControl>
-              <Input className={`pb-3 ${textLarge ? "text-xl" : ""} ${dyslexicFont ? lexend.className : ""}`} placeholder="Enter your email" {...field} />
+              <Input
+                className={`pb-3 ${textLarge ? "text-xl" : ""} ${
+                  dyslexicFont ? lexend.className : ""
+                }`}
+                placeholder="Enter your email"
+                {...field}
+              />
             </FormControl>
             {fieldState.error && (
-              <FormMessage className='text-red-500'>
+              <FormMessage className="text-red-500">
                 {fieldState.error.message}
               </FormMessage>
             )}
@@ -73,7 +103,11 @@ export function FormStep1({ form }: FormStepProps) {
 
   return (
     <div className={textLarge ? "text-2xl" : "text-base"}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${dyslexicFont ? lexend.className : ""}`}>
+      <CardTitle
+        className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${
+          dyslexicFont ? lexend.className : ""
+        }`}
+      >
         Use of Clinical Information in Research Studies
       </CardTitle>
       <FHr />
@@ -93,7 +127,11 @@ export function FormStep1({ form }: FormStepProps) {
         }}
       />
       <br />
-      <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>
+      <CardDescription
+        className={`${textLarge ? "text-xl" : "text-base"} ${
+          highContrast ? "filter contrast-200" : ""
+        } ${dyslexicFont ? lexend.className : ""}`}
+      >
         *De-identified means we will exclude your name and contact details from
         the research database
       </CardDescription>
@@ -106,7 +144,11 @@ export function FormStep2({ form }: FormStepProps) {
 
   return (
     <div className={textLarge ? "text-2xl" : "text-base"}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${dyslexicFont ? lexend.className : ""}`}>
+      <CardTitle
+        className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${
+          dyslexicFont ? lexend.className : ""
+        }`}
+      >
         Contact for Future Research Studies
       </CardTitle>
       <FHr />
@@ -139,12 +181,22 @@ export function FormStep3({ form }: FormStepProps) {
 
   return (
     <div className={textLarge ? "text-2xl" : "text-base"}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${dyslexicFont ? lexend.className : ""}`}>Student Clinic Consent</CardTitle>
-      <CardDescription className={`font-bold text-gray-700 ${textLarge ? "text-xl" : ""} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>
-        I acknowledge that I have been informed that the initial eye
-        examination and subsequent care in the UNSW Optometry Clinic that I will
-        recieve, will be conducted by an optometry student under the
-        supervision of a qualified, APHRA registered optometrist.
+      <CardTitle
+        className={`pb-3 ${textLarge ? "text-3xl" : "text-xl"} ${
+          dyslexicFont ? lexend.className : ""
+        }`}
+      >
+        Student Clinic Consent
+      </CardTitle>
+      <CardDescription
+        className={`font-bold text-gray-700 ${textLarge ? "text-xl" : ""} ${
+          highContrast ? "filter contrast-200" : ""
+        } ${dyslexicFont ? lexend.className : ""}`}
+      >
+        I acknowledge that I have been informed that the initial eye examination
+        and subsequent care in the UNSW Optometry Clinic that I will recieve,
+        will be conducted by an optometry student under the supervision of a
+        qualified, APHRA registered optometrist.
       </CardDescription>
       <FHr />
       <CheckboxWithText
@@ -171,8 +223,18 @@ export function FormReviewStep({ form }: FormStepProps) {
   const values = getValues();
 
   return (
-    <div className={`space-y-4 ${textLarge ? "text-2xl" : "text-base"} ${dyslexicFont ? lexend.className : ""}`}>
-      <CardTitle className={`pb-3 ${textLarge ? "text-2xl" : "text-base"} ${dyslexicFont ? lexend.className : ""}`}>Review Your Information</CardTitle>
+    <div
+      className={`space-y-4 ${textLarge ? "text-2xl" : "text-base"} ${
+        dyslexicFont ? lexend.className : ""
+      }`}
+    >
+      <CardTitle
+        className={`pb-3 ${textLarge ? "text-2xl" : "text-base"} ${
+          dyslexicFont ? lexend.className : ""
+        }`}
+      >
+        Review Your Information
+      </CardTitle>
       <FHr />
       <div>
         <strong>Name:</strong> {values.name}
@@ -193,7 +255,11 @@ export function FormReviewStep({ form }: FormStepProps) {
         {values.acceptStudentConsent ? "Accepted" : "Denied"}
       </div>
       <FHr />
-      <FormDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>
+      <FormDescription
+        className={`${textLarge ? "text-xl" : "text-base"} ${
+          highContrast ? "filter contrast-200" : ""
+        } ${dyslexicFont ? lexend.className : ""}`}
+      >
         By signing below, you agree that the information you have provided is
         accurate
       </FormDescription>
@@ -202,12 +268,18 @@ export function FormReviewStep({ form }: FormStepProps) {
         name="drawSignature"
         render={({ field, fieldState }) => (
           <FormItem>
-            <FormLabel className={`${textLarge ? "text-xl" : "text-base"} ${dyslexicFont ? lexend.className : ""}`}>Signature</FormLabel>
+            <FormLabel
+              className={`${textLarge ? "text-xl" : "text-base"} ${
+                dyslexicFont ? lexend.className : ""
+              }`}
+            >
+              Signature
+            </FormLabel>
             <FormControl>
               <SignatureInput field={field} />
             </FormControl>
             {fieldState.error && (
-              <FormMessage className='text-red-500'>
+              <FormMessage className="text-red-500">
                 {fieldState.error.message}
               </FormMessage>
             )}
@@ -224,8 +296,18 @@ export function FormSuccess() {
   return (
     <div className={`text-center ${textLarge ? "text-2xl" : "text-base"}`}>
       <div>
-        <CardTitle className={`mb-5 ${textLarge ? "text-2xl" : "text-base"} ${dyslexicFont ? lexend.className : ""}`}>Form Submitted Successfully</CardTitle>
-        <CardDescription className={`${textLarge ? "text-xl" : "text-base"} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>
+        <CardTitle
+          className={`mb-5 ${textLarge ? "text-2xl" : "text-base"} ${
+            dyslexicFont ? lexend.className : ""
+          }`}
+        >
+          Form Submitted Successfully
+        </CardTitle>
+        <CardDescription
+          className={`${textLarge ? "text-xl" : "text-base"} ${
+            highContrast ? "filter contrast-200" : ""
+          } ${dyslexicFont ? lexend.className : ""}`}
+        >
           Your information has been submitted successfully. Thank you!
         </CardDescription>
       </div>

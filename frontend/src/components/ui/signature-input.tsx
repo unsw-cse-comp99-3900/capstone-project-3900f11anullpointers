@@ -16,10 +16,10 @@ const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
   ({ className, field }, ref) => {
     const sigCanvas = React.useRef<SignaturePad>(null);
 
-    const clear = () => {
+    const clear = React.useCallback(() => {
       sigCanvas.current?.clear();
       field.onChange("");
-    };
+    }, [field]);
 
     const save = () => {
       const trimmedDataURL =
@@ -37,7 +37,7 @@ const SignatureInput = React.forwardRef<SignaturePad, SignatureInputProps>(
       return () => {
         window.removeEventListener("clearSignature", handleClearSignature);
       };
-    }, []);
+    }, [clear]);
 
     const { textLarge, highContrast, dyslexicFont } = useThemeContext();
 

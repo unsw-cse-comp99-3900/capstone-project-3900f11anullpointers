@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useTheme } from 'next-themes';
-import './TimeoutFeature.css';
+import React, { useState, useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
+import "./TimeoutFeature.css";
 
 const TimeoutFeature = () => {
   const [isIdle, setIsIdle] = useState(false);
@@ -41,21 +41,21 @@ const TimeoutFeature = () => {
 
   useEffect(() => {
     // Event listeners to track user activity
-    window.addEventListener('touchstart', handleUserActivity);
-    window.addEventListener('touchmove', handleUserActivity);
-    window.addEventListener('keydown', handleUserActivity);
-    window.addEventListener('scroll', handleUserActivity);
-    window.addEventListener('mousemove', handleUserActivity);
+    window.addEventListener("touchstart", handleUserActivity);
+    window.addEventListener("touchmove", handleUserActivity);
+    window.addEventListener("keydown", handleUserActivity);
+    window.addEventListener("scroll", handleUserActivity);
+    window.addEventListener("mousemove", handleUserActivity);
 
     resetTimer();
 
     // Clean up listeners
     return () => {
-      window.removeEventListener('touchstart', handleUserActivity);
-      window.removeEventListener('touchmove', handleUserActivity);
-      window.removeEventListener('keydown', handleUserActivity);
-      window.removeEventListener('scroll', handleUserActivity);
-      window.removeEventListener('mousemove', handleUserActivity);
+      window.removeEventListener("touchstart", handleUserActivity);
+      window.removeEventListener("touchmove", handleUserActivity);
+      window.removeEventListener("keydown", handleUserActivity);
+      window.removeEventListener("scroll", handleUserActivity);
+      window.removeEventListener("mousemove", handleUserActivity);
       if (timeoutId.current) clearTimeout(timeoutId.current);
       if (promptTimeoutId.current) clearTimeout(promptTimeoutId.current);
     };
@@ -66,7 +66,11 @@ const TimeoutFeature = () => {
       {showPrompt && isIdle && (
         <div className={`overlay ${theme}`}>
           <div className={`prompt ${theme}`}>
-            <p>You have been inactive for five minutes. Please press "Extend" to continue your session, or the form will reset.</p>
+            <p>
+              You have been inactive for five minutes. Please press
+              &quot;Extend&quot; to continue your session, or the form will
+              reset.
+            </p>
             <button onClick={handleExtend}>Extend</button>
           </div>
         </div>
