@@ -7,37 +7,41 @@ Below is the structure of the project:
 .
 ├── README.md
 ├── backend
-│   ├── Dockerfile
-│   ├── __init__.py
-│   ├── app.py
-│   ├── requirements.txt
-│   └── src
-│       ├── __init__.py
-│       ├── doc_printing.py
-│       ├── fonts
-│       │   ├── Roboto-Black.pkl
-│       │   ├── Roboto-Black.ttf
-│       │   ├── Roboto-Bold.pkl
-│       │   ├── Roboto-Bold.ttf
-│       │   ├── Roboto-Regular.cw127.pkl
-│       │   ├── Roboto-Regular.pkl
-│       │   ├── Roboto-Regular.ttf
-│       │   ├── __init__.py
-│       │   ├── font_config.json
-│       │   └── fonts.py
-│       ├── form_text
-│       │   ├── adult.json
-│       │   └── child.json
-│       ├── logo
-│       │   ├── logo.png
-│       │   └── old_logo.png
-│       ├── pdf_gen.py
-│       ├── send_email.py
-│       ├── signatures
-│       │   └── test1.png
-│       └── tests
-│           ├── test_doc_printing.py
-│           └── test_fonts.py
+│   ├── Dockerfile
+│   ├── __init__.py
+│   ├── app.py
+│   ├── requirements.txt
+│   └── src
+│       ├── __init__.py
+│       ├── doc_printing.py
+│       ├── fonts
+│       │   ├── Roboto-Black.pkl
+│       │   ├── Roboto-Black.ttf
+│       │   ├── Roboto-Bold.pkl
+│       │   ├── Roboto-Bold.ttf
+│       │   ├── Roboto-Regular.cw127.pkl
+│       │   ├── Roboto-Regular.pkl
+│       │   ├── Roboto-Regular.ttf
+│       │   ├── __init__.py
+│       │   ├── font_config.json
+│       │   └── fonts.py
+│       ├── form_text
+│       │   ├── adult.json
+│       │   └── child.json
+│       ├── logo
+│       │   ├── logo.png
+│       │   └── old_logo.png
+│       ├── pdf_gen.py
+│       ├── send_email.py
+│       ├── signatures
+│       │   └── test1.png
+│       └── tests
+│           ├── run_tests.py
+│           ├── test_doc_printing.py
+│           ├── test_flask_app.py
+│           ├── test_fonts.py
+│           ├── test_pdf_gen.py
+│           └── test_send_email.py
 ├── docker-compose.yml
 ├── frontend
 │   ├── Dockerfile

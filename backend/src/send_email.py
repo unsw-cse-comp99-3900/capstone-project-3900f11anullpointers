@@ -211,30 +211,39 @@ def send_email_to_patient(server: str, port: int, email_from: str, email_to: str
 def _send_email(server: str, port: str, email_from: str,
                 email_to: str, pswd: str, text: str) -> None:
     """Handles the actual sending of an email using the SMTP protocol with error handling."""
+
+    # Mapping of exception classes to their log messages
+    exception_handlers = {
+        smtplib.SMTPAuthenticationError: "Failed to authenticate with the mail server",
+        smtplib.SMTPConnectError: "Failed to connect to the mail server",
+        smtplib.SMTPHeloError: "Server didn't reply properly to the HELO greeting",
+        smtplib.SMTPSenderRefused: "Sender address was refused by the server",
+        smtplib.SMTPRecipientsRefused: "Recipient address was refused by the server",
+        smtplib.SMTPDataError: "The server replied with an unexpected error code",
+        smtplib.SMTPNotSupportedError: "The command or option is not supported by the server",
+        smtplib.SMTPServerDisconnected: "Server unexpectedly disconnected",
+        smtplib.SMTPException: "An error occurred while sending the email"
+    }
+    
+    mail_server = None
     try:
-        mail_server: SMTP = SMTP(server, port)
+        mail_server = SMTP(server, port)
         mail_server.starttls()
         mail_server.login(email_from, pswd)
-
         mail_server.sendmail(email_from, email_to, text)
-        print(f"Email successfully sent to - {email_to}")
-    except smtplib.SMTPAuthenticationError as e:
-        logging.error("Failed to authenticate with the mail server: %s", e)
-    except smtplib.SMTPConnectError as e:
-        logging.error("Failed to connect to the mail server: %s", e)
-    except smtplib.SMTPHeloError as e:
-        logging.error("Server didn't reply properly to the HELO greeting: %s", e)
-    except smtplib.SMTPSenderRefused as e:
-        logging.error("Sender address was refused by the server: %s", e)
-    except smtplib.SMTPRecipientsRefused as e:
-        logging.error("Recipient address was refused by the server: %s", e)
-    except smtplib.SMTPDataError as e:
-        logging.error("The server replied with an unexpected error code: %s", e)
-    except smtplib.SMTPNotSupportedError as e:
-        logging.error("The command or option is not supported by the server: %s", e)
-    except smtplib.SMTPServerDisconnected as e:
-        logging.error("Server unexpectedly disconnected: %s", e)
-    except smtplib.SMTPException as e:
-        logging.error("An error occurred while sending the email: %s", e)
+        logging.info(f"Email successfully sent to - {email_to}")
+    except tuple(exception_handlers.keys()) as e:
+        if mail_server:
+            try:
+                mail_server.quit()
+            finally:
+                pass
+        logging.error(f"{exception_handlers[type(e)]}: %s", type(e))
+        raise e
+
     finally:
-        mail_server.quit()
+        if mail_server:
+            try:
+                mail_server.quit()
+            except Exception as e:
+                logging.error("Failed to quit the mail server cleanly: %s", e)
