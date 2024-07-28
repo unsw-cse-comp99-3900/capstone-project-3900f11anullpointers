@@ -128,4 +128,7 @@ Below is the structure of the project:
 ├── package-lock.json
 ├── package.json
 └── structure.txt
+e-lock.json
+├── package.json
+└── structure.txt
 ```
