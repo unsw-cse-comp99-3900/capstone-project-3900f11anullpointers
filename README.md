@@ -44,70 +44,95 @@ Below is the structure of the project:
 │           └── test_send_email.py
 ├── docker-compose.yml
 ├── frontend
-│   ├── Dockerfile
-│   ├── README.md
-│   ├── components.json
-│   ├── next-env.d.ts
-│   ├── next.config.mjs
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── postcss.config.mjs
-│   ├── public
-│   │   ├── next.svg
-│   │   ├── unsw_logo.png
-│   │   └── vercel.svg
-│   ├── src
-│   │   ├── app
-│   │   │   ├── child-form
-│   │   │   │   ├── components
-│   │   │   │   │   ├── CardHeaderContent.tsx
-│   │   │   │   │   ├── FormButtons.tsx
-│   │   │   │   │   └── Forms.tsx
-│   │   │   │   └── page.tsx
-│   │   │   ├── favicon.ico
-│   │   │   ├── globals.css
-│   │   │   ├── layout.tsx
-│   │   │   └── page.tsx
-│   │   ├── components
-│   │   │   ├── CardHeaderContent.tsx
-│   │   │   ├── CheckboxWithText.tsx
-│   │   │   ├── Footer.tsx
-│   │   │   ├── FormButtons.tsx
-│   │   │   ├── Forms.tsx
-│   │   │   ├── Header.tsx
-│   │   │   ├── ModeToggle.tsx
-│   │   │   ├── ProgressBar.tsx
-│   │   │   ├── RadioWithText.tsx
-│   │   │   ├── Steven-Forms.tsx
-│   │   │   ├── TimeoutFeature.css
-│   │   │   ├── TimeoutFeature.tsx
-│   │   │   └── ui
-│   │   │       ├── button.tsx
-│   │   │       ├── card.tsx
-│   │   │       ├── checkbox.tsx
-│   │   │       ├── dropdown-menu.tsx
-│   │   │       ├── form.tsx
-│   │   │       ├── input.tsx
-│   │   │       ├── label.tsx
-│   │   │       ├── radio-group.tsx
-│   │   │       ├── select.tsx
-│   │   │       ├── signature-input.tsx
-│   │   │       ├── toast.tsx
-│   │   │       ├── toaster.tsx
-│   │   │       └── use-toast.ts
-│   │   ├── context
-│   │   │   └── theme-context.tsx
-│   │   ├── lib
-│   │   │   └── utils.ts
-│   │   ├── styles
-│   │   │   ├── accessibility.css
-│   │   │   └── globals.css
-│   │   └── validators
-│   │       ├── adult-auth.ts
-│   │       └── child-auth.ts
-│   ├── tailwind.config.ts
-│   └── tsconfig.json
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── components.json
+│   ├── next-env.d.ts
+│   ├── next.config.mjs
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.mjs
+│   ├── cypress.config.ts
+|   ├── __tests__
+│   │   ├── CardHeaderConsent.test.tsx
+│   │   ├── CheckboxWithText.test.tsx
+│   │   ├── Footer.test.tsx
+│   │   ├── FormButtons.tsx
+│   │   ├── Header.test.tsx
+│   │   ├── ModeToggle.test.tsx
+│   │   ├── ProgressBar.test.tsx
+│   │   ├── ThemeProvider.test.tsx
+│   │   └── TimeoutFeature.test.tsx
+|   ├── cypress
+│   │   ├── downloads
+│   │   ├── e2e
+│   │   │   ├── adult.cy.ts
+│   │   │   └── child.cy.ts
+│   │   ├── fixtures
+│   │   │   └── example.json
+│   │   └── support
+│   │       ├── commands.ts
+│   │       └── e2e.ts
+│   ├── public
+│   │   ├── next.svg
+│   │   ├── unsw_logo.png
+│   │   └── vercel.svg
+│   ├── src
+│   │   ├── app
+│   │   │   ├── child-form
+│   │   │   │   ├── components
+│   │   │   │   │   ├── CardHeaderContent.tsx
+│   │   │   │   │   ├── FormButtons.tsx
+│   │   │   │   │   └── Forms.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── favicon.ico
+│   │   │   ├── globals.css
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── components
+│   │   │   ├── CardHeaderContent.tsx
+│   │   │   ├── CheckboxWithText.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── FormButtons.tsx
+│   │   │   ├── Forms.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── ModeToggle.tsx
+│   │   │   ├── ProgressBar.tsx
+│   │   │   ├── TimeoutFeature.css
+│   │   │   ├── TimeoutFeature.tsx
+│   │   │   └── ui
+│   │   │       ├── button.tsx
+│   │   │       ├── card.tsx
+│   │   │       ├── checkbox.tsx
+│   │   │       ├── dropdown-menu.tsx
+│   │   │       ├── form.tsx
+│   │   │       ├── input.tsx
+│   │   │       ├── label.tsx
+│   │   │       ├── radio-group.tsx
+│   │   │       ├── select.tsx
+│   │   │       ├── signature-input.tsx
+│   │   │       ├── toast.tsx
+│   │   │       ├── toaster.tsx
+│   │   │       └── use-toast.ts
+│   │   ├── context
+│   │   │   └── theme-context.tsx
+│   │   ├── deprecated
+│   │   │   ├── Steven-Forms.tsx
+│   │   │   └── RadioWithText.tsx
+│   │   ├── lib
+│   │   │   └── utils.ts
+│   │   ├── styles
+│   │   │   ├── accessibility.css
+│   │   │   └── globals.css
+│   │   └── validators
+│   │       ├── adult-auth.ts
+│   │       └── child-auth.ts
+│   ├── tailwind.config.ts
+│   └── tsconfig.json
 ├── package-lock.json
+├── package.json
+└── structure.txt
+e-lock.json
 ├── package.json
 └── structure.txt
 ```

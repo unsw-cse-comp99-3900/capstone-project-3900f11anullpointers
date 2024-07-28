@@ -46,7 +46,6 @@ export function FormButtons({
 
     const isValid = await trigger(fieldsToValidate);
     isValid && setFormStep(formStep + 1);
-    console.log("UP!!", formStep)
   };
 
   const handleFinalSubmit = async () => {
@@ -64,9 +63,9 @@ export function FormButtons({
     console.log(formData);
     try {
       let fieldsToValidate: string = "drawSignature"
-  
+
       const isValid = await trigger(fieldsToValidate);
-      if (!isValid){
+      if (!isValid) {
         return
       }
       setIsLoading(true);
@@ -84,11 +83,10 @@ export function FormButtons({
       };
       // For debugging
       /*       await new Promise((resolve) => setTimeout(resolve, 1000));
-      setIsLoading(false);
-      setFormStep(formStep + 1); */
+            setIsLoading(false);
+            setFormStep(formStep + 1); */
 
       const backendURL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
-      console.log(backendURL);
       const response = await fetch(`${backendURL}/post`, {
         method: "POST",
         headers: {

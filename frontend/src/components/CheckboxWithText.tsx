@@ -1,5 +1,4 @@
 "use client";
-
 import { UseFormReturn } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,7 +14,7 @@ import { Lexend } from "next/font/google";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
-type CheckboxWithTextProps = {
+export type CheckboxWithTextProps = {
   form: UseFormReturn<any>;
   checkbox1: {
     name: string;
@@ -43,11 +42,16 @@ export function CheckboxWithText({
     errors.denyResearchConsent,
     errors.acceptContactConsent,
     errors.denyContactConsent,
-    errors.acceptStudentConsent,
-    errors.denyStudentConsent,
+    // errors.acceptStudentConsent,
+    // errors.denyStudentConsent,
   ].filter(Boolean);
 
-  console.log(consentErrors);
+  const handleItemClick = (event: any, field: any) => {
+    if (event.target.type !== 'checkbox') {
+      event.preventDefault();
+      field.onChange(!field.value);
+    }
+  };
 
   return (
     <div className='space-y-6'>
@@ -55,16 +59,26 @@ export function CheckboxWithText({
         control={form.control}
         name={checkbox1.name}
         render={({ field, fieldState }) => (
-          <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
+          <FormItem
+            className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 cursor-pointer'
+            onClick={(event) => handleItemClick(event, field)}
+          >
             <FormControl>
               <Checkbox
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />
             </FormControl>
-            <div className='space-y-1 leading-none'>
-              <FormLabel className={`${textLarge ? 'text-xl' : 'text-base'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>{checkbox1.labelText}</FormLabel>
-              <FormDescription>
+            <div className='space-y-1 leading-none cursor-pointer'>
+              <FormLabel
+                className={`cursor-pointer ${textLarge ? 'text-xl' : 'text-base'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}
+                onClick={(event) => handleItemClick(event, field)}
+              >
+                {checkbox1.labelText}
+              </FormLabel>
+              <FormDescription
+                onClick={(event) => handleItemClick(event, field)}
+              >
                 {checkbox1.descriptionText}
               </FormDescription>
             </div>
@@ -75,7 +89,10 @@ export function CheckboxWithText({
         control={form.control}
         name={checkbox2.name}
         render={({ field, fieldState }) => (
-          <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
+          <FormItem
+            className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 cursor-pointer'
+            onClick={(event) => handleItemClick(event, field)}
+          >
             <FormControl>
               <Checkbox
                 checked={field.value}
@@ -83,8 +100,15 @@ export function CheckboxWithText({
               />
             </FormControl>
             <div className='space-y-1 leading-none'>
-              <FormLabel className={`${textLarge ? 'text-xl' : 'text-base'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}>{checkbox2.labelText}</FormLabel>
-              <FormDescription>
+              <FormLabel
+                className={`cursor-pointer ${textLarge ? 'text-xl' : 'text-base'} ${highContrast ? "filter contrast-200" : ""} ${dyslexicFont ? lexend.className : ""}`}
+                onClick={(event) => handleItemClick(event, field)}
+              >
+                {checkbox2.labelText}
+              </FormLabel>
+              <FormDescription
+                onClick={(event) => handleItemClick(event, field)}
+              >
                 {checkbox2.descriptionText}
               </FormDescription>
             </div>
