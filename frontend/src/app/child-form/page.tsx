@@ -94,11 +94,6 @@ export default function Home() {
                 Vision Science, UNSW Australia. It is a teaching facility for both excellence 
                 in eye care and is at the forefront of the latest research.'
               />
-              <a href='/' className="w-full flex justify-end pr-10">
-                <Button variant='ghost' className={` ${textLarge ? "text-lg" : ""} ${dyslexicFont ? lexend.className : ""}`}>
-                  Fill out the adult form instead
-                </Button>
-              </a>
               <CardContent>
                 <FormProvider {...form}>
                   <form

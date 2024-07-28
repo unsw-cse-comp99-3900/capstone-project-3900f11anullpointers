@@ -63,9 +63,9 @@ export function FormButtons({
     console.log(formData);
     try {
       let fieldsToValidate: string = "drawSignature"
-  
+
       const isValid = await trigger(fieldsToValidate);
-      if (!isValid){
+      if (!isValid) {
         return
       }
       setIsLoading(true);
@@ -82,9 +82,9 @@ export function FormButtons({
         },
       };
       // For debugging
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setIsLoading(false);
-      setFormStep(formStep + 1);
+      /*       await new Promise((resolve) => setTimeout(resolve, 1000));
+            setIsLoading(false);
+            setFormStep(formStep + 1); */
 
       const backendURL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
       const response = await fetch(`${backendURL}/post`, {
@@ -103,12 +103,12 @@ export function FormButtons({
       setIsLoading(false);
       setFormStep(formStep + 1);
     } catch (error: any) {
-/*       setIsLoading(false);
+      setIsLoading(false);
       toast({
         variant: "destructive",
         title: "Something went wrong",
         description: error.message,
-      }); */
+      });
     }
   };
 

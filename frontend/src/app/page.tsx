@@ -87,17 +87,12 @@ export default function Home() {
               <CardHeaderContent
                 step={formStep}
                 totalSteps={formSteps.length - 1}
-                title='Patient Consent & Information Sheet'
+                title='Patient Consent & Information Sheet (Adults)'
                 description='The UNSW Optometry Clinic is part of the School of Optometry and Vision 
                 Science, UNSW Australia. It is a teaching facility for both undergraduate and 
                 postgraduate optometry students, providing excellence in eye care and is at the 
                 forefront of the latest research.'
               />
-              <a href='/child-form' className="w-full flex justify-end pr-10">
-                <Button variant='ghost' className={` ${textLarge ? "text-lg" : ""} ${dyslexicFont ? lexend.className : ""}`}>
-                  Fill out the child form instead
-                </Button>
-              </a>
               <CardContent>
                 <FormProvider {...form}>
                   <form

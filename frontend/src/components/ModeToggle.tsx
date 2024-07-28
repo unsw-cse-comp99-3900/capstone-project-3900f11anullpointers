@@ -3,6 +3,7 @@ import * as React from "react";
 import { Moon, Sun, ZoomIn, ZoomOut, Contrast, EyeOff, Eye, Circle } from "lucide-react";
 import { useThemeContext } from "@/context/theme-context";
 import { Button } from "@/components/ui/button";
+import { Lexend } from "next/font/google";
 
 export const ModeToggle: React.FC = () => {
   const { theme, textLarge, highContrast, dyslexicFont, toggleTheme, toggleTextSize, toggleHighContrast, toggleDyslexicFont } = useThemeContext();
