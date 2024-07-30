@@ -70,9 +70,7 @@ def validate_signature(signature_base64: str) -> None:
             raise ValueError("Signature image must be in PNG format")
 
         # Validate image dimensions
-        width, height = image.size
-
-        if width != 630 or height != 112:
+        if image.size != (630, 112):
             raise ValueError("Signature image dimensions are invalid")
 
     except Exception as e:
@@ -87,7 +85,7 @@ def validate_input(data: Dict[str, Any]) -> None:
     if not isinstance(data.get("email"), str) or not re.match(email_pattern, data["email"]):
         raise ValueError("Invalid email")
 
-    base64_png_pattern = r"^data:image/png;base64,[A-Za-z0-9+/=]+$"
+    base64_png_pattern = r"^data:image/png(?:;charset=utf-8)?;base64,[A-Za-z0-9+/=]+$"
     if not isinstance(data.get("drawSignature"), str) or not data["drawSignature"].strip():
         raise ValueError("Invalid drawSignature")
     
