@@ -22,7 +22,7 @@ export const formSteps: FormStepConfig[] = [
   {
     component: ConsentStep,
     props: {
-      title: "Use of Clinical Information in Research Studies",
+      title: "Teaching and Research",
       preDescription: `Please indicate below whether you give consent for your child's
         de-identified* information being used for teaching and research
         purposes. This has no bearing on your child's clinical care.`,
@@ -47,7 +47,7 @@ export const formSteps: FormStepConfig[] = [
   {
     component: ConsentStep,
     props: {
-      title: "Use of Clinical Information in Research Studies",
+      title: "Student Clinic Consent",
       preDescription: `I acknowledge that I have been informed that my child's initial eye
         examination and subsequent care in the UNSW Optometry Clinic will be
         conducted by an optometry student under the supervision of a qualified,

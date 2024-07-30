@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { FormButtons } from "@/components/FormButtons";
+import { FormButtons } from "./components/FormButtons";
 import { Toaster } from "@/components/ui/toaster";
 import TimeoutFeature from "@/components/TimeoutFeature";
 import { StepWrapper } from "@/components/StepWrapper";
@@ -113,9 +113,9 @@ export default function Home() {
                           duration: 0.5,
                         }}
                       >
-                        {formSteps.map((_, index) => (
+                        {formSteps.map((formObj, index) => (
                           <div key={index} className='w-full flex-shrink-0 p-3'>
-                            <StepWrapper form={form} step={index} />
+                            <StepWrapper form={form} step={formObj} />
                           </div>
                         ))}
                       </motion.div>

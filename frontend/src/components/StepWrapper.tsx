@@ -1,13 +1,13 @@
-import { formSteps } from "../forms/AdultFormStepConfig";
+import { FormStepConfig } from "../forms/AdultFormStepConfig";
 import { UseFormReturn } from "react-hook-form";
 
 type StepWrapperProps = {
   form: UseFormReturn<any>;
-  step: number;
+  step: FormStepConfig;
 };
 
 export function StepWrapper({ form, step }: StepWrapperProps) {
-  const StepComponent = formSteps[step].component;
-  const stepProps = formSteps[step].props;
+  const StepComponent = step.component;
+  const stepProps = step.props;
   return <StepComponent form={form} {...stepProps} />;
 }

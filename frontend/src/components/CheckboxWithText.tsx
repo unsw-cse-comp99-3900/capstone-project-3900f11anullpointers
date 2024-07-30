@@ -37,13 +37,18 @@ export function CheckboxWithText({
 
   const { errors } = form.formState;
 
-  const consentErrors = [
+  const consentErrors = typeof window !== 'undefined' && window.location.pathname.endsWith("/child-form") ? [
+    errors.acceptResearchConsent,
+    errors.denyResearchConsent,
+    errors.acceptStudentConsent,
+    errors.denyStudentConsent,
+  ].filter(Boolean) : [
     errors.acceptResearchConsent,
     errors.denyResearchConsent,
     errors.acceptContactConsent,
     errors.denyContactConsent,
-    // errors.acceptStudentConsent,
-    // errors.denyStudentConsent,
+    errors.acceptStudentConsent,
+    errors.denyStudentConsent,
   ].filter(Boolean);
 
   const handleItemClick = (event: any, field: any) => {

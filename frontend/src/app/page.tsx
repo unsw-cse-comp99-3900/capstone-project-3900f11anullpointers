@@ -112,9 +112,9 @@ export default function Home() {
                           duration: 0.5,
                         }}
                       >
-                        {formSteps.map((_, index) => (
+                        {formSteps.map((step, index) => (
                           <div key={index} className='w-full flex-shrink-0 p-3'>
-                            <StepWrapper form={form} step={index} />
+                            <StepWrapper form={form} step={step} />
                           </div>
                         ))}
                       </motion.div>
