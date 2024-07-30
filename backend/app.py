@@ -104,7 +104,11 @@ def validate_input(data: Dict[str, Any]) -> None:
     if not isinstance(consent, dict):
         raise ValueError("Invalid consent data")
     
-    required_consent_keys = {"researchConsent", "contactConsent", "studentConsent"}
+    if data["formType"] == "child":
+        required_consent_keys = {"researchConsent", "studentConsent"}
+    elif data["formType"] == "adult":
+        required_consent_keys = {"researchConsent", "contactConsent", "studentConsent"}
+
     if required_consent_keys != consent.keys():
         raise ValueError("Missing or extra consent fields")
 
