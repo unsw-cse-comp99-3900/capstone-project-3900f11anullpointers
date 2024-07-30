@@ -106,10 +106,12 @@ def validate_input(data: Dict[str, Any]) -> None:
     
     if data["formType"] == "child":
         required_consent_keys = {"researchConsent", "studentConsent"}
+        if "contactConsent" in consent:
+            del consent["contactConsent"]
     elif data["formType"] == "adult":
         required_consent_keys = {"researchConsent", "contactConsent", "studentConsent"}
 
-    if required_consent_keys != consent.keys():
+    if required_consent_keys != set(consent.keys()):
         raise ValueError("Missing or extra consent fields")
 
     for key in required_consent_keys:
