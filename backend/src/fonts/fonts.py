@@ -32,6 +32,7 @@ FONTS_FILE = "font_config.json"
 class Fonts:
     """Loads fonts from FONT_CONFIG json file into class"""
     def __init__(self):
+        self.added_fonts = set()
         try:
             with open(f"{FONTS_FOLDER}/{FONTS_FILE}", "r", encoding="utf-8") as file:
                 font_dict = json.load(file)
@@ -61,7 +62,10 @@ class Fonts:
 
     def _set_to_font(self, pdf: FPDF, size: int, font_name: str):
         try:
-            pdf.add_font(font_name, "", f"{FONTS_FOLDER}/{font_name}.ttf", uni=True)
+            if font_name not in self.added_fonts:
+                pdf.add_font(font_name, "", f"{FONTS_FOLDER}/{font_name}.ttf", uni=True)
+                self.added_fonts.add(font_name)
+                
             pdf.set_font(font_name, size=size)
         except RuntimeError as e:
             logging.error("Font %s not found: %s", font_name, e)

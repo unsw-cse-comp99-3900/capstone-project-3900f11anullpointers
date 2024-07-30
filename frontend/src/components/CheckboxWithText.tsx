@@ -54,7 +54,7 @@ export function CheckboxWithText({
   };
 
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       <FormField
         control={form.control}
         name={checkbox1.name}
@@ -116,7 +116,7 @@ export function CheckboxWithText({
         )}
       />
       {consentErrors.length > 0 && (
-        <FormMessage className='text-red-500'>
+        <FormMessage className="text-red-500">
           Please select ONE option.
         </FormMessage>
       )}

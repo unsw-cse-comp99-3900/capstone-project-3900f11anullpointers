@@ -12,7 +12,6 @@ from src.fonts.fonts import (
     FONTS_FILE,
 )
 
-
 class TestFonts(unittest.TestCase):
     """Class for testing the Fonts class"""
     def setUp(self):

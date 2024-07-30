@@ -1,3 +1,4 @@
+"""Module to run the tests for the backend"""
 import os
 import sys
 import unittest
@@ -15,36 +16,38 @@ sys.path.append(SOURCE_PATH)
 
 # Custom test runner to add color
 class ColoredTextTestResult(unittest.TextTestResult):
+    """Class to create coloured test results"""
     def addSuccess(self, test):
         super().addSuccess(test)
-        self.stream.write(colored('ok', 'green') + '\n')
+        self.stream.write(colored("ok", "green") + "\n")
 
     def addFailure(self, test, err):
         super().addFailure(test, err)
-        self.stream.write(colored('FAIL', 'red') + '\n')
+        self.stream.write(colored("FAIL", "red") + "\n")
 
     def addError(self, test, err):
         super().addError(test, err)
-        self.stream.write(colored('ERROR', 'yellow') + '\n')
+        self.stream.write(colored("ERROR", "yellow") + "\n")
 
 class ColoredTextTestRunner(unittest.TextTestRunner):
+    """Class to run the coloured tests"""
     resultclass = ColoredTextTestResult
 
-# Discover and run all test files matching the pattern 'test*.py'
 def run_tests():
+    """Discover and run all test files matching the pattern test*.py"""
     # Discover all test files
     test_loader = unittest.TestLoader()
     test_suite = test_loader.discover("tests", pattern="test_*.py")
-    
+
     # Run the tests
     test_runner = ColoredTextTestRunner(verbosity=2)
     result = test_runner.run(test_suite)
-    
+
     # Return the appropriate exit code
     if result.wasSuccessful():
         return 0
     else:
         return 1
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(run_tests())
