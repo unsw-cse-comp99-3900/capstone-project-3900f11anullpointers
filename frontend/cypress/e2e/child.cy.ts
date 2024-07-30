@@ -4,13 +4,13 @@ describe('NameStep Component', () => {
     });
 
     it('should allow switching to the child form', () => {
-        cy.contains('Fill out the child form instead').click();
+        cy.contains('Click for Child Form').click();
         cy.contains('Patient\'s Consent & Information Sheet (Children)').should('be.visible');
     });
 
     describe('After switching to the child form', () => {
         beforeEach(() => {
-            cy.contains('Fill out the child form instead').click();
+            cy.contains('Click for Child Form').click();
         });
 
         it('should display the name and email fields', () => {

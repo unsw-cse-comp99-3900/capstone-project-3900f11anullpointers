@@ -76,7 +76,7 @@ export default function Home() {
 
   return (
     <main className='flex max-h-screen flex-col items-center justify-center'>
-      <div className='flex flex-col items-center justify-center w-full max-w-3xl mx-auto p-4 sm:p-6 md:p-8'>
+      <div className='flex flex-col items-center justify-center w-full max-w-lg mx-auto p-4 sm:max-w-xl md:max-w-3xl'>
         <Card className='w-full'>
           {isSubmitted ? (
             <CardContent>
