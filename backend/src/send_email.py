@@ -24,27 +24,26 @@ Exception Handling:
 """
 
 import smtplib
-from smtplib import SMTP
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import base64
-from datetime import datetime   
+from datetime import datetime
 import logging
-import threading
 import time
 
 CLINIC_SUBJECT: str = "Patient Consent Form Submission - UNSW Optometry Clinic"
 PATIENT_SUBJECT: str = "Confirmation of Consent Form Submission - UNSW Optometry Clinic"
 
 class SendEmail:
+    """Handles the sending of emails to the clinic or patient"""
     def __init__(self, server: str, port: int, user: str, pswd: str):
         self.server = server
         self.port = port
         self.user = user
         self.pswd = pswd
-                   
+
     def send_email_to_clinic(self, email_to: str, attach_name:str , pdf_base64: str,
                     patient_name: str, patient_email: str, submit_datetime: datetime) -> None:
         """
@@ -58,12 +57,12 @@ class SendEmail:
         - patient_email (str): The email address of the patient.
         - submit_datetime (datetime): The date and time the form was submitted.
         """
-        
+
         start = time.time()
         subject = CLINIC_SUBJECT
         current_time = submit_datetime.strftime("%l:%M %p")
         current_date = submit_datetime.strftime("%B %d, %Y")
-        
+
         body = f"""\
         <!DOCTYPE html>
         <html lang="en">
@@ -82,10 +81,18 @@ class SendEmail:
                     <h2 style="margin-top: 0 color: black !important;">New Consent Form Received</h2>
                     <p style="color: black !important;">A new patient consent form has been submitted with the following details:</p>
                     <ul>
-                        <li style="color: black !important;"><strong>Patient Name:</strong> {patient_name}</li>
-                        <li style="color: black !important;"><strong>Patient Email:</strong> {patient_email}</li>
-                        <li style="color: black !important;"><strong>Submission Date:</strong> {current_date}</li>
-                        <li style="color: black !important;"><strong>Submission Time:</strong> {current_time}</li>
+                        <li style="color: black !important;">
+                            <strong>Patient Name:</strong> {patient_name}
+                        </li>
+                        <li style="color: black !important;">
+                            <strong>Patient Email:</strong> {patient_email}
+                        </li>
+                        <li style="color: black !important;">
+                            <strong>Submission Date:</strong> {current_date}
+                        </li>
+                        <li style="color: black !important;">
+                            <strong>Submission Time:</strong> {current_time}
+                        </li>
                     </ul>
                     <p style="color: black !important;">The completed consent form is attached to this email as a PDF file.</p>
                     <p style="color: black !important;">Please process this form according to our standard procedures and add it to the patient's records.</p>
@@ -101,12 +108,10 @@ class SendEmail:
         </body>
         </html>
         """
-        
+
         self._send_email(email_to, subject, body, attach_name=attach_name, pdf_base64=pdf_base64)
         end = time.time()
-        logging.info(f"Email successfully sent to the patient. Elapsed time: {end-start:.2f} sec")
-
-            
+        logging.info("Email successfully sent to the clinic. Elapsed time: %.2f sec", end-start)
 
     def send_email_to_patient(self, email_to: str, patient_name: str) -> None:
         """
@@ -177,18 +182,19 @@ class SendEmail:
                 "
             >
                 <p>This is an automated message, please do not reply.</p>
-                <p>&copy; 2024 Your Company. All rights reserved.</p>
+                <p>&copy; 2024 UNSW. All rights reserved.</p>
             </div>
             </div>
         </body>
         </html>
         """
-        
+
         self._send_email(email_to, subject, body)
         end = time.time()
-        logging.info(f"Email successfully sent to the patient. Elapsed time: {end-start:.2f} sec")
-    
-    def _send_email(self, email_to: str, subject: str, body: str, attach_name="Consent Form.pdf", pdf_base64=None) -> None:
+        logging.info("Email successfully sent to the patient. Elapsed time: %.2f sec", end-start)
+
+    def _send_email(self, email_to: str, subject: str, body: str,
+                    attach_name="Consent Form.pdf", pdf_base64=None) -> None:
         """
         Handles the actual sending of an email using the SMTP protocol with error handling.
         
@@ -199,48 +205,58 @@ class SendEmail:
         - attach_name (str): The name for the attached PDF file.
         - pdf_base64 (str): The base64-encoded content of the PDF.
         """
-        
+        connection: smtplib.SMTP = None
+
         try:
             connection = smtplib.SMTP(self.server, self.port)
             connection.starttls()
             connection.login(self.user, self.pswd)
-            
+
             msg = MIMEMultipart()
-            msg['From'] = self.user
-            msg['To'] = email_to
-            msg['Subject'] = subject
+            msg["From"] = self.user
+            msg["To"] = email_to
+            msg["Subject"] = subject
 
-            msg.attach(MIMEText(body, 'html'))
+            msg.attach(MIMEText(body, "html"))
 
-            if pdf_base64 != None:
+            if pdf_base64 is not None:
                 attachment_decoded = base64.b64decode(pdf_base64)
-                attachment_package = MIMEBase('application', 'pdf')
-                attachment_package.set_payload(attachment_decoded)
-                encoders.encode_base64(attachment_package)
-                attachment_package.add_header('Content-Disposition', f"attachment; filename= {attach_name}")
-                msg.attach(attachment_package)
+                attach_package = MIMEBase("application", "pdf")
+                attach_package.set_payload(attachment_decoded)
+                encoders.encode_base64(attach_package)
+                attach_package.add_header("Content-Disposition",
+                                          f"attachment; filename= {attach_name}")
+                msg.attach(attach_package)
 
             text = msg.as_string()
             connection.sendmail(self.user, email_to, text)
         except smtplib.SMTPAuthenticationError as e:
             logging.error("Failed to authenticate with the mail server: %s", e)
+            raise e
         except smtplib.SMTPConnectError as e:
             logging.error("Failed to connect to the mail server: %s", e)
+            raise e
         except smtplib.SMTPHeloError as e:
             logging.error("Server didn't reply properly to the HELO greeting: %s", e)
+            raise e
         except smtplib.SMTPSenderRefused as e:
             logging.error("Sender address was refused by the server: %s", e)
+            raise e
         except smtplib.SMTPRecipientsRefused as e:
             logging.error("Recipient address was refused by the server: %s", e)
+            raise e
         except smtplib.SMTPDataError as e:
             logging.error("The server replied with an unexpected error code: %s", e)
+            raise e
         except smtplib.SMTPNotSupportedError as e:
             logging.error("The command or option is not supported by the server: %s", e)
+            raise e
         except smtplib.SMTPServerDisconnected as e:
             logging.error("Server unexpectedly disconnected: %s", e)
+            raise e
         except smtplib.SMTPException as e:
             logging.error("An error occurred while sending the email: %s", e)
+            raise e
         finally:
-            connection.close()        
-     
-
+            if connection:
+                connection.close()

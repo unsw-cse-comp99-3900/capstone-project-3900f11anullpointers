@@ -15,20 +15,16 @@ import os
 import logging
 import secrets
 import re
-from typing import Any, Dict, List
-from datetime import datetime
-from flask import Flask, Response, request, jsonify
-from flask_cors import CORS
-from src.pdf_gen import GeneratePDF
-from src.send_email import SendEmail
-import os
-import logging
-from dotenv import find_dotenv, load_dotenv 
-from datetime import datetime
-import pytz
 import time
 import threading
-
+from typing import Any, Dict, List
+from datetime import datetime
+import pytz
+from flask import Flask, Response, request, jsonify
+from flask_cors import CORS
+from dotenv import find_dotenv, load_dotenv
+from src.pdf_gen import GeneratePDF
+from src.send_email import SendEmail
 
 load_dotenv(find_dotenv(".env"))
 load_dotenv(find_dotenv(".env.local"))
@@ -42,32 +38,45 @@ CORS(app, resources={r"/*": {"origins": FRONTEND_URL}})
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
-server = os.getenv('SMTP_HOST')
-port = os.getenv('SMTP_PORT')
-user = os.getenv('SMTP_USER')
-pswd = os.getenv('SMTP_PSWD')
+server = os.getenv("SMTP_HOST")
+port = os.getenv("SMTP_PORT")
+user = os.getenv("SMTP_USER")
+pswd = os.getenv("SMTP_PSWD")
 smtp_server = SendEmail(server, port, user, pswd)
-    
+
 # Function to set up email to be sent to clinic and patient
-def send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime): 
+def _send_emails(recipient_email, pdf_base64, patient_name, patient_email, submit_datetime):
     """Sends emails with the generated PDF attached."""
-     
+
     start = time.time()
-    
+
     reg_name: str = re.sub(r"[^a-zA-Z' -]", "", patient_name).replace(" ", "_")
-    token: str = reg_name + " - " + secrets.token_hex(4)
-    
-    t1 = threading.Thread(target=smtp_server.send_email_to_clinic, args=(recipient_email, f"{token}.pdf", pdf_base64, patient_name, patient_email, submit_datetime))
-    t2 = threading.Thread(target=smtp_server.send_email_to_patient, args=(patient_email, patient_name))
-    
+    token: str = reg_name + "_" + secrets.token_hex(4)
+
+    t1 = threading.Thread(
+        target=smtp_server.send_email_to_clinic,
+        args=(
+            recipient_email,
+            f"{token}.pdf",
+            pdf_base64,
+            patient_name,
+            patient_email,
+            submit_datetime
+        )
+    )
+    t2 = threading.Thread(
+        target=smtp_server.send_email_to_patient,
+        args=(patient_email, patient_name)
+    )
+
     t1.start()
     t2.start()
-    
+
     t1.join()
     t2.join()
-    
+
     end = time.time()
-    logging.info(f"Emails sent successfully. Total elapsed time: {end-start:.2f} sec")
+    logging.info("Emails sent successfully. Total elapsed time: %.2f sec", end - start)
 
 @app.route("/post", methods=["POST"])
 def post_method() -> Response:
@@ -86,7 +95,7 @@ def post_method() -> Response:
         received_data: Dict[str, Any] = request.json
 
 
-        current_au_time = datetime.now(pytz.timezone('Australia/Sydney'))
+        current_au_time: datetime = datetime.now(pytz.timezone("Australia/Sydney"))
 
         draw_signature: str = received_data.get("drawSignature")
         form_type: str = received_data.get("formType")
@@ -118,7 +127,8 @@ def post_method() -> Response:
         patient_name: str = received_data.get("name")
         patient_email: str = received_data.get("email")
 
-        send_emails(os.getenv("RECIPIENT_EMAIL"), pdf_base64, patient_name, patient_email, current_au_time)
+        _send_emails(os.getenv("RECIPIENT_EMAIL"), pdf_base64,
+                    patient_name, patient_email, current_au_time)
 
         response_data: Dict[str, Any] = {
             "message": "Form submission successful",

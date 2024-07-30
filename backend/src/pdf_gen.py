@@ -28,8 +28,8 @@ TEXT_FOLDER = "src/form_text"
 LOGO_FOLDER = "src/logo"
 LOGO_FILE = f"{LOGO_FOLDER}/logo.png"
 
-logging.getLogger('fontTools.subset').level = logging.WARN
-logging.getLogger('fontTools.ttLib.ttFont').level = logging.WARN
+logging.getLogger("fontTools.subset").level = logging.WARN
+logging.getLogger("fontTools.ttLib.ttFont").level = logging.WARN
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
 class GeneratePDF:
@@ -44,6 +44,7 @@ class GeneratePDF:
             self.fonts = Fonts()
         except (RuntimeError, FileNotFoundError, json.JSONDecodeError) as e:
             logging.error("PDF generator cannot be made: %s", e)
+            raise e
 
     def _add_base64_image(self, base64_data: str, h=None) -> None:
         try:
@@ -55,6 +56,7 @@ class GeneratePDF:
             self.pdf.image(image_file, h=h)
         except (ValueError, TypeError) as e:
             logging.error("Error addding base64 image: %s", e)
+            raise e
 
     def generate_pdf(self, client_name: str, form_name: str, consent_flags: List[bool],
                      siganture_base64: str, submit_datetime: datetime) -> str:
@@ -96,6 +98,7 @@ class GeneratePDF:
             self.pdf.output(pdf_buffer)
         except RuntimeError as e:
             logging.error("Unable to output pdf document: %s", e)
+            raise e
 
         pdf_content: bytes = pdf_buffer.getvalue()
         pdf_base64 = base64.b64encode(pdf_content).decode("utf-8")
@@ -110,4 +113,4 @@ class GeneratePDF:
                 return json.load(file)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             logging.error("Cannot read {form_name} config file: %s", e)
-            raise
+            raise e
