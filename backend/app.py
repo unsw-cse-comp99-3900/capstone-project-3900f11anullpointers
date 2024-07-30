@@ -19,7 +19,6 @@ import secrets
 import re
 import base64
 import pytz
-import io
 from typing import Any, Dict, List
 from datetime import datetime
 from flask import Flask, Response, request, jsonify
@@ -27,7 +26,6 @@ from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
 from src.send_email import send_email_to_clinic, send_email_to_patient
 from dotenv import find_dotenv, load_dotenv
-from PIL import Image
 
 load_dotenv(find_dotenv(".env"))
 load_dotenv(find_dotenv(".env.local"))
@@ -63,15 +61,11 @@ def validate_signature(signature_base64: str) -> None:
     try:
         # Decode the base64 string
         signature_data = base64.b64decode(signature_base64)
-        # Open the image
-        image = Image.open(io.BytesIO(signature_data))
-        # Validate image format
-        if image.format != 'PNG':
-            raise ValueError("Signature image must be in PNG format")
 
-        # Validate image dimensions
-        if image.width > 1200 or image.height > 200:
-            raise ValueError("Signature image dimensions are invalid")
+        # Check header of image to ensure it is a PDF.
+        png_signature = b'\x89PNG\r\n\x1a\n'
+        if signature_data[:8] != png_signature:
+            raise ValueError("Signature image must be in PNG format")
 
     except Exception as e:
         raise ValueError("Invalid signature image: " + str(e))    
