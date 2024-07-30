@@ -9,12 +9,17 @@ Functions:
 
 Private Functions:
 - send_emails: Sends emails with the generated PDF attached.
+- validate_signature: Validates the base64 encoded signature image.
+- validate_input: Validates all input data.
 """
 
 import os
 import logging
 import secrets
 import re
+import base64
+import pytz
+import io
 from typing import Any, Dict, List
 from datetime import datetime
 from flask import Flask, Response, request, jsonify
@@ -22,7 +27,7 @@ from flask_cors import CORS
 from src.pdf_gen import GeneratePDF
 from src.send_email import send_email_to_clinic, send_email_to_patient
 from dotenv import find_dotenv, load_dotenv
-import pytz
+from PIL import Image
 
 load_dotenv(find_dotenv(".env"))
 load_dotenv(find_dotenv(".env.local"))
@@ -53,6 +58,60 @@ def _send_emails(recipient_email: str, pdf_base64, patient_name: str,
 
     send_email_to_patient(server, port, email_from, patient_email, pswd, patient_name)
 
+def validate_signature(signature_base64: str) -> None:
+    """Validates the base64 encoded signature image."""
+    try:
+        # Decode the base64 string
+        signature_data = base64.b64decode(signature_base64)
+        # Open the image
+        image = Image.open(io.BytesIO(signature_data))
+        # Validate image format
+        if image.format != 'PNG':
+            raise ValueError("Signature image must be in PNG format")
+
+        # Validate image dimensions
+        width, height = image.size
+
+        if width != 630 or height != 112:
+            raise ValueError("Signature image dimensions are invalid")
+
+    except Exception as e:
+        raise ValueError("Invalid signature image: " + str(e))    
+
+def validate_input(data: Dict[str, Any]) -> None:
+    """Validates the input data."""
+    if not isinstance(data.get("name"), str) or not data["name"].strip():
+        raise ValueError("Invalid name")
+
+    email_pattern = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+    if not isinstance(data.get("email"), str) or not re.match(email_pattern, data["email"]):
+        raise ValueError("Invalid email")
+
+    base64_png_pattern = r"^data:image/png;base64,[A-Za-z0-9+/=]+$"
+    if not isinstance(data.get("drawSignature"), str) or not data["drawSignature"].strip():
+        raise ValueError("Invalid drawSignature")
+    
+    if not re.match(base64_png_pattern, data["drawSignature"]):
+        raise ValueError("Invalid drawSignature: Not a valid Base64 PNG data URI.")
+
+    # Validate base64 signature image
+    validate_signature(data["drawSignature"])
+
+    if data.get("formType") not in ["adult", "child"]:
+        raise ValueError("Invalid formType")
+
+    consent = data.get("consent")
+    if not isinstance(consent, dict):
+        raise ValueError("Invalid consent data")
+    
+    required_consent_keys = {"researchConsent", "contactConsent", "studentConsent"}
+    if required_consent_keys != consent.keys():
+        raise ValueError("Missing or extra consent fields")
+
+    for key in required_consent_keys:
+        if not isinstance(consent[key], bool):
+            raise ValueError(f"Invalid value for {key}")    
+
 @app.route("/post", methods=["POST"])
 def post_method() -> Response:
     """
@@ -70,6 +129,8 @@ def post_method() -> Response:
         received_data: Dict[str, Any] = request.json
 
         logging.info(received_data)
+
+        validate_input(received_data)
 
         current_au_time: datetime = datetime.now(pytz.timezone("Australia/Sydney"))
 
