@@ -62,7 +62,7 @@ def validate_signature(signature_base64: str) -> None:
         # Decode the base64 string
         signature_data = base64.b64decode(signature_base64)
 
-        # Check header of image to ensure it is a PDF
+        # Check header of image to ensure it is a PNG
         png_signature = b'\x89PNG\r\n\x1a\n'
         if signature_data[:8] != png_signature:
             raise ValueError("Signature image must be in PNG format")
