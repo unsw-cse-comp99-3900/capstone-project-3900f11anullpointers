@@ -77,8 +77,8 @@ export default function Home() {
   }, []);
 
   return (
-    <main className='flex max-h-screen flex-col items-center justify-center'>
-      <div className='flex flex-col items-center justify-center w-full max-w-lg mx-auto p-4 sm:max-w-xl md:max-w-3xl'>
+    <div>
+      <div className='flex flex-col items-center justify-center w-full max-w-md mx-auto p-4 sm:max-w-xl md:max-w-3xl'>
         <Card className='w-full'>
           {isSubmitted ? (
             <CardContent>
@@ -143,6 +143,6 @@ export default function Home() {
         <Toaster />
       </div>
       <TimeoutFeature />
-    </main>
+    </div>
   );
 }
