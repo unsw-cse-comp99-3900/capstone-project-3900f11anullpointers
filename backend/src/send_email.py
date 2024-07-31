@@ -57,7 +57,6 @@ class SendEmail:
         - patient_email (str): The email address of the patient.
         - submit_datetime (datetime): The date and time the form was submitted.
         """
-
         start = time.time()
         subject = CLINIC_SUBJECT
         current_time = submit_datetime.strftime("%l:%M %p")
@@ -205,9 +204,12 @@ class SendEmail:
         - attach_name (str): The name for the attached PDF file.
         - pdf_base64 (str): The base64-encoded content of the PDF.
         """
+        logging.info("Intialising the email sending process")
+        
         connection: smtplib.SMTP = None
 
         try:
+            logging.info("Connecting to the SMTP server")
             connection = smtplib.SMTP(self.server, self.port)
             connection.starttls()
             connection.login(self.user, self.pswd)
@@ -229,6 +231,7 @@ class SendEmail:
                 msg.attach(attach_package)
 
             text = msg.as_string()
+            logging.info("Preparing to send email")
             connection.sendmail(self.user, email_to, text)
         except smtplib.SMTPAuthenticationError as e:
             logging.error("Failed to authenticate with the mail server: %s", e)
