@@ -9,7 +9,7 @@ export const ModeToggle: React.FC = () => {
   const { theme, textLarge, highContrast, dyslexicFont, toggleTheme, toggleTextSize, toggleHighContrast, toggleDyslexicFont } = useThemeContext();
 
   return (
-    <div className="flex space-x-2">
+    <div className={`flex space-x-2`}>
       <Button
         variant="outline"
         size={textLarge ? "lg" : "icon"}

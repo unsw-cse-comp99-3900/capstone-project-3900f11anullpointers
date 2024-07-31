@@ -34,7 +34,7 @@ FRONTEND_PORT = os.getenv("NEXT_PUBLIC_FRONTEND_PORT")
 FRONTEND_URL = f"http://{FRONTEND_HOST}:{FRONTEND_PORT}"
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": FRONTEND_URL}})
+CORS(app)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
