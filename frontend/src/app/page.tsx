@@ -75,8 +75,8 @@ export default function Home() {
   }, []);
 
   return (
-    <main className='flex max-h-screen flex-col items-center justify-center'>
-      <div className='flex flex-col items-center justify-center w-full max-w-3xl mx-auto p-4 sm:p-6 md:p-8'>
+    <div>
+      <div className='flex flex-col items-center justify-center w-full max-w-md mx-auto p-4 sm:max-w-xl md:max-w-3xl'>
         <Card className='w-full'>
           {isSubmitted ? (
             <CardContent>
@@ -112,9 +112,9 @@ export default function Home() {
                           duration: 0.5,
                         }}
                       >
-                        {formSteps.map((_, index) => (
+                        {formSteps.map((step, index) => (
                           <div key={index} className='w-full flex-shrink-0 p-3'>
-                            <StepWrapper form={form} step={index} />
+                            <StepWrapper form={form} step={step} />
                           </div>
                         ))}
                       </motion.div>
@@ -142,6 +142,6 @@ export default function Home() {
         <Toaster />
       </div>
       <TimeoutFeature />
-    </main>
+    </div>
   );
 }

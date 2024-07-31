@@ -45,7 +45,7 @@ export const formSteps: FormStepConfig[] = [
   {
     component: ConsentStep,
     props: {
-      title: "Use of Clinical Information in Research Studies",
+      title: "Contact for Future Research Studies",
       preDescription: "",
       checkboxes: {
         checkbox1: {
@@ -68,7 +68,7 @@ export const formSteps: FormStepConfig[] = [
   {
     component: ConsentStep,
     props: {
-      title: "Use of Clinical Information in Research Studies",
+      title: "Student Clinic Consent",
       preDescription: "",
       checkboxes: {
         checkbox1: {
