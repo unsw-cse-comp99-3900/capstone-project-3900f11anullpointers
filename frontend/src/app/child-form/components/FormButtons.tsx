@@ -41,7 +41,6 @@ export function FormButtons({
 
     const isValid = await trigger(fieldsToValidate);
     isValid && setFormStep(formStep + 1);
-    console.log("UP!!", formStep);
   };
 
   const handleFinalSubmit = async () => {
@@ -56,7 +55,6 @@ export function FormButtons({
       return;
     }
 
-    console.log(formData);
     try {
       let fieldsToValidate: string = "drawSignature";
 

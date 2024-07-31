@@ -1,13 +1,20 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ModeToggle } from "./ModeToggle";
 import { useThemeContext } from "@/context/theme-context";
 import { Lexend } from "next/font/google";
+import { Button } from "@/components/ui/button";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
 const Header = () => {
-  const { theme, textLarge, highContrast, dyslexicFont } = useThemeContext();
+  const { theme, textLarge, dyslexicFont } = useThemeContext();
+
+  const [isChildForm, setIsChildForm] = useState(false);
+
+  useEffect(() => {
+    setIsChildForm(window.location.pathname.endsWith("/child-form"));
+  }, []);
 
   return (
     <header
@@ -27,12 +34,27 @@ const Header = () => {
               textLarge
                 ? "text-2xl md:text-4xl lg:text-5xl"
                 : "text-xl md:text-3xl lg:text-4xl"
-            } ${dyslexicFont ? lexend.className : ""} font-headingtext-primary`}
+            } ${
+              dyslexicFont ? lexend.className : ""
+            } font-heading text-primary`}
           >
             UNSW Optometry Clinic
           </h1>
         </div>
-        <div>
+        <div className="flex flex-row">
+          <a
+            href={isChildForm ? "/" : "/child-form"}
+            className="w-full flex justify-end pr-10"
+          >
+            <Button
+              variant="secondary"
+              className={` ${textLarge ? "text-lg" : ""} ${
+                dyslexicFont ? lexend.className : ""
+              }`}
+            >
+              {isChildForm ? "Click for Adult Form" : "Click for Child Form"}
+            </Button>
+          </a>
           <ModeToggle />
         </div>
       </div>
