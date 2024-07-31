@@ -23,11 +23,15 @@ export default function RootLayout({
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <NextThemesProvider attribute="class" defaultTheme="system">
           <CustomThemeProvider>
-            <Header />
+            <div className="flex-shrink-0">
+              <Header />
+            </div>
             <main className="flex-grow flex flex-col items-center justify-center">
               {children}
             </main>
-            <Footer />
+            <div className="flex-shrink-0">
+              <Footer />
+            </div>
           </CustomThemeProvider>
         </NextThemesProvider>
       </body>

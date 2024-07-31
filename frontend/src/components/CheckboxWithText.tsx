@@ -37,13 +37,18 @@ export function CheckboxWithText({
 
   const { errors } = form.formState;
 
-  const consentErrors = [
+  const consentErrors = typeof window !== 'undefined' && window.location.pathname.endsWith("/child-form") ? [
+    errors.acceptResearchConsent,
+    errors.denyResearchConsent,
+    errors.acceptStudentConsent,
+    errors.denyStudentConsent,
+  ].filter(Boolean) : [
     errors.acceptResearchConsent,
     errors.denyResearchConsent,
     errors.acceptContactConsent,
     errors.denyContactConsent,
-    // errors.acceptStudentConsent,
-    // errors.denyStudentConsent,
+    errors.acceptStudentConsent,
+    errors.denyStudentConsent,
   ].filter(Boolean);
 
   const handleItemClick = (event: any, field: any) => {
@@ -54,7 +59,7 @@ export function CheckboxWithText({
   };
 
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       <FormField
         control={form.control}
         name={checkbox1.name}
@@ -116,7 +121,7 @@ export function CheckboxWithText({
         )}
       />
       {consentErrors.length > 0 && (
-        <FormMessage className='text-red-500'>
+        <FormMessage className="text-red-500">
           Please select ONE option.
         </FormMessage>
       )}

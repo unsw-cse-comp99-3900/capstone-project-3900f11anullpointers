@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import Header from '@/components/Header'
 import { ThemeProvider } from '@/context/theme-context'
 
-const BUTTONS_IN_MODE_TOGGLE = 4
+const BUTTONS_IN_MODE_TOGGLE = 5
 
 describe('Header component', () => {
   it('renders the header with correct text', () => {

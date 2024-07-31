@@ -9,12 +9,13 @@ export const ModeToggle: React.FC = () => {
   const { theme, textLarge, highContrast, dyslexicFont, toggleTheme, toggleTextSize, toggleHighContrast, toggleDyslexicFont } = useThemeContext();
 
   return (
-    <div className="flex space-x-2">
+    <div className={`flex space-x-2`}>
       <Button
         variant="outline"
         size={textLarge ? "lg" : "icon"}
         onClick={toggleTheme}
         aria-label="Toggle theme"
+        title="Toggle between dark and light theme"
       >
         {theme === "dark" ? (
           <>
@@ -33,6 +34,7 @@ export const ModeToggle: React.FC = () => {
         size={textLarge ? "lg" : "icon"}
         onClick={toggleTextSize}
         aria-label="Toggle large text"
+        title="Toggle large text size"
       >
         {textLarge ? (
           <ZoomOut className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"} transition-all rotate-0 scale-100`} />
@@ -45,6 +47,7 @@ export const ModeToggle: React.FC = () => {
         size={textLarge ? "lg" : "icon"}
         onClick={toggleHighContrast}
         aria-label="Toggle high contrast"
+        title="Toggle high contrast mode"
       >
         {highContrast ? (
           <Contrast className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"} transition-all rotate-180 scale-100`} />
@@ -57,6 +60,7 @@ export const ModeToggle: React.FC = () => {
         size={textLarge ? "lg" : "icon"}
         onClick={toggleDyslexicFont}
         aria-label="Toggle dyslexic font"
+        title="Toggle dyslexic-friendly font"
       >
         {dyslexicFont ? (
           <Eye className={`${textLarge ? "h-6 w-6" : "h-[1.2rem] w-[1.2rem]"} transition-all rotate-0 scale-100`} />
