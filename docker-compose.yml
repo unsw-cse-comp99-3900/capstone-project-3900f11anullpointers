@@ -1,6 +1,16 @@
 version: "3.9"
 
 services:
+  frontend:
+    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
   backend:
     restart: unless-stopped
     build:
@@ -8,6 +18,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3030:3030"
+    networks:
+      - app-network
     
   tests:
     build:
@@ -18,3 +30,7 @@ services:
     logging:
       driver: "none"
     command: ["python", "tests/run_tests.py"]
+
+networks:
+  app-network:
+    driver: bridge

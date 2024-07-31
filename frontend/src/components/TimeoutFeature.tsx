@@ -71,7 +71,7 @@ const TimeoutFeature = () => {
             <DialogHeader>
               <DialogTitle>Inactivity Alert</DialogTitle>
               <DialogDescription>
-                You have been inactive for five minutes. Please press "Extend" to continue your session, or the form will reset.
+                You have been inactive for five minutes. Please press &quot;Extend&quot; to continue your session, or the form will reset.
               </DialogDescription>
             </DialogHeader>
               <Button onClick={handleExtend}>Extend</Button>
