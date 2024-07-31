@@ -9,6 +9,9 @@ import { useEffect } from "react";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
+const BACKEND_HOST = process.env.NEXT_PUBLIC_HOST;
+const BACKEND_PORT = process.env.NEXT_PUBLIC_BACKEND_PORT;
+
 type FormButtonsProps = {
   formStep: number;
   setFormStep: (step: number) => void;
@@ -80,7 +83,8 @@ export function FormButtons({
       setIsLoading(false);
       setFormStep(formStep + 1); */
 
-      const response = await fetch("http://localhost:3030/post", {
+      const backendURL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
+      const response = await fetch(`${backendURL}/post`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

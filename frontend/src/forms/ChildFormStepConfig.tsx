@@ -66,7 +66,7 @@ export const formSteps: FormStepConfig[] = [
           descriptionText: "",
         },
       },      postDescription:
-        "*De-identified means we will exclude your child's name and contact details from the research database",
+        "",
     },
   },
   {

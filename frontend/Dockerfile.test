@@ -1,0 +1,16 @@
+# Base image
+FROM node:20-alpine
+
+# Install dependencies
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm install
+
+# Copy the application code
+COPY . .
+
+# Set the PATH to include node_modules/.bin
+ENV PATH /app/node_modules/.bin:$PATH
+
+# Run tests
+CMD ["npm", "test"]

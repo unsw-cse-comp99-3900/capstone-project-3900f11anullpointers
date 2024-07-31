@@ -90,9 +90,10 @@ export default function Home() {
                 step={formStep}
                 totalSteps={formSteps.length - 1}
                 title="Patient's Consent & Information Sheet (Children)"
-                description='The UNSW Optometry Clinic is part of the School of Optometry and
-                Vision Science, UNSW Australia. It is a teaching facility for both excellence 
-                in eye care and is at the forefront of the latest research.'
+                description='The UNSW Optometry Clinic is part of the School of Optometry and Vision 
+                Science, UNSW Australia. It is a teaching facility for both undergraduate and 
+                postgraduate optometry students, providing excellence in eye care and is at the 
+                forefront of the latest research.'
               />
               <CardContent>
                 <FormProvider {...form}>

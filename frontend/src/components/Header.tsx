@@ -25,7 +25,7 @@ const Header = () => {
             UNSW Optometry Clinic
           </h1>
         </div>
-        <div className="flex">
+        <div className={`flex ${textLarge ? "flex-col" : ""}`}>
           <a href={isChildForm ? '/' : '/child-form'} className="w-full flex justify-end pb-1 pr-2">
             <Button variant='secondary' className={`w-[100%] ${textLarge ? "text-lg" : ""} ${dyslexicFont ? lexend.className : ""}`}>
               {isChildForm ? "Click for Adult Form" : "Click for Child Form"}

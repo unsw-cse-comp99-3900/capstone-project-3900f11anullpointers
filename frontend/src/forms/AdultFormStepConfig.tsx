@@ -62,14 +62,14 @@ export const formSteps: FormStepConfig[] = [
         },
       },
       postDescription:
-        "*De-identified means we will exclude your name and contact details from the research database",
+        "",
     },
   },
   {
     component: ConsentStep,
     props: {
       title: "Student Clinic Consent",
-      preDescription: "",
+      preDescription: "I acknowledge that I have been informed that the initial eye examination and subsequent care in the UNSW Optometry Clinic that I will receive, will be conducted by an optometry student under the supervision of a qualified, AHPRA registered optometrist.",
       checkboxes: {
         checkbox1: {
           name: "acceptStudentConsent",
@@ -84,7 +84,7 @@ export const formSteps: FormStepConfig[] = [
         },
       },
       postDescription:
-        "*De-identified means we will exclude your name and contact details from the research database",
+        "",
     },
   },
   {
