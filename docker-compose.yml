@@ -24,10 +24,10 @@ services:
   test-frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.test
     networks:
       - app-network
-    command: [ "npm", "test" ]
+    command: ["npm", "run", "test"]
     environment:
       - NODE_ENV=test
 
@@ -37,7 +37,7 @@ services:
       dockerfile: Dockerfile
     networks:
       - app-network
-    command: [ "python", "tests/run_tests.py" ]
+    command: ["python", "tests/run_tests.py"]
     environment:
       - LOG_LEVEL=ERROR
     logging:
