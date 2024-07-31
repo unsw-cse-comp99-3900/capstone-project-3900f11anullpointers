@@ -96,10 +96,6 @@ def validate_signature(signature_base64: str) -> None:
         if image.format != 'PNG':
             raise ValueError("Signature image must be in PNG format")
 
-        # Validate image dimensions
-        if image.width > 1200 or image.height > 200:
-            raise ValueError("Signature image dimensions are invalid")
-
     except Exception as e:
         raise ValueError("Invalid signature image: " + str(e))    
 
