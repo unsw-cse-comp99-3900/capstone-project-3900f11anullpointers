@@ -9,18 +9,18 @@
             },
             {
                 "type": "consent",
-                "subtitle": "TEACHING AND RESEARCH",
+                "subtitle": "",
                 "body": " to the use of my child’s de-identified* information for the purpose of teaching and research",
                 "footnote": "* de-identified means we exclude your name and contact details from the research database"
             },
             {
                 "type": "info",
-                "subtitle": "STUDENT CLINIC CONSENT",
+                "subtitle": "",
                 "body": "I acknowledge that I have been informed that my child’s initial eye examination and subsequent care in the UNSW Optometry Clinic will be conducted by an optometry student under the supervision of a qualified, AHPRA registered optometrist."
             },
             {
                 "type": "consent",
-                "subtitle": "STUDENT CLINIC CONSENT",
+                "subtitle": "",
                 "body": "to my child being examined by a student under supervision",
                 "footnote": null
             }
