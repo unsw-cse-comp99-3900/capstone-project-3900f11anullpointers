@@ -121,7 +121,7 @@ class TestPDFGeneration(unittest.TestCase):
                                           VALID_SIGNATURE, self.timestamp)
 
         decoded_pdf = base64.b64decode(pdf)
-        self.assertTrue(decoded_pdf.startswith(b'%PDF-'))
+        self.assertTrue(decoded_pdf.startswith(b"%PDF-"))
 
     def test_successful_pdf_generation(self):
         """
