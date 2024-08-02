@@ -1,14 +1,15 @@
 # UNSW Optometry Clinic - Electronic consent form
 
-## Description
+### Context
+All new patients at the UNSW Optometry Clinic are required to sign a consent form when attending their initial appointment.
 
-Description
+### Problem
+At the moment, patients complete and sign a paper consent form, that reception scans, emails and attaches to the patient record in a patient management system. This is too manual and time consuming for clinic staff.
 
-## Technologies Used
+### Solution
+Digitise the form process as an electronic consent form that can be filled out on a clinic iPad, and is automatically exported to the clinic inbox.
 
-Technologies used
-
-## Folder Structure
+### Folder Structure
 
 ```
 .
