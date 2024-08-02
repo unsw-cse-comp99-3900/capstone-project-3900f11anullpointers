@@ -1,6 +1,6 @@
 import { UseFormReturn } from "react-hook-form";
-import { RadioWithText } from "@/components/RadioWithText";
-import { CardDescription, CardTitle } from "./ui/card";
+import { RadioWithText } from "@/deprecated/RadioWithText";
+import { CardDescription, CardTitle } from "../components/ui/card";
 import {
   FormField,
   FormItem,

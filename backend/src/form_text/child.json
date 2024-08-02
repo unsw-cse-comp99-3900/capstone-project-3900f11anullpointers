@@ -9,7 +9,7 @@
             },
             {
                 "type": "consent",
-                "subtitle": "TEACHING AND RESEARCH",
+                "subtitle": "",
                 "body": " to the use of my child’s de-identified* information for the purpose of teaching and research",
                 "footnote": "* de-identified means we exclude your name and contact details from the research database"
             },
@@ -20,7 +20,7 @@
             },
             {
                 "type": "consent",
-                "subtitle": "STUDENT CLINIC CONSENT",
+                "subtitle": "",
                 "body": "to my child being examined by a student under supervision",
                 "footnote": null
             }

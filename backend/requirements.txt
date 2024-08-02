@@ -6,3 +6,4 @@ flask-cors
 python-dotenv==1.0.1
 pytz==2024.1
 resend==2.2.0
+termcolor==2.4.0
